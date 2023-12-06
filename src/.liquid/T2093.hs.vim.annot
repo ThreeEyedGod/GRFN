@@ -1,0 +1,3 @@
+1:1-1:1::T2093.$trModule :: "GHC.Types.Module"
+14:10-14:40::T2093.$fNumUnsigned :: "forall a .\n(GHC.TypeNats.KnownNat<[]> a) =>\n(GHC.Num.Num (T2093.Unsigned a))"
+24:1-24:2::T2093.x :: "{VV : (T2093.Unsigned GHC.Types.Int) | VV <= 9}"
