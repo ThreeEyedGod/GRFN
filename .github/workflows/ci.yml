@@ -17,11 +17,14 @@ jobs:
   test:
     strategy:
       matrix:
+        stack: ["2.13.1"]
+        ghc: ["9.2.8"]
+        cabal: ["3.10.2.1"]
         runner:
           - macOS-latest
 
         resolver:
-          - lts-20.26  # ghc-9.2
+          - lts-20.26  
 
       fail-fast: false
 
@@ -37,8 +40,27 @@ jobs:
           cabal-arguments: --resolver ${{ matrix.resolver }}
           cache-prefix: ${{ matrix.resolver }}/
 
-      - if: ${{ runner.os == 'macOS-latest' }}
-        run: |
-          [[ "${{ steps.cabal.outputs.compiler }}" = "ghc-9.2.8" ]]
-          [[ "${{ steps.cabal.outputs.compiler-version }}" = "9.2.8" ]]
+      - uses: actions/setup-haskell@v1 #.1.4
+        name: Setup Haskell Stack
+        with:
+          ghc-version: ${{ matrix.ghc }}
+          stack-version: ${{ matrix.stack }}
+          cabal-version: ${{ matrix.cabal }}
+    
+      - uses: actions/cache@v2
+        name: Cache multiple paths
+        env: 
+          cache-name: cache-stack
+        with:
+          path: | 
+            ~/.stack
+            ~/src
+            ~/app
+            ~/test
+          key: ${{ runner.os }}-${{ matrix.ghc }}-stack
+          restore-keys: |
+            ${{ runner.os }}-build-${{ env.cache-name }}-
+            ${{ runner.os }}-build-
+            ${{ runner.os }}- 
+    
 
