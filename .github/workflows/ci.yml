@@ -50,6 +50,13 @@ jobs:
        path: ~/.ghcup
        key: ${{ runner.os }}-${{ matrix.ghc }}-ghcup   
 
+    - name: Echo World
+      run: | 
+         ls -al
+         echo $GITHUB_REPOSITORY $GITHUB_WORKSPACE $GITHUB_EVENT_PATH $RUNNER_WORKSPACE
+         echo
+         env
+
     - name: Build Binary
       run: |
         shell: bash
