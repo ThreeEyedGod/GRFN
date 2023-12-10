@@ -56,6 +56,7 @@ jobs:
     - name: Specific GHC
       run: |
         ghcup install ghc 9.2.8 
+        ghcup set ghc 9.2.8
 
     - name: Build Binary
       run: |
