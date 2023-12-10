@@ -55,7 +55,6 @@ jobs:
 
     - name: Build Binary
       run: |
-        shell: bash
         working-directory: ${{ github.workspace }}/grfn
         cabal build
         
