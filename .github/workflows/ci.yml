@@ -51,5 +51,5 @@ jobs:
        key: ${{ runner.os }}-${{ matrix.ghc }}-ghcup   
 
     - name: Build Binary
-      run: cabal build -I $GITHUB_WORKSPACE --print-directory
+      run: cabal build
         
