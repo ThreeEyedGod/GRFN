@@ -1,5 +1,5 @@
 .stack-work/** linguist-generated=true
-.stack-work/* linguist-generated=true
+dist-newstyle/** linguist-generated=true
 **/.liquid/* linguist-generated=true
 **/.liquid/* linguist-generated=true
 .vscode/* linguist-generated=true
