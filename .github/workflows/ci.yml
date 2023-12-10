@@ -40,6 +40,15 @@ jobs:
           cabal-version: ${{ matrix.cabal }}
           ghcup-version: ${{ matrix.ghcup }}
     
+    - name: Setup Z3
+      id: z3
+      uses: cda-tum/setup-z3@v1
+      with:
+            platform: macOS
+            architecture: x64
+      env:
+            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+       
     - uses: actions/cache@v2
       if: matrix.os  == 'macOS-latest'
       with:
