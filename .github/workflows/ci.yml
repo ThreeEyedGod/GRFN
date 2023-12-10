@@ -18,7 +18,7 @@ jobs:
     strategy:
       matrix:
         stack: ["latest"]
-        ghc: ["9.2.8"]
+        ghc: ["latest"]
         cabal: ["3.8.1.0"]
         ghcup: ["latest"]
         runner:
