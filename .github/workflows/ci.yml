@@ -14,7 +14,7 @@ jobs:
     strategy:
       matrix:
         stack: ["latest"]
-        ghc: ["latest"]
+        ghc: ["9.2.8"]
         cabal: ["3.8.1.0"]
         ghcup: ["latest"]
         runner:
@@ -36,9 +36,9 @@ jobs:
     - uses: actions/setup-haskell@v1 #.1.4
       name: Setup Haskell Stack
       with:
-          ghc-version: ${{ matrix.ghc }}
           stack-version: ${{ matrix.stack }}
           cabal-version: ${{ matrix.cabal }}
+          ghcup-version: ${{ matrix.ghcup }}
     
     - uses: actions/cache@v2
       if: matrix.os  == 'macOS-latest'
@@ -52,8 +52,10 @@ jobs:
          echo $GITHUB_REPOSITORY $GITHUB_WORKSPACE $GITHUB_EVENT_PATH $RUNNER_WORKSPACE
          echo
          env
-
-# working-directory: ${{ github.workspace }}
+    
+    - name: Specific GHC
+      run: |
+        ghcup install ghc 9.2.8 
 
     - name: Build Binary
       run: |
