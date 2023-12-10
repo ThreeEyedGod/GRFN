@@ -44,21 +44,11 @@ jobs:
           cabal-version: ${{ matrix.cabal }}
     
     - uses: actions/cache@v2
-      name: Cache multiple paths
-      env: 
-        cache-name: cache-stack
+      if: matrix.os  == 'macOS-latest'
       with:
-        path: | 
-            ~/.stack
-            ~/src
-            ~/app
-            ~/test
-        key: ${{ runner.os }}-${{ matrix.ghc }}-stack
-        restore-keys: |
-            ${{ runner.os }}-build-${{ env.cache-name }}-
-            ${{ runner.os }}-build-
-            ${{ runner.os }}- 
-    
+       path: ~/.ghcup
+       key: ${{ runner.os }}-${{ matrix.ghc }}-ghcup   
+
     - name: Build Binary
       run: cabal build -I $GITHUB_WORKSPACE --print-directory
         
