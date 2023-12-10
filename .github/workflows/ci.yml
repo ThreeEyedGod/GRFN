@@ -17,9 +17,9 @@ jobs:
   test:
     strategy:
       matrix:
-        stack: ["2.13.1"]
+        stack: ["latest"]
         ghc: ["9.2.8"]
-        cabal: ["latest"]
+        cabal: ["3.8.1.0"]
         ghcup: ["latest"]
         runner:
           - macOS-latest
