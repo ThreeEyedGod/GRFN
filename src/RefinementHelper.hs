@@ -15,7 +15,8 @@ three = 3 :: Int
 
 -- To assert that code is unreachable 
 {-@ die :: {v:String | false} -> a @-}
-die msg = error msg
+die :: String -> a
+die = error 
 
 
 -- Domain Data
