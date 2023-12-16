@@ -4,7 +4,6 @@
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE DataKinds #-}
 {-# LANGUAGE GADTs #-}
-{-# LANGUAGE TypeApplications #-}
 
 module Lib
     ( genARandomPreFactoredNumberLEn
@@ -17,7 +16,7 @@ import Data.Numbers.Primes (isPrime)
 import System.Random.Stateful (uniformRM, globalStdGen)
 import Data.Either 
 import RefinementHelper
-import ShortCircuit ((??), if', andM)
+import ShortCircuit (if')
 
 {-@ lazy genARandomPreFactoredNumberLEn @-} -- disabling termination checking
 genARandomPreFactoredNumberLEn :: Int -> IO (Either String (Int,[Int]))
@@ -27,8 +26,8 @@ genARandomPreFactoredNumberLEn n | n >= 2  = do
                                                 rndM <- fmap filterInvalid (getRndMInt (2, n)) 
                                                 case rndM of 
                                                     Left invalid -> pure $ Left "Invalid"
-                                                    Right upper  -> if' (ps <= n) (pure $ Right rsp) (genARandomPreFactoredNumberLEn n)
-                                                                        where rsp@(ps, sq) = (product sq, createSeq upper)
+                                                    Right upper  -> if' (ps <= n) (pure $ Right rsp) (genARandomPreFactoredNumberLEn n) --if' from shortcircuit, used here for convenience not lazy evaluation
+                                                                        where rsp@(ps, sq) = (product sq, createSeq upper) -- Haskell as-pattern @
 genARandomPreFactoredNumberLEn _           = pure $ Left "Invalid"
 
 {-@ lazy createSeq @-} -- disabling termination checking
@@ -54,7 +53,7 @@ firstPrimeLE n | n > 0     = firstPrimeLE (n-1)
 firstPrimeLE _             = die "impossible"
 
 
--- some helper functions
+-- helper functions
 -- get a random integer given a lower and upper bound
 getRndMInt :: (Int, Int) -> IO Int 
 getRndMInt (l,u) = uniformRM (l, u) globalStdGen :: IO Int
