@@ -1,10 +1,3 @@
-{-# LANGUAGE BlockArguments, FlexibleContexts, FlexibleInstances, PolyKinds, ScopedTypeVariables #-}
-{-# Language PartialTypeSignatures #-}
-{-# Language NamedWildCards #-}
-{-# LANGUAGE OverloadedStrings #-}
-{-# LANGUAGE DataKinds #-}
-{-# LANGUAGE GADTs #-}
-
 module Lib
     ( genARandomPreFactoredNumberLEn
      ,firstPrimeLE
@@ -14,7 +7,6 @@ module Lib
 
 import Data.Numbers.Primes (isPrime)
 import System.Random.Stateful (uniformRM, globalStdGen)
-import Data.Either 
 import RefinementHelper
 import ShortCircuit (if')
 
@@ -25,7 +17,7 @@ genARandomPreFactoredNumberLEn 1           = pure $ Right (1, [1])
 genARandomPreFactoredNumberLEn n | n >= 2  = do 
                                                 rndM <- fmap filterInvalid (getRndMInt (2, n)) 
                                                 case rndM of 
-                                                    Left invalid -> pure $ Left "Invalid"
+                                                    Left _ -> pure $ Left "Invalid"
                                                     Right upper  -> if' (ps <= n) (pure $ Right rsp) (genARandomPreFactoredNumberLEn n) --if' from shortcircuit, used here for convenience not lazy evaluation
                                                                         where rsp@(ps, sq) = (product sq, createSeq upper) -- Haskell as-pattern @
 genARandomPreFactoredNumberLEn _           = pure $ Left "Invalid"
@@ -35,10 +27,10 @@ genARandomPreFactoredNumberLEn _           = pure $ Left "Invalid"
 createSeq :: Int -> [Int]
 createSeq 1                  = [1]      
 createSeq n | n >= 2         = case filterInvalidNonPos n of 
-                                Left invalid -> createSeq 1
+                                Left _ -> createSeq 1
                                 Right nGte1  -> do 
                                                     case filterInvalidNonPos (si-1) of
-                                                        Left invalid -> createSeq 1 
+                                                        Left _ -> createSeq 1 
                                                         Right okN    ->  si : createSeq okN
                                                 where si = firstPrimeLE nGte1
 createSeq _                  = die "impossible"
