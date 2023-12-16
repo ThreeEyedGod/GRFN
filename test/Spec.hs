@@ -1,16 +1,17 @@
+{-# LANGUAGE TypeApplications #-}
 import Lib
 import Data.Numbers.Primes
-import Test.Framework (defaultMain, testGroup)
+import Test.Framework (defaultMain, Test, testGroup)
 import Test.Framework.Providers.QuickCheck2 (testProperty)
 
 import Test.QuickCheck (Positive(..), NonNegative(..), expectFailure, listOf, suchThat, elements, Arbitrary, Property, arbitrary, quickCheck, (==>), forAll, Gen, choose)
 import Test.QuickCheck.Monadic (assert, monadicIO, pick, pre, run, forAllM)
-
 import System.IO.Error (isDoesNotExistError, tryIOError)
 
 main :: IO ()
 main = defaultMain tests
 
+tests :: [Test]
 tests = [
         testGroup "Group firstPrimeLE" [
                 testProperty "propcheckIfPrimeOdd" prop_checkIfPrimeIsOdd
@@ -39,12 +40,12 @@ prop_checkIfLEn :: Positive Int -> Property
 prop_checkIfLEn (Positive n) = n > 2 && n < 30 ==> monadicIO $ do  
         x <- run $ genARandomPreFactoredNumberLEn n
         case x of 
-            Left err -> assert (1==2)
-            Right x -> assert (fst x <= n)
+            Left _ -> assert (1== 2)
+            Right y -> assert (fst y <= n)
 
 prop_checkIffiltersValidInput ::  Int -> Property
 prop_checkIffiltersValidInput n = n > -10 && n < 1 ==> monadicIO $ do  
         x <- run $ genARandomPreFactoredNumberLEn n
         case x of 
-            Left err -> assert (err =="Invalid")
-            Right x -> assert (1==2)
+            Left err -> assert (err=="Invalid")
+            Right _ -> assert (1==2)

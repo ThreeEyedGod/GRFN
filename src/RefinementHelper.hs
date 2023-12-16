@@ -1,11 +1,11 @@
 module RefinementHelper (die, filterInvalid, filterInvalidNonPos) where
-import Prelude 
+import Prelude (String, error)
+import Protolude hiding (die)
 
 -- To assert that code is unreachable 
 {-@ die :: {v:String | false} -> a @-}
 die :: String -> a
-die = error 
-
+die = error
 
 -- Domain Data
 {-@ type Pos = {v:Nat | 0 < v} @-}
