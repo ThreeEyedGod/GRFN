@@ -4,10 +4,9 @@ module Lib
      ,createSeq
     ) where
 
-
 import Data.Numbers.Primes (isPrime)
 import System.Random.Stateful (uniformRM, globalStdGen)
-import RefinementHelper
+import RefinementHelper 
 import ShortCircuit (if')
 
 {-@ lazy genARandomPreFactoredNumberLEn @-} -- disabling termination checking

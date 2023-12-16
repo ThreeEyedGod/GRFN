@@ -1,17 +1,5 @@
-module RefinementHelper where
-import Prelude hiding (abs)
-
-
-{-@ type Zero = {v:Int | v == 0} @-}
-{-@ type NonZero = {v:Int | v /= 0} @-}
-
-{-@ zero :: Zero @-}
-zero = 0 :: Int
-
-{-@ one, two, three :: NonZero @-}
-one = 1 :: Int
-two = 2 :: Int
-three = 3 :: Int
+module RefinementHelper (die, filterInvalid, filterInvalidNonPos) where
+import Prelude 
 
 -- To assert that code is unreachable 
 {-@ die :: {v:String | false} -> a @-}

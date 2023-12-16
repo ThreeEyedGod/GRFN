@@ -40,6 +40,16 @@
   (major1) == 0 && (major2) <  2 || \
   (major1) == 0 && (major2) == 2 && (minor) <= 1)
 #endif /* MIN_VERSION_primes */
+/* package protolude-0.3.3 */
+#ifndef VERSION_protolude
+#define VERSION_protolude "0.3.3"
+#endif /* VERSION_protolude */
+#ifndef MIN_VERSION_protolude
+#define MIN_VERSION_protolude(major1,major2,minor) (\
+  (major1) <  0 || \
+  (major1) == 0 && (major2) <  3 || \
+  (major1) == 0 && (major2) == 3 && (minor) <= 3)
+#endif /* MIN_VERSION_protolude */
 /* package random-1.2.1.1 */
 #ifndef VERSION_random
 #define VERSION_random "1.2.1.1"

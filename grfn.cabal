@@ -19,6 +19,7 @@ library
   hs-source-dirs:      src
   exposed-modules:     Lib, RefinementHelper, ShortCircuit
   build-depends:       base                 >= 4.11.1.0 && < 5
+                      ,protolude
                       ,random
                       ,liquidhaskell == 0.9.2.8.0
                       ,primes
