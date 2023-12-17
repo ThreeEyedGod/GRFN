@@ -1,5 +1,5 @@
 # grfn
-[![GitHub CI](https://github.com/ThreeEyedGod/GRFN/workflows/CI/badge.svg)](https://github.com/ThreeEyedGod/GRFN/actions) [![MPL-2.0 license](https://img.shields.io/badge/license-MPL--2.0-blue.svg)](https://github.com/threeeyedgod/GRFN/blob/main/LICENSE)
+[![GitHub CI](https://github.com/ThreeEyedGod/MaximumCity/workflows/CI/badge.svg)](https://github.com/ThreeEyedGod/GRFN/actions) [![MPL-2.0 license](https://img.shields.io/badge/license-MPL--2.0-blue.svg)](https://github.com/threeeyedgod/GRFN/blob/main/LICENSE)
 [![Stable Version](https://img.shields.io/github/v/tag/ThreeEyedGod/GRFN)](https://img.shields.io/github/v/tag/ThreeEyedGod/grfn)
 [![Latest Release](https://img.shields.io/github/v/release/ThreeEyedGod/GRFN?color=%233D9970)](https://img.shields.io/github/v/release/ThreeEyedGod/grfn?color=%233D9970)
 
@@ -12,7 +12,8 @@ Synopsis
 ---------
 
 ### Highlights
-Uses both Refinement Types (LiquidHaskell) and QuickCheck to improve quality
+Uses Refinement Types (LiquidHaskell), QuickCheck and a bit of lazy evaluation showcasing
+Standard hlint; github actions; 
 
 Issues
 ---------
