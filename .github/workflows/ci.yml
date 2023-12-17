@@ -50,7 +50,7 @@ jobs:
             GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
        
     - uses: actions/cache@v2
-      if: matrix.os  == 'macOS-latest'
+      if: runner.os == 'macos-latest'
       with:
        path: ~/.ghcup
        key: ${{ runner.os }}-${{ matrix.ghc }}-ghcup   
