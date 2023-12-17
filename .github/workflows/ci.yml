@@ -57,10 +57,24 @@ jobs:
             GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
        
     - uses: actions/cache@v2
-      if: runner.os == 'macos-latest'
+      name: Cache multiple paths
+      env: 
+         cache-name: cache-stack
       with:
-       path: ~/.ghcup
-       key: ${{ runner.os }}-${{ matrix.ghc }}-ghcup   
+         path: | 
+           ~/.ghcup
+           ~/.cabal
+           ~/.stack
+           ~/src
+           ~/app
+           ~/test
+         key: ${{ runner.os }}-${{ matrix.ghc }}-ghcup
+         restore-keys: |
+           ${{ runner.os }}-build-${{ env.cache-name }}-
+           ${{ runner.os }}-build-
+           ${{ runner.os }}- 
+ 
+
 
     - name: Echo World
       run: | 
@@ -73,6 +87,7 @@ jobs:
       run: |
         ghcup install ghc 9.2.8 
         ghcup set ghc 9.2.8
+        ghc --version
 
     - name: Build Binary
       run: |

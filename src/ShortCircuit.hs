@@ -95,22 +95,22 @@ firstFalseOf = foldl (&&) true
 
 -- | Short-circuit two actions, performing the second only if the first returned a false-ish value.
 orM :: (Monad m, Shortcircuit a) => m a -> m a -> m a
-orM a b = a >>= \x -> (return x ?? b) x
+orM a b = a >>= \x -> (pure x ?? b) x
 
 -- | Short-circuit two actions, performing the second only if the first returned a true-ish value.
 andM :: (Monad m, Shortcircuit a) => m a -> m a -> m a
-andM a b = a >>= \x -> (b ?? return x) x
+andM a b = a >>= \x -> (b ?? pure turn x) x
 
 -- | Short-circuit a list of actions, performing only until a true-ish value is found, or the list exhausted.
 firstTrueOfM :: (Monad m, Shortcircuit a, HasFalse a) => [m a] -> m a
-firstTrueOfM = foldr orM (return false)
+firstTrueOfM = foldr orM (pure false)
 
 -- | Short-circuit a list of actions, performing only until a false-ish value is found, or the list exhausted.
 lastFalseOfM :: (Monad m, Shortcircuit a, HasTrue a) => [m a] -> m a
-lastFalseOfM = foldr andM (return true)
+lastFalseOfM = foldr andM (pure true)
 
 firstFalseOfM :: (Monad m, Shortcircuit a, HasTrue a) => [m a] -> m a
-firstFalseOfM = foldl andM (return true)
+firstFalseOfM = foldl andM (pure true)
 
 instance HasTrue Bool where
     true = True
@@ -119,7 +119,7 @@ instance HasFalse Bool where
     false = False
 
 instance Shortcircuit Bool where
-    isTrue = (== True)
+    isTrue = id
 
 instance HasFalse (Maybe a) where
     false = Nothing

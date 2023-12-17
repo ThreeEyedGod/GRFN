@@ -56,4 +56,3 @@ getRndMInt (l,u) = uniformRM (l, u) globalStdGen :: IO Int
 fromRight :: Either l r -> r
 fromRight (Right v) = v
 fromRight _ = error "ouch"
-
