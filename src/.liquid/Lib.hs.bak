@@ -55,3 +55,5 @@ getRndMInt (l,u) = uniformRM (l, u) globalStdGen :: IO Int
 -- kind of dicey 'unsafe function' I assume that the value will always be Right something
 fromRight :: Either l r -> r
 fromRight (Right v) = v
+fromRight _ = error "ouch"
+
