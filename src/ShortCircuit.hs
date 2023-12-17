@@ -99,7 +99,7 @@ orM a b = a >>= \x -> (pure x ?? b) x
 
 -- | Short-circuit two actions, performing the second only if the first returned a true-ish value.
 andM :: (Monad m, Shortcircuit a) => m a -> m a -> m a
-andM a b = a >>= \x -> (b ?? pure turn x) x
+andM a b = a >>= \x -> (b ?? pure x) x
 
 -- | Short-circuit a list of actions, performing only until a true-ish value is found, or the list exhausted.
 firstTrueOfM :: (Monad m, Shortcircuit a, HasFalse a) => [m a] -> m a
@@ -131,6 +131,3 @@ instance Shortcircuit (Maybe a) where
 instance Shortcircuit (Either a b) where
     isTrue (Left _)  = False
     isTrue (Right _) = True
-
-validateList :: (a -> Either e a) -> [a] -> Either e [a]
-validateList = traverse
