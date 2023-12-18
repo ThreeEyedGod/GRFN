@@ -56,25 +56,18 @@ jobs:
       env:
             GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
        
-    - uses: actions/cache@v2
-      name: Cache multiple paths
-      env: 
-         cache-name: cache-stack
+    - name: Cache ~/.cabal/packages, ~/.cabal/store and dist-newstyle
+      uses: actions/cache@v2
       with:
-         path: | 
-           ~/.ghcup
-           ~/.cabal
-           ~/.stack
-           ~/src
-           ~/app
-           ~/test
-         key: ${{ runner.os }}-${{ matrix.ghc }}-ghcup
-         restore-keys: |
-           ${{ runner.os }}-build-${{ env.cache-name }}-
-           ${{ runner.os }}-build-
-           ${{ runner.os }}- 
- 
-
+        path: |
+          ~/.cabal/packages
+          ~/.cabal/store
+          dist-newstyle
+        key: ${{ runner.os }}-${{ matrix.ghc }} 
+        restore-keys: |
+          ${{ runner.os }}-build-${{ env.cache-key }}-
+          ${{ runner.os }}-build-
+          ${{ runner.os }}- 
 
     - name: Echo World
       run: | 
