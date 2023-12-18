@@ -1,4 +1,3 @@
-{-# LANGUAGE TypeApplications #-}
 import Lib
 import Data.Numbers.Primes
 import Test.Framework (defaultMain, Test, testGroup)
@@ -48,4 +47,4 @@ prop_checkIffiltersValidInput n = n > -10 && n < 1 ==> monadicIO $ do
         x <- run $ genARandomPreFactoredNumberLEn n
         case x of 
             Left err -> assert (err=="Invalid")
-            Right _ -> assert (1==2)
+            Right _  -> assert (1==2)

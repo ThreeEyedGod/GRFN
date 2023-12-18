@@ -10,7 +10,7 @@ import System.Random.Stateful (uniformRM, globalStdGen)
 import RefinementHelper 
 import ShortCircuit (if')
 import Protolude hiding (die)
-import Prelude (String, error)
+import Prelude (String)
 
 
 {-@ lazy genARandomPreFactoredNumberLEn @-} -- disabling termination checking
@@ -31,8 +31,6 @@ createSeq :: Int -> [Int]
 createSeq 1                  = [1]      
 createSeq n | n >= 2         = case filterInvalidNonPos n of 
                                 Left _       -> createSeq 1
-                                -- Right nGte1  -> if' fVal (si : createSeq rght) (createSeq 1 )
-                                --                     where (si, fVal, rght) = (firstPrimeLE nGte1, filterInvalidNonPos (si-1), fromRight fVal)
                                 Right nGte1  -> do 
                                                     case filterInvalidNonPos (si-1) of
                                                         Left _       -> createSeq 1 
@@ -54,9 +52,3 @@ firstPrimeLE _             = die "impossible"
 -- get a random integer given a lower and upper bound
 getRndMInt :: (Int, Int) -> IO Int 
 getRndMInt (l, u) = uniformRM (l, u) globalStdGen :: IO Int
-
-
--- kind of dicey 'unsafe function' I assume that the value will always be Right something
-fromRight :: Either l r -> r
-fromRight (Right v) = v
-fromRight _ = error "ouch"
