@@ -1,3 +1,4 @@
+{-# Language NoImplicitPrelude #-}
 module RefinementHelper (die, filterInvalid, filterInvalidNonPos) where
 import Prelude (String, error)
 import Protolude hiding (die)

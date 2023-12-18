@@ -11,7 +11,7 @@ import System.IO.Error (isDoesNotExistError, tryIOError)
 main :: IO ()
 main = defaultMain tests
 
-tests :: [Test]
+tests :: [Test] 
 tests = [
         testGroup "Group firstPrimeLE" [
                 testProperty "propcheckIfPrimeOdd" prop_checkIfPrimeIsOdd

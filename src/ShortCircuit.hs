@@ -1,12 +1,4 @@
-{- |
-Copyright    : 2010 Aristid Breitkreuz
-License      : BSD3
-Stability    : experimental
-Portability  : portable
-
-Short-circuit evaluation.
--}
-
+{-# Language NoImplicitPrelude #-}
 {-@ LIQUID "--skip-module" @-}
 
 module ShortCircuit

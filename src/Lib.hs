@@ -1,3 +1,4 @@
+{-# Language NoImplicitPrelude #-}
 module Lib
     ( genARandomPreFactoredNumberLEn
      ,firstPrimeLE
@@ -8,6 +9,9 @@ import Data.Numbers.Primes (isPrime)
 import System.Random.Stateful (uniformRM, globalStdGen)
 import RefinementHelper 
 import ShortCircuit (if')
+import Protolude hiding (die)
+import Prelude (String, error)
+
 
 {-@ lazy genARandomPreFactoredNumberLEn @-} -- disabling termination checking
 genARandomPreFactoredNumberLEn :: Int -> IO (Either String (Int,[Int]))
@@ -49,7 +53,7 @@ firstPrimeLE _             = die "impossible"
 -- helper functions
 -- get a random integer given a lower and upper bound
 getRndMInt :: (Int, Int) -> IO Int 
-getRndMInt (l,u) = uniformRM (l, u) globalStdGen :: IO Int
+getRndMInt (l, u) = uniformRM (l, u) globalStdGen :: IO Int
 
 
 -- kind of dicey 'unsafe function' I assume that the value will always be Right something
