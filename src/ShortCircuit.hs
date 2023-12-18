@@ -1,52 +1,53 @@
-{-# Language NoImplicitPrelude #-}
+{-# LANGUAGE NoImplicitPrelude #-}
+
 {-@ LIQUID "--skip-module" @-}
 
 module ShortCircuit
-(
-  -- * Type classes
-  HasFalse(..)
-, HasTrue(..)
-, Shortcircuit(..)
-  -- * Short circuit tests
-, isFalse
-, if'
-, unless'
-, (??)
-, (||)
-, (&&)
-, firstTrueOf
-, lastFalseOf
-, firstFalseOf
-  -- * Monadic short circuits
-, orM
-, andM
-, firstTrueOfM
-, lastFalseOfM
-, firstFalseOfM
-)
+  ( -- * Type classes
+    HasFalse (..),
+    HasTrue (..),
+    Shortcircuit (..),
+
+    -- * Short circuit tests
+    isFalse,
+    if',
+    unless',
+    (??),
+    (||),
+    (&&),
+    firstTrueOf,
+    lastFalseOf,
+    firstFalseOf,
+
+    -- * Monadic short circuits
+    orM,
+    andM,
+    firstTrueOfM,
+    lastFalseOfM,
+    firstFalseOfM,
+  )
 where
-  
+
 import Control.Monad
 import Data.Maybe
-import Prelude hiding ((||), (&&))
-
+import Prelude hiding ((&&), (||))
 
 -- | Types with a defined false value.
 class HasFalse a where
-    -- | A false value for this type. 
-    -- If 'Shortcircuit' @a@ holds, @isTrue false == False@ must hold.
-    false :: a
+  -- | A false value for this type.
+  -- If 'Shortcircuit' @a@ holds, @isTrue false == False@ must hold.
+  false :: a
 
 -- | Types with a defined true value.
 class HasTrue a where
-    -- | A true value for this type.
-    -- If 'Shortcircuit' @a@ holds, @isTrue true == True@ must hold.
-    true :: a
+  -- | A true value for this type.
+  -- If 'Shortcircuit' @a@ holds, @isTrue true == True@ must hold.
+  true :: a
 
 -- | Types that support short circuits.
 class Shortcircuit a where
-    -- | Whether the value is true-like (i.e. not false-like).
-    isTrue :: a -> Bool
+  -- | Whether the value is true-like (i.e. not false-like).
+  isTrue :: a -> Bool
 
 -- | Whether the value is false-like (i.e. not true-like).
 isFalse :: (Shortcircuit a) => a -> Bool
@@ -54,13 +55,15 @@ isFalse = not . isTrue
 
 -- | @if then else@ generalised to 'Shortcircuit'.
 if' :: (Shortcircuit a) => a -> b -> b -> b
-if' x a b | isTrue x  = a
-          | otherwise = b
-          
+if' x a b
+  | isTrue x = a
+  | otherwise = b
+
 -- | The opposite of 'if''.
 unless' :: (Shortcircuit a) => a -> b -> b -> b
-unless' x a b | isFalse x = a
-              | otherwise = b
+unless' x a b
+  | isFalse x = a
+  | otherwise = b
 
 -- | Like 'if'', but with different argument order, allowing infix use.
 (??) :: (Shortcircuit a) => b -> b -> a -> b
@@ -105,21 +108,20 @@ firstFalseOfM :: (Monad m, Shortcircuit a, HasTrue a) => [m a] -> m a
 firstFalseOfM = foldl andM (pure true)
 
 instance HasTrue Bool where
-    true = True
+  true = True
 
 instance HasFalse Bool where
-    false = False
+  false = False
 
 instance Shortcircuit Bool where
-    isTrue = id
+  isTrue = id
 
 instance HasFalse (Maybe a) where
-    false = Nothing
+  false = Nothing
 
 instance Shortcircuit (Maybe a) where
-    isTrue = isJust
-
+  isTrue = isJust
 
 instance Shortcircuit (Either a b) where
-    isTrue (Left _)  = False
-    isTrue (Right _) = True
+  isTrue (Left _) = False
+  isTrue (Right _) = True

@@ -1,9 +1,11 @@
-{-# Language NoImplicitPrelude #-}
-module RefinementHelper (die, filterInvalid, filterInvalidNonPos) where
-import Prelude (String, error)
-import Protolude hiding (die)
+{-# LANGUAGE NoImplicitPrelude #-}
 
--- To assert that code is unreachable 
+module RefinementHelper (die, filterInvalid, filterInvalidNonPos) where
+
+import Protolude hiding (die)
+import Prelude (String, error)
+
+-- To assert that code is unreachable
 {-@ die :: {v:String | false} -> a @-}
 die :: String -> a
 die = error
@@ -28,4 +30,4 @@ filterInvalidNonPos = intsPos
 
 {-@ intsPos :: x:Int -> rv : (Either String {rght:Pos | rght == x })   @-}
 intsPos :: Int -> Either String Int
-intsPos n = if n < 1 then Left "Invalid" else Right n    
+intsPos n = if n < 1 then Left "Invalid" else Right n
