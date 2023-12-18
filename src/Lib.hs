@@ -20,7 +20,7 @@ genARandomPreFactoredNumberLEn 1           = pure $ Right (1, [1])
 genARandomPreFactoredNumberLEn n | n >= 2  = do 
                                                 rndM <- fmap filterInvalid (getRndMInt (2, n)) 
                                                 case rndM of 
-                                                    Left _ -> pure $ Left "Invalid"
+                                                    Left _       -> pure $ Left "Invalid"
                                                     Right upper  -> if' (ps <= n) (pure $ Right rsp) (genARandomPreFactoredNumberLEn n) --if' from shortcircuit, used here for convenience not lazy evaluation
                                                                         where rsp@(ps, sq) = (product sq, createSeq upper) -- Haskell as-pattern @
 genARandomPreFactoredNumberLEn _           = pure $ Left "Invalid"
@@ -30,12 +30,12 @@ genARandomPreFactoredNumberLEn _           = pure $ Left "Invalid"
 createSeq :: Int -> [Int]
 createSeq 1                  = [1]      
 createSeq n | n >= 2         = case filterInvalidNonPos n of 
-                                Left _ -> createSeq 1
+                                Left _       -> createSeq 1
                                 -- Right nGte1  -> if' fVal (si : createSeq rght) (createSeq 1 )
                                 --                     where (si, fVal, rght) = (firstPrimeLE nGte1, filterInvalidNonPos (si-1), fromRight fVal)
                                 Right nGte1  -> do 
                                                     case filterInvalidNonPos (si-1) of
-                                                        Left _ -> createSeq 1 
+                                                        Left _       -> createSeq 1 
                                                         Right okN    ->  si : createSeq okN
                                                 where si = firstPrimeLE nGte1
 createSeq _                  = die "impossible"
