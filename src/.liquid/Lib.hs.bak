@@ -8,9 +8,9 @@ module Lib
 where
 
 import Data.Numbers.Primes (isPrime)
-import Protolude hiding (die)
+import Protolude hiding (die, (||))
 import RefinementHelper
-import ShortCircuit (if')
+import ShortCircuit (if', (||))
 import System.Random.Stateful (globalStdGen, uniformRM)
 import Prelude (String)
 import Data.Text (pack)
@@ -34,14 +34,11 @@ genARandomPreFactoredNumberLEn _ = pure $ Left $ pack "Invalid"
 {-@ createSeq :: Pos -> PrimeFactors @-}
 createSeq :: Int -> [Int]
 createSeq 1 = [1]
-createSeq n | n >= 2 = case filterInvalidNonPos n of
-  Left _ -> createSeq 1
-  Right nGte1 -> do
-    case filterInvalidNonPos (si - 1) of
+createSeq n | n >= 2 = case filterInvalidNonPos (si - 1) of
       Left _ -> createSeq 1
       Right okN -> si : createSeq okN
     where
-      si = firstPrimeLE nGte1
+      si = firstPrimeLE n
 createSeq _ = die "impossible"
 
 -- {-@ lazy firstPrimeLE @-} -- disabling termination checking
