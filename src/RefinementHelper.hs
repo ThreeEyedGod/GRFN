@@ -1,4 +1,4 @@
-{-# LANGUAGE NoImplicitPrelude #-}
+{-# LANGUAGE LinearTypes #-}
 
 module RefinementHelper (die, filterInvalid, filterInvalidNonPos) where
 

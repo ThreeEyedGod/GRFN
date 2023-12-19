@@ -7,10 +7,11 @@ Group createSeq:
 Group genARandomPreFactoredNumberLEn:
   prop_checkIfLEn: [OK, passed 100 tests]
   prop_checkIffiltersValidInput: [OK, passed 100 tests]
+  prop_checkValidOutput1: [OK, passed 100 tests]
 
          Properties  Total      
- Passed  5           5          
+ Passed  6           6          
  Failed  0           0          
- Total   5           5          
+ Total   6           6          
 Test suite grfn-test: PASS
 Test suite logged to: /Users/mandeburung/Documents/grfn/dist-newstyle/build/aarch64-osx/ghc-9.2.8/grfn-0.1.0.0/t/grfn-test/test/grfn-0.1.0.0-grfn-test.log

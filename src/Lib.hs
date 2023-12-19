@@ -55,3 +55,4 @@ firstPrimeLE _ = die "impossible"
 -- get a random integer given a lower and upper bound
 getRndMInt :: (Int, Int) -> IO Int
 getRndMInt (l, u) = uniformRM (l, u) globalStdGen :: IO Int
+

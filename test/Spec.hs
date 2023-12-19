@@ -23,7 +23,8 @@ tests =
     testGroup
       "Group genARandomPreFactoredNumberLEn"
       [ testProperty "prop_checkIfLEn" prop_checkIfLEn,
-        testProperty "prop_checkIffiltersValidInput" prop_checkIffiltersValidInput
+        testProperty "prop_checkIffiltersValidInput" prop_checkIffiltersValidInput,
+        testProperty "prop_checkValidOutput1" prop_checkValidOutput1
       ]
   ]
 
@@ -46,7 +47,16 @@ prop_checkIfLEn (Positive n) = n > 2 && n < 30 ==> monadicIO $ do
 
 prop_checkIffiltersValidInput :: Int -> Property
 prop_checkIffiltersValidInput n = n > -10 && n < 1 ==> monadicIO $ do
+  -- notice we are constraining n to be within a "bad range"
   x <- run $ genARandomPreFactoredNumberLEn n
   case x of
     Left err -> assert (err == "Invalid")
     Right _ -> assert (1 == 2)
+
+prop_checkValidOutput1 :: Positive Int -> Property
+prop_checkValidOutput1 (Positive n) = n > 2 && n < 50 ==> monadicIO $ do
+  -- if n upper end is set at 100 then it results in an error https://www.cnblogs.com/BlogOfASBOIER/p/13096167.html
+  x <- run $ genARandomPreFactoredNumberLEn n
+  case x of
+    Left err -> assert (err == "Invalid")
+    Right y -> assert (fst y >= (head $ snd y))
