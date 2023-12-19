@@ -13,20 +13,21 @@ import RefinementHelper
 import ShortCircuit (if')
 import System.Random.Stateful (globalStdGen, uniformRM)
 import Prelude (String)
+import Data.Text (pack)
 
 {-@ lazy genARandomPreFactoredNumberLEn @-}
 -- disabling termination checking
-genARandomPreFactoredNumberLEn :: Int -> IO (Either String (Int, [Int]))
-genARandomPreFactoredNumberLEn x | x <= 0 = pure $ Left "Invalid"
+genARandomPreFactoredNumberLEn :: Int -> IO (Either Text (Int, [Int]))
+genARandomPreFactoredNumberLEn x | x <= 0 = pure $ Left $ pack "Invalid"
 genARandomPreFactoredNumberLEn 1 = pure $ Right (1, [1])
 genARandomPreFactoredNumberLEn n | n >= 2 = do
   rndM <- fmap filterInvalid (getRndMInt (2, n))
   case rndM of
-    Left _ -> pure $ Left "Invalid"
+    Left _ -> pure $ Left $ pack "Invalid"
     Right upper -> if' (ps <= n) (pure $ Right rsp) (genARandomPreFactoredNumberLEn n) -- if' from shortcircuit, used here for convenience not lazy evaluation
       where
         rsp@(ps, sq) = (product sq, createSeq upper) -- Haskell as-pattern @
-genARandomPreFactoredNumberLEn _ = pure $ Left "Invalid"
+genARandomPreFactoredNumberLEn _ = pure $ Left $ pack "Invalid"
 
 {-@ lazy createSeq @-}
 -- disabling termination checking

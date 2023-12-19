@@ -4,6 +4,7 @@ module RefinementHelper (die, filterInvalid, filterInvalidNonPos) where
 
 import Protolude hiding (die)
 import Prelude (String, error)
+import Data.Text (pack)
 
 -- To assert that code is unreachable
 {-@ die :: {v:String | false} -> a @-}
