@@ -6,6 +6,8 @@ import Protolude hiding (die)
 import Prelude (String, error)
 import Data.Text (pack)
 
+{-@ measure isPrime :: Int -> Bool @-}
+
 -- To assert that code is unreachable
 {-@ die :: {v:String | false} -> a @-}
 die :: String -> a

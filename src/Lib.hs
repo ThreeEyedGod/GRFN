@@ -8,12 +8,11 @@ module Lib
 where
 
 import Data.Numbers.Primes (isPrime)
+import Data.Text (pack)
 import Protolude hiding (die, (||))
 import RefinementHelper
-import ShortCircuit (if', (||))
+import ShortCircuit (if')
 import System.Random.Stateful (globalStdGen, uniformRM)
-import Prelude (String)
-import Data.Text (pack)
 
 {-@ lazy genARandomPreFactoredNumberLEn @-}
 -- disabling termination checking
@@ -34,14 +33,22 @@ genARandomPreFactoredNumberLEn _ = pure $ Left $ pack "Invalid"
 {-@ createSeq :: Pos -> PrimeFactors @-}
 createSeq :: Int -> [Int]
 createSeq 1 = [1]
-createSeq n | n >= 2 = case filterInvalidNonPos (si - 1) of
-      Left _ -> createSeq 1
-      Right okN -> si : createSeq okN
-    where
-      si = firstPrimeLE n
+createSeq n | n >= 2 = case filterInvalidNonPos si of
+  Left _ -> createSeq 1
+  Right okN -> lstPrimesLE okN
+  where
+    si = firstPrimeLE n
 createSeq _ = die "impossible"
 
+{-@ lstPrimesLE :: Pos -> PrimeFactors @-}
+lstPrimesLE :: Int -> [Int]
+lstPrimesLE 1 = [1]
+lstPrimesLE n | n >= 2 = 1 : [x | x <- [1 .. n], x > 0, isPrime x] -- the "1: " is there to 'prove' to the SMT solver that the len lst > 0 equivalent to the defn of PrimeFactors
+lstPrimesLE _ = die "impossible"
+
 -- {-@ lazy firstPrimeLE @-} -- disabling termination checking
+-- {-@ firstPrimeLE :: Pos -> {v:Pos | v==1 || isPrime v} @-}
+-- it would be nice to have the above refinement working; it's tighter on the output
 {-@ firstPrimeLE :: Pos -> Pos @-}
 firstPrimeLE :: Int -> Int
 firstPrimeLE 1 = 1
@@ -53,4 +60,3 @@ firstPrimeLE _ = die "impossible"
 -- get a random integer given a lower and upper bound
 getRndMInt :: (Int, Int) -> IO Int
 getRndMInt (l, u) = uniformRM (l, u) globalStdGen :: IO Int
-
