@@ -33,11 +33,9 @@ genARandomPreFactoredNumberLEn _ = pure $ Left $ pack "Invalid"
 {-@ createSeq :: Pos -> PrimeFactors @-}
 createSeq :: Int -> [Int]
 createSeq 1 = [1]
-createSeq n | n >= 2 = case filterInvalidNonPos si of
+createSeq n | n >= 2 = case filterInvalidNonPos $ firstPrimeLE n of
   Left _ -> createSeq 1
   Right okN -> lstPrimesLE okN
-  where
-    si = firstPrimeLE n
 createSeq _ = die "impossible"
 
 {-@ lstPrimesLE :: Pos -> PrimeFactors @-}

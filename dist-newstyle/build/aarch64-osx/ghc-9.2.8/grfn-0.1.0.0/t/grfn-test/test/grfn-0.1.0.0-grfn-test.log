@@ -6,7 +6,7 @@ Group createSeq:
   prop_checkSeqisOnlyPrimes: [OK, passed 100 tests]
 Group genARandomPreFactoredNumberLEn:
   prop_checkIfLEn: [OK, passed 100 tests]
-  prop_checkIffiltersValidInput: [Arguments exhausted after 97 tests]
+  prop_checkIffiltersValidInput: [OK, passed 100 tests]
   prop_checkValidOutput1: [OK, passed 100 tests]
 
          Properties  Total      
