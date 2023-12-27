@@ -40,6 +40,16 @@
   (major1) == 0 && (major2) <  1 || \
   (major1) == 0 && (major2) == 1 && (minor) <= 0)
 #endif /* MIN_VERSION_grfn */
+/* package hspec-2.11.7 */
+#ifndef VERSION_hspec
+#define VERSION_hspec "2.11.7"
+#endif /* VERSION_hspec */
+#ifndef MIN_VERSION_hspec
+#define MIN_VERSION_hspec(major1,major2,minor) (\
+  (major1) <  2 || \
+  (major1) == 2 && (major2) <  11 || \
+  (major1) == 2 && (major2) == 11 && (minor) <= 7)
+#endif /* MIN_VERSION_hspec */
 /* package primes-0.2.1.0 */
 #ifndef VERSION_primes
 #define VERSION_primes "0.2.1.0"

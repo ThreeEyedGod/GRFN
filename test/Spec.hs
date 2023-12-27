@@ -1,5 +1,7 @@
 import Data.Numbers.Primes
 import Lib
+import Test.Hspec (Spec, describe, it, shouldBe, shouldNotReturn, shouldReturn)
+
 import System.IO.Error (isDoesNotExistError, tryIOError)
 import Test.Framework (Test, defaultMain, testGroup)
 import Test.Framework.Providers.QuickCheck2 (testProperty)
