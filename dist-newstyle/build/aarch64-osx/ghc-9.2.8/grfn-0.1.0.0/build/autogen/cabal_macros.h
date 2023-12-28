@@ -70,6 +70,16 @@
   (major1) == 1 && (major2) <  2 || \
   (major1) == 1 && (major2) == 2 && (minor) <= 5)
 #endif /* MIN_VERSION_text */
+/* package utility-ht-0.0.17 */
+#ifndef VERSION_utility_ht
+#define VERSION_utility_ht "0.0.17"
+#endif /* VERSION_utility_ht */
+#ifndef MIN_VERSION_utility_ht
+#define MIN_VERSION_utility_ht(major1,major2,minor) (\
+  (major1) <  0 || \
+  (major1) == 0 && (major2) <  0 || \
+  (major1) == 0 && (major2) == 0 && (minor) <= 17)
+#endif /* MIN_VERSION_utility_ht */
 
 /* tool gcc-15.0.0 */
 #ifndef TOOL_VERSION_gcc

@@ -7,12 +7,13 @@ module Lib
   )
 where
 
-import Data.Bool (bool)
+--import Data.Bool (bool) -- after refactoring yet again, using Data.bool.HT this is no longer being used
+import Data.Bool.HT (if')
 import Data.Numbers.Primes (isPrime)
 import Data.Text (pack)
 import Protolude hiding (bool, die, (||))
 import RefinementHelper
-import ShortCircuit (if') -- now after refactoring using bool, this is not being used
+--import ShortCircuit (if') -- now after refactoring using bool, this is not being used
 import System.Random.Stateful (globalStdGen, uniformRM)
 
 {-@ lazy genARandomPreFactoredNumberLEn @-}
@@ -24,7 +25,7 @@ genARandomPreFactoredNumberLEn n | n >= 2 = do
   rndM <- fmap filterInvalid (getRndMInt (2, n))
   case rndM of
     Left _ -> pure $ Left $ pack "Invalid"
-    Right upper -> bool (genARandomPreFactoredNumberLEn n) (pure $ Right rsp) (ps <= n) -- Data.bool bool f _ FALSE = f bool _ t TRUE = t
+    Right upper -> if' (ps <= n) (pure $ Right rsp) (genARandomPreFactoredNumberLEn n)  -- Data.bool.HT if' 
       where
         rsp@(ps, sq) = (product sq, createSeq upper) -- Haskell as-pattern @
 genARandomPreFactoredNumberLEn _ = pure $ Left $ pack "Invalid"
