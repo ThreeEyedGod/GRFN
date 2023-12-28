@@ -12,10 +12,10 @@ A reference Python implemention is [here](https://www.johndcook.com/blog/2023/11
 Synopsis
 ---------
 ### Highlights
-Uses Refinement Types (LiquidHaskell), Property Testing (QuickCheck) some lazy evaluation (cf. Shortcircuit)
+Uses Refinement Types (LiquidHaskell), Property Testing (QuickCheck) ~~some lazy evaluation (cf. Shortcircuit)~~ refactored using Data.Bool
 
 ### Standard
-hlint; github actions 
+hlint; github actions, IDE:Cursor+hoogle-vscode+ormolu
 
 Issues
 -------
