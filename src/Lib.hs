@@ -1,4 +1,11 @@
 {-# LANGUAGE NoImplicitPrelude #-}
+{-# LANGUAGE BangPatterns #-}
+
+{-- | ... Module header comment
+    genARandomPreFactoredNumberLEn is the external callable function
+    firstPrimeLE and create Seq should not be called externally
+    
+-}
 
 module Lib
   ( genARandomPreFactoredNumberLEn,
@@ -16,8 +23,11 @@ import RefinementHelper
 --import ShortCircuit (if') -- now after refactoring using bool, this is not being used
 import System.Random.Stateful (globalStdGen, uniformRM)
 
+
 {-@ lazy genARandomPreFactoredNumberLEn @-}
 -- disabling termination checking
+-- | This is the Entry Function
+-- With an integer input it should generate a tuple of a number less than the integer i/p and its factors
 genARandomPreFactoredNumberLEn :: Int -> IO (Either Text (Int, [Int]))
 genARandomPreFactoredNumberLEn x | x <= 0 = pure $ Left $ pack "Invalid"
 genARandomPreFactoredNumberLEn 1 = pure $ Right (1, [1])
