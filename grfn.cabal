@@ -4,12 +4,12 @@ name:                grfn
 version:             0.1.0.0
 -- synopsis:
 -- description:
-homepage:            https://github.com/githubuser/grfn#readme
+homepage:            https://github.com/threeeyedgod/grfn#readme
 license:             BSD-3-Clause
 license-file:        LICENSE
-author:              Author name here
+author:              VN
 maintainer:          example@example.com
-copyright:           2023 Author name here
+copyright:           2023 ThreeEyedGod
 category:            Web
 build-type:          Simple
 extra-source-files:  README.md
@@ -37,7 +37,8 @@ library
                        -Wpartial-fields
                        -Wredundant-constraints
                        -fplugin=LiquidHaskell
-
+                       -fwrite-ide-info
+                       -hiedir=.hie
 executable grfn-exe
   hs-source-dirs:      app
   main-is:             Main.hs
@@ -86,4 +87,4 @@ test-suite grfn-test
 
 source-repository head
   type:     git
-  location: https://github.com/githubuser/grfn
+  location: https://github.com/threeeyedgod/grfn

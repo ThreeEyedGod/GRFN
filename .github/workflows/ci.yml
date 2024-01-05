@@ -14,14 +14,14 @@ jobs:
     strategy:
       matrix:
         stack: ["latest"]
-        ghc: ["9.2.8"]
+        ghc: ["9.4.7"]
         cabal: ["3.8.1.0"]
         ghcup: ["latest"]
         runner:
           - macOS-latest
 
         resolver:
-          - lts-20.26  
+          - lts-21.21  
 
       fail-fast: false
 
