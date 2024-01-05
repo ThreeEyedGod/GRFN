@@ -1,5 +1,4 @@
 {-# LANGUAGE NoImplicitPrelude #-}
-{-# LANGUAGE BangPatterns #-}
 
 {-- | ... Module header comment
     genARandomPreFactoredNumberLEn is the external callable function
