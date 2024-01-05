@@ -38,7 +38,8 @@ packages:
 # forks / in-progress versions pinned to a git hash. For example:
 #
 extra-deps:
-
+  - liquidhaskell-0.9.4.7.0@sha256:31866a28d6f3ef540ba8da75ec0459223b8ab445e0b6873075bd21b4ed76f6df,3559
+  - liquidhaskell-boot-0.9.4.7.0@sha256:0de0c907e361d491454efc7e824ce72fb066ec8cc6b435766fc5beb9139ef22e,98
 # - acme-missiles-0.3
 # - git: https://github.com/commercialhaskell/stack.git
 #   commit: e7b331f14bcffb8367cd58fbfc8b40ec7642100a
