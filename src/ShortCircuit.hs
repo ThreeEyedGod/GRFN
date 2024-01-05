@@ -65,6 +65,8 @@ unless' x a b
   | isFalse x = a
   | otherwise = b
 
+infix 2 ??, ||, &&
+
 -- | Like 'if'', but with different argument order, allowing infix use.
 (??) :: (Shortcircuit a) => b -> b -> a -> b
 a ?? b = \x -> if' x a b
@@ -86,7 +88,7 @@ lastFalseOf :: (Shortcircuit a, HasTrue a) => [a] -> a
 lastFalseOf = foldr (&&) true
 
 firstFalseOf :: (Shortcircuit a, HasTrue a) => [a] -> a
-firstFalseOf = foldl (&&) true
+firstFalseOf =  foldr (flip (&&)) true  -- foldl (&&) true stan reported that foldl was space-leaking hence moved to the current one
 
 -- | Short-circuit two actions, performing the second only if the first returned a false-ish value.
 orM :: (Monad m, Shortcircuit a) => m a -> m a -> m a
@@ -105,7 +107,8 @@ lastFalseOfM :: (Monad m, Shortcircuit a, HasTrue a) => [m a] -> m a
 lastFalseOfM = foldr andM (pure true)
 
 firstFalseOfM :: (Monad m, Shortcircuit a, HasTrue a) => [m a] -> m a
-firstFalseOfM = foldl andM (pure true)
+firstFalseOfM =  foldr (flip andM) (pure true) --foldl andM (pure true) stan reported that foldl was space - leaking hence moved to the current one
+
 
 instance HasTrue Bool where
   true = True
