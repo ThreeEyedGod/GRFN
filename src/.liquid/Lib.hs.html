@@ -15,201 +15,203 @@ Put mouse over identifiers to see inferred types
 <span class=hs-linenum> 3: </span><span class='hs-comment'>{-- | ... Module header comment
     genARandomPreFactoredNumberLEn is the external callable function
     firstPrimeLE and create Seq should not be called externally
-
 -}</span>
-<span class=hs-linenum> 8: </span>
-<span class=hs-linenum> 9: </span><span class='hs-keyword'>module</span> <span class='hs-conid'>Lib</span>
-<span class=hs-linenum>10: </span>  <span class='hs-layout'>(</span> <span class='hs-varid'>genARandomPreFactoredNumberLEn</span>
-<span class=hs-linenum>11: </span>    <span class='hs-layout'>,</span><span class='hs-varid'>firstPrimeLE</span>
-<span class=hs-linenum>12: </span>    <span class='hs-layout'>,</span><span class='hs-varid'>lstPrimesLE</span>
-<span class=hs-linenum>13: </span>    <span class='hs-layout'>,</span><span class='hs-varid'>createSeq</span>
-<span class=hs-linenum>14: </span>  <span class='hs-layout'>)</span>
-<span class=hs-linenum>15: </span><span class='hs-keyword'>where</span>
-<span class=hs-linenum>16: </span>
-<span class=hs-linenum>17: </span><span class='hs-comment'>-- import Data.Bool (bool) -- after refactoring yet again, using Data.bool.HT this is no longer being used</span>
-<span class=hs-linenum>18: </span><span class='hs-keyword'>import</span> <span class='hs-conid'>Data.Bool.HT</span> <span class='hs-layout'>(</span><span class='hs-varid'>if'</span><span class='hs-layout'>)</span>
-<span class=hs-linenum>19: </span><span class='hs-keyword'>import</span> <span class='hs-conid'>Data.Numbers.Primes</span> <span class='hs-layout'>(</span><span class='hs-varid'>isPrime</span><span class='hs-layout'>)</span>
-<span class=hs-linenum>20: </span><span class='hs-keyword'>import</span> <span class='hs-conid'>Data.Text</span> <span class='hs-layout'>(</span><span class='hs-varid'>pack</span><span class='hs-layout'>)</span>
-<span class=hs-linenum>21: </span><span class='hs-keyword'>import</span> <span class='hs-conid'>Protolude</span> <span class='hs-varid'>hiding</span> <span class='hs-layout'>(</span><span class='hs-varid'>bool</span><span class='hs-layout'>,</span> <span class='hs-varid'>die</span><span class='hs-layout'>,</span> <span class='hs-layout'>(</span><span class='hs-varop'>||</span><span class='hs-layout'>)</span><span class='hs-layout'>)</span>
-<span class=hs-linenum>22: </span><span class='hs-keyword'>import</span> <span class='hs-conid'>RefinementHelper</span>
-<span class=hs-linenum>23: </span><span class='hs-comment'>-- import ShortCircuit (if') -- now after refactoring using bool, this is not being used</span>
-<span class=hs-linenum>24: </span><span class='hs-keyword'>import</span> <span class='hs-conid'>System.Random.Stateful</span> <span class='hs-layout'>(</span><span class='hs-varid'>globalStdGen</span><span class='hs-layout'>,</span> <span class='hs-varid'>uniformRM</span><span class='hs-layout'>)</span>
-<span class=hs-linenum>25: </span>
-<span class=hs-linenum>26: </span><span class='hs-keyword'>{-@</span> <span class='hs-varid'>lazy</span> <span class='hs-varid'>genARandomPreFactoredNumberLEn</span> <span class='hs-keyword'>@-}</span>
-<span class=hs-linenum>27: </span><span class='hs-comment'>-- disabling termination checking</span>
-<span class=hs-linenum>28: </span>
-<span class=hs-linenum>29: </span><span class='hs-comment'>-- | This is the Entry Function</span>
-<span class=hs-linenum>30: </span><span class='hs-comment'>-- With an integer input it should generate a tuple of a number less than the integer i/p and its factors</span>
-<span class=hs-linenum>31: </span><span class='hs-definition'>genARandomPreFactoredNumberLEn</span> <span class='hs-keyglyph'>::</span> <span class='hs-conid'>Int</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-conid'>IO</span> <span class='hs-layout'>(</span><span class='hs-conid'>Either</span> <span class='hs-conid'>Text</span> <span class='hs-layout'>(</span><span class='hs-conid'>Int</span><span class='hs-layout'>,</span> <span class='hs-keyglyph'>[</span><span class='hs-conid'>Int</span><span class='hs-keyglyph'>]</span><span class='hs-layout'>)</span><span class='hs-layout'>)</span>
-<span class=hs-linenum>32: </span><a class=annot href="#"><span class=annottext>GHC.Types.Int -&gt; (GHC.Types.IO (Data.Either.Either Data.Text.Internal.Text (GHC.Types.Int, [GHC.Types.Int])))</span><span class='hs-definition'>genARandomPreFactoredNumberLEn</span></a> <a class=annot href="#"><span class=annottext>GHC.Types.Int</span><span class='hs-varid'>x</span></a> <span class='hs-keyglyph'>|</span> <a class=annot href="#"><span class=annottext>{v : GHC.Types.Int | v == x##a7dR}</span><span class='hs-varid'>x</span></a> <span class='hs-varop'>&lt;=</span> <a class=annot href="#"><span class=annottext>GHC.Types.Int</span><span class='hs-num'>0</span></a> <span class='hs-keyglyph'>=</span> <a class=annot href="#"><span class=annottext>(Data.Either.Either Data.Text.Internal.Text (GHC.Types.Int, [GHC.Types.Int])) -&gt; (GHC.Types.IO (Data.Either.Either Data.Text.Internal.Text (GHC.Types.Int, [GHC.Types.Int])))</span><span class='hs-varid'>pure</span></a> <span class='hs-varop'>$</span> <a class=annot href="#"><span class=annottext>{v : (Data.Either.Either Data.Text.Internal.Text (GHC.Types.Int, [GHC.Types.Int])) | isLeft v}</span><span class='hs-conid'>Left</span></a> <span class='hs-varop'>$</span> <a class=annot href="#"><span class=annottext>Data.Text.Internal.Text</span><span class='hs-varid'>pack</span></a> <a class=annot href="#"><span class=annottext>[GHC.Types.Char]</span><span class='hs-str'>"Invalid"</span></a>
-<span class=hs-linenum>33: </span><span class='hs-definition'>genARandomPreFactoredNumberLEn</span> <span class='hs-num'>1</span> <span class='hs-keyglyph'>=</span> <a class=annot href="#"><span class=annottext>(Data.Either.Either Data.Text.Internal.Text (GHC.Types.Int, [GHC.Types.Int])) -&gt; (GHC.Types.IO (Data.Either.Either Data.Text.Internal.Text (GHC.Types.Int, [GHC.Types.Int])))</span><span class='hs-varid'>pure</span></a> <span class='hs-varop'>$</span> <a class=annot href="#"><span class=annottext>{v : (Data.Either.Either Data.Text.Internal.Text (GHC.Types.Int, [GHC.Types.Int])) | not (isLeft v)}</span><span class='hs-conid'>Right</span></a> <a class=annot href="#"><span class=annottext>(GHC.Types.Int, [GHC.Types.Int])</span><span class='hs-layout'>(</span></a><a class=annot href="#"><span class=annottext>GHC.Types.Int</span><span class='hs-num'>1</span></a><span class='hs-layout'>,</span> <a class=annot href="#"><span class=annottext>[GHC.Types.Int]</span><span class='hs-keyglyph'>[</span></a><a class=annot href="#"><span class=annottext>GHC.Types.Int</span><span class='hs-num'>1</span></a><span class='hs-keyglyph'>]</span><span class='hs-layout'>)</span>
-<span class=hs-linenum>34: </span><span class='hs-definition'>genARandomPreFactoredNumberLEn</span> <span class='hs-varid'>n</span> <span class='hs-keyglyph'>|</span> <a class=annot href="#"><span class=annottext>{v : GHC.Types.Int | v == x##a7dR}</span><span class='hs-varid'>n</span></a> <span class='hs-varop'>&gt;=</span> <a class=annot href="#"><span class=annottext>GHC.Types.Int</span><span class='hs-num'>2</span></a> <span class='hs-keyglyph'>=</span> <span class='hs-keyword'>do</span>
-<span class=hs-linenum>35: </span>  <a class=annot href="#"><span class=annottext>(Data.Either.Either [GHC.Types.Char] {v : GHC.Types.Int | $VV##1825##k_ /= 0
-                                                          &amp;&amp; $VV##1825##k_ /= $lq_anf$##7205759403792821777##d7kt##k_
-                                                          &amp;&amp; $VV##1825##k_ /= $lq_anf$##7205759403792821778##d7ku##k_
-                                                          &amp;&amp; $VV##1825##k_ &gt; 0
-                                                          &amp;&amp; $VV##1825##k_ &gt; $lq_anf$##7205759403792821777##d7kt##k_
-                                                          &amp;&amp; $VV##1825##k_ &gt; $lq_anf$##7205759403792821778##d7ku##k_
-                                                          &amp;&amp; $VV##1825##k_ &gt;= 0
-                                                          &amp;&amp; $VV##1825##k_ &gt;= $lq_anf$##7205759403792821777##d7kt##k_
-                                                          &amp;&amp; $VV##1825##k_ &gt;= $lq_anf$##7205759403792821778##d7ku##k_
-                                                          &amp;&amp; $VV##1825##k_ &gt;= $lq_anf$##7205759403792821783##d7kz##k_
-                                                          &amp;&amp; $VV##1825##k_ &gt;= $lq_anf$##7205759403792821784##d7kA##k_
-                                                          &amp;&amp; $VV##1825##k_ &gt;= $lq_anf$##7205759403792821791##d7kH##k_
-                                                          &amp;&amp; $VV##1825##k_ &gt;= $lq_anf$##7205759403792821792##d7kI##k_
-                                                          &amp;&amp; 0 &lt; $VV##1825##k_
-                                                          &amp;&amp; 2 &lt;= $VV##1825##k_})</span><span class='hs-varid'>rndM</span></a> <span class='hs-keyglyph'>&lt;-</span> <a class=annot href="#"><span class=annottext>(GHC.Types.IO (Data.Either.Either [GHC.Types.Char] {v : GHC.Types.Int | $VV##1825##k_ /= 0
-                                                                        &amp;&amp; $VV##1825##k_ /= $lq_anf$##7205759403792821777##d7kt##k_
-                                                                        &amp;&amp; $VV##1825##k_ /= $lq_anf$##7205759403792821778##d7ku##k_
-                                                                        &amp;&amp; $VV##1825##k_ &gt; 0
-                                                                        &amp;&amp; $VV##1825##k_ &gt; $lq_anf$##7205759403792821777##d7kt##k_
-                                                                        &amp;&amp; $VV##1825##k_ &gt; $lq_anf$##7205759403792821778##d7ku##k_
-                                                                        &amp;&amp; $VV##1825##k_ &gt;= 0
-                                                                        &amp;&amp; $VV##1825##k_ &gt;= $lq_anf$##7205759403792821777##d7kt##k_
-                                                                        &amp;&amp; $VV##1825##k_ &gt;= $lq_anf$##7205759403792821778##d7ku##k_
-                                                                        &amp;&amp; $VV##1825##k_ &gt;= $lq_anf$##7205759403792821783##d7kz##k_
-                                                                        &amp;&amp; $VV##1825##k_ &gt;= $lq_anf$##7205759403792821784##d7kA##k_
-                                                                        &amp;&amp; $VV##1825##k_ &gt;= $lq_anf$##7205759403792821791##d7kH##k_
-                                                                        &amp;&amp; $VV##1825##k_ &gt;= $lq_anf$##7205759403792821792##d7kI##k_
-                                                                        &amp;&amp; 0 &lt; $VV##1825##k_
-                                                                        &amp;&amp; 2 &lt;= $VV##1825##k_}))</span><span class='hs-varid'>fmap</span></a> <a class=annot href="#"><span class=annottext>GHC.Types.Int -&gt; (Data.Either.Either [GHC.Types.Char] {v : GHC.Types.Int | 2 &lt;= v})</span><span class='hs-varid'>filterInvalid</span></a> <a class=annot href="#"><span class=annottext>(GHC.Types.IO GHC.Types.Int)</span><span class='hs-layout'>(</span></a><span class='hs-varid'>getRndMInt</span> <a class=annot href="#"><span class=annottext>{v : (GHC.Types.Int, GHC.Types.Int) | snd v == x##a7dR
-                                      &amp;&amp; x_Tuple22 v == x##a7dR}</span><span class='hs-layout'>(</span></a><a class=annot href="#"><span class=annottext>GHC.Types.Int</span><span class='hs-num'>2</span></a><span class='hs-layout'>,</span> <a class=annot href="#"><span class=annottext>{v : GHC.Types.Int | v == x##a7dR}</span><span class='hs-varid'>n</span></a><span class='hs-layout'>)</span><span class='hs-layout'>)</span>
-<span class=hs-linenum>36: </span>  <span class='hs-keyword'>case</span> <a class=annot href="#"><span class=annottext>{v : (Data.Either.Either [GHC.Types.Char] {v : GHC.Types.Int | $VV##1825##k_ /= 0
-                                                               &amp;&amp; $VV##1825##k_ /= $lq_anf$##7205759403792821777##d7kt##k_
-                                                               &amp;&amp; $VV##1825##k_ /= $lq_anf$##7205759403792821778##d7ku##k_
-                                                               &amp;&amp; $VV##1825##k_ &gt; 0
-                                                               &amp;&amp; $VV##1825##k_ &gt; $lq_anf$##7205759403792821777##d7kt##k_
-                                                               &amp;&amp; $VV##1825##k_ &gt; $lq_anf$##7205759403792821778##d7ku##k_
-                                                               &amp;&amp; $VV##1825##k_ &gt;= 0
-                                                               &amp;&amp; $VV##1825##k_ &gt;= $lq_anf$##7205759403792821777##d7kt##k_
-                                                               &amp;&amp; $VV##1825##k_ &gt;= $lq_anf$##7205759403792821778##d7ku##k_
-                                                               &amp;&amp; $VV##1825##k_ &gt;= $lq_anf$##7205759403792821783##d7kz##k_
-                                                               &amp;&amp; $VV##1825##k_ &gt;= $lq_anf$##7205759403792821784##d7kA##k_
-                                                               &amp;&amp; $VV##1825##k_ &gt;= $lq_anf$##7205759403792821791##d7kH##k_
-                                                               &amp;&amp; $VV##1825##k_ &gt;= $lq_anf$##7205759403792821792##d7kI##k_
-                                                               &amp;&amp; 0 &lt; $VV##1825##k_
-                                                               &amp;&amp; 2 &lt;= $VV##1825##k_}) | v == rndM##a7dT}</span><span class='hs-varid'>rndM</span></a> <span class='hs-keyword'>of</span>
-<span class=hs-linenum>37: </span>    <span class='hs-conid'>Left</span> <span class='hs-keyword'>_</span> <span class='hs-keyglyph'>-&gt;</span> <a class=annot href="#"><span class=annottext>(Data.Either.Either Data.Text.Internal.Text (GHC.Types.Int, [GHC.Types.Int])) -&gt; (GHC.Types.IO (Data.Either.Either Data.Text.Internal.Text (GHC.Types.Int, [GHC.Types.Int])))</span><span class='hs-varid'>pure</span></a> <span class='hs-varop'>$</span> <a class=annot href="#"><span class=annottext>{v : (Data.Either.Either Data.Text.Internal.Text (GHC.Types.Int, [GHC.Types.Int])) | isLeft v}</span><span class='hs-conid'>Left</span></a> <span class='hs-varop'>$</span> <a class=annot href="#"><span class=annottext>Data.Text.Internal.Text</span><span class='hs-varid'>pack</span></a> <a class=annot href="#"><span class=annottext>[GHC.Types.Char]</span><span class='hs-str'>"Invalid"</span></a>
-<span class=hs-linenum>38: </span>    <span class='hs-conid'>Right</span> <span class='hs-varid'>upper</span> <span class='hs-keyglyph'>-&gt;</span> <a class=annot href="#"><span class=annottext>{VV : forall a . GHC.Types.Bool -&gt; a -&gt; a -&gt; a | VV == if'}</span><span class='hs-varid'>if'</span></a> <a class=annot href="#"><span class=annottext>{v : GHC.Types.Bool | v &lt;=&gt; ps##a7h7 &lt;= x##a7dR}</span><span class='hs-layout'>(</span></a><a class=annot href="#"><span class=annottext>{v : GHC.Types.Int | v == ps##a7h7}</span><span class='hs-varid'>ps</span></a> <span class='hs-varop'>&lt;=</span> <a class=annot href="#"><span class=annottext>{v : GHC.Types.Int | v == x##a7dR}</span><span class='hs-varid'>n</span></a><span class='hs-layout'>)</span> <a class=annot href="#"><span class=annottext>(GHC.Types.IO (Data.Either.Either Data.Text.Internal.Text (GHC.Types.Int, [GHC.Types.Int])))</span><span class='hs-layout'>(</span></a><a class=annot href="#"><span class=annottext>(Data.Either.Either Data.Text.Internal.Text (GHC.Types.Int, [GHC.Types.Int])) -&gt; (GHC.Types.IO (Data.Either.Either Data.Text.Internal.Text (GHC.Types.Int, [GHC.Types.Int])))</span><span class='hs-varid'>pure</span></a> <span class='hs-varop'>$</span> <a class=annot href="#"><span class=annottext>{v : (Data.Either.Either Data.Text.Internal.Text (GHC.Types.Int, [GHC.Types.Int])) | not (isLeft v)}</span><span class='hs-conid'>Right</span></a> <a class=annot href="#"><span class=annottext>{v : (GHC.Types.Int, [GHC.Types.Int]) | v == rsp##a7h4}</span><span class='hs-varid'>rsp</span></a><span class='hs-layout'>)</span> <a class=annot href="#"><span class=annottext>(GHC.Types.IO (Data.Either.Either Data.Text.Internal.Text (GHC.Types.Int, [GHC.Types.Int])))</span><span class='hs-layout'>(</span></a><span class='hs-varid'>genARandomPreFactoredNumberLEn</span> <a class=annot href="#"><span class=annottext>{v : GHC.Types.Int | v == x##a7dR}</span><span class='hs-varid'>n</span></a><span class='hs-layout'>)</span> <span class='hs-comment'>-- Data.bool.HT if'</span>
-<span class=hs-linenum>39: </span>      <span class='hs-keyword'>where</span>
-<span class=hs-linenum>40: </span>        <a class=annot href="#"><span class=annottext>(GHC.Types.Int, [GHC.Types.Int])</span><span class='hs-varid'>rsp</span></a><span class='hs-keyglyph'>@</span><span class='hs-layout'>(</span><a class=annot href="#"><span class=annottext>GHC.Types.Int</span><span class='hs-varid'>ps</span></a><span class='hs-layout'>,</span> <a class=annot href="#"><span class=annottext>{VV##2064 : [GHC.Types.Int] | false}</span><span class='hs-varid'>sq</span></a><span class='hs-layout'>)</span> <span class='hs-keyglyph'>=</span> <a class=annot href="#"><span class=annottext>({v : GHC.Types.Int | false}, {v : [GHC.Types.Int] | false})&lt;\_ VV -&gt; {v : [GHC.Types.Int] | false}&gt;</span><span class='hs-layout'>(</span></a><a class=annot href="#"><span class=annottext>GHC.Types.Int</span><span class='hs-varid'>product</span></a> <a class=annot href="#"><span class=annottext>{VV##2064 : [GHC.Types.Int] | false}</span><span class='hs-varid'>sq</span></a><span class='hs-layout'>,</span> <a class=annot href="#"><span class=annottext>{v : [{v : GHC.Types.Int | v &gt;= 0
-                           &amp;&amp; 0 &lt; v}] | 1 &lt;= len v}</span><span class='hs-varid'>createSeq</span></a> <a class=annot href="#"><span class=annottext>{v : GHC.Types.Int | v == upper##a7dU
-                     &amp;&amp; $VV##1825##k_ /= 0
-                     &amp;&amp; $VV##1825##k_ /= $lq_anf$##7205759403792821777##d7kt##k_
-                     &amp;&amp; $VV##1825##k_ /= $lq_anf$##7205759403792821778##d7ku##k_
-                     &amp;&amp; $VV##1825##k_ &gt; 0
-                     &amp;&amp; $VV##1825##k_ &gt; $lq_anf$##7205759403792821777##d7kt##k_
-                     &amp;&amp; $VV##1825##k_ &gt; $lq_anf$##7205759403792821778##d7ku##k_
-                     &amp;&amp; $VV##1825##k_ &gt;= 0
-                     &amp;&amp; $VV##1825##k_ &gt;= $lq_anf$##7205759403792821777##d7kt##k_
-                     &amp;&amp; $VV##1825##k_ &gt;= $lq_anf$##7205759403792821778##d7ku##k_
-                     &amp;&amp; $VV##1825##k_ &gt;= $lq_anf$##7205759403792821783##d7kz##k_
-                     &amp;&amp; $VV##1825##k_ &gt;= $lq_anf$##7205759403792821784##d7kA##k_
-                     &amp;&amp; $VV##1825##k_ &gt;= $lq_anf$##7205759403792821791##d7kH##k_
-                     &amp;&amp; $VV##1825##k_ &gt;= $lq_anf$##7205759403792821792##d7kI##k_
-                     &amp;&amp; 0 &lt; $VV##1825##k_
-                     &amp;&amp; 2 &lt;= $VV##1825##k_}</span><span class='hs-varid'>upper</span></a><span class='hs-layout'>)</span> <span class='hs-comment'>-- Haskell as-pattern @</span>
-<span class=hs-linenum>41: </span><span class='hs-definition'>genARandomPreFactoredNumberLEn</span> <span class='hs-keyword'>_</span> <span class='hs-keyglyph'>=</span> <a class=annot href="#"><span class=annottext>(Data.Either.Either Data.Text.Internal.Text (GHC.Types.Int, [GHC.Types.Int])) -&gt; (GHC.Types.IO (Data.Either.Either Data.Text.Internal.Text (GHC.Types.Int, [GHC.Types.Int])))</span><span class='hs-varid'>pure</span></a> <span class='hs-varop'>$</span> <a class=annot href="#"><span class=annottext>{v : (Data.Either.Either Data.Text.Internal.Text (GHC.Types.Int, [GHC.Types.Int])) | isLeft v}</span><span class='hs-conid'>Left</span></a> <span class='hs-varop'>$</span> <a class=annot href="#"><span class=annottext>Data.Text.Internal.Text</span><span class='hs-varid'>pack</span></a> <a class=annot href="#"><span class=annottext>[GHC.Types.Char]</span><span class='hs-str'>"Invalid"</span></a>
-<span class=hs-linenum>42: </span>
-<span class=hs-linenum>43: </span><span class='hs-keyword'>{-@</span> <span class='hs-varid'>lazy</span> <span class='hs-varid'>createSeq</span> <span class='hs-keyword'>@-}</span>
-<span class=hs-linenum>44: </span><span class='hs-comment'>-- disabling termination checking</span>
-<span class=hs-linenum>45: </span><span class='hs-keyword'>{-@</span> <span class='hs-varid'>createSeq</span> <span class='hs-keyglyph'>::</span> <span class='hs-conid'>Pos</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-conid'>PrimeFactors</span> <span class='hs-keyword'>@-}</span>
-<span class=hs-linenum>46: </span><span class='hs-definition'>createSeq</span> <span class='hs-keyglyph'>::</span> <span class='hs-conid'>Int</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-keyglyph'>[</span><span class='hs-conid'>Int</span><span class='hs-keyglyph'>]</span>
-<span class=hs-linenum>47: </span><a class=annot href="#"><span class=annottext>{VV##0 : GHC.Types.Int | VV##0 &gt;= 0
+<span class=hs-linenum> 7: </span>
+<span class=hs-linenum> 8: </span><span class='hs-keyword'>module</span> <span class='hs-conid'>Lib</span>
+<span class=hs-linenum> 9: </span>  <span class='hs-layout'>(</span> <span class='hs-varid'>genARandomPreFactoredNumberLEn</span>
+<span class=hs-linenum>10: </span>    <span class='hs-layout'>,</span><span class='hs-varid'>firstPrimeLE</span>
+<span class=hs-linenum>11: </span>    <span class='hs-layout'>,</span><span class='hs-varid'>lstPrimesLE</span>
+<span class=hs-linenum>12: </span>    <span class='hs-layout'>,</span><span class='hs-varid'>createSeq</span>
+<span class=hs-linenum>13: </span>  <span class='hs-layout'>)</span>
+<span class=hs-linenum>14: </span><span class='hs-keyword'>where</span>
+<span class=hs-linenum>15: </span>
+<span class=hs-linenum>16: </span><span class='hs-comment'>-- import Data.Bool (bool) -- after refactoring yet again, using Data.bool.HT this is no longer being used</span>
+<span class=hs-linenum>17: </span><span class='hs-keyword'>import</span> <span class='hs-conid'>Data.Bool.HT</span> <span class='hs-layout'>(</span><span class='hs-varid'>if'</span><span class='hs-layout'>)</span>
+<span class=hs-linenum>18: </span><span class='hs-keyword'>import</span> <span class='hs-conid'>Data.Numbers.Primes</span> <span class='hs-layout'>(</span><span class='hs-varid'>isPrime</span><span class='hs-layout'>)</span>
+<span class=hs-linenum>19: </span><span class='hs-keyword'>import</span> <span class='hs-conid'>Data.Text</span> <span class='hs-layout'>(</span><span class='hs-varid'>pack</span><span class='hs-layout'>)</span>
+<span class=hs-linenum>20: </span><span class='hs-keyword'>import</span> <span class='hs-conid'>Protolude</span> <span class='hs-varid'>hiding</span> <span class='hs-layout'>(</span><span class='hs-varid'>bool</span><span class='hs-layout'>,</span> <span class='hs-varid'>die</span><span class='hs-layout'>,</span> <span class='hs-layout'>(</span><span class='hs-varop'>||</span><span class='hs-layout'>)</span><span class='hs-layout'>)</span>
+<span class=hs-linenum>21: </span><span class='hs-keyword'>import</span> <span class='hs-conid'>RefinementHelper</span>
+<span class=hs-linenum>22: </span><span class='hs-comment'>-- import ShortCircuit (if') -- now after refactoring using bool, this is not being used</span>
+<span class=hs-linenum>23: </span><span class='hs-keyword'>import</span> <span class='hs-conid'>System.Random.Stateful</span> <span class='hs-layout'>(</span><span class='hs-varid'>globalStdGen</span><span class='hs-layout'>,</span> <span class='hs-varid'>uniformRM</span><span class='hs-layout'>)</span>
+<span class=hs-linenum>24: </span>
+<span class=hs-linenum>25: </span><span class='hs-keyword'>{-@</span> <span class='hs-varid'>lazy</span> <span class='hs-varid'>genARandomPreFactoredNumberLEn</span> <span class='hs-keyword'>@-}</span>
+<span class=hs-linenum>26: </span><span class='hs-comment'>-- disabling termination checking</span>
+<span class=hs-linenum>27: </span><span class='hs-comment'>-- | This is the Entry Function.</span>
+<span class=hs-linenum>28: </span><span class='hs-comment'>-- Provide an integer input and it should generate a tuple of a number less than the integer i/p and its factors</span>
+<span class=hs-linenum>29: </span><span class='hs-definition'>genARandomPreFactoredNumberLEn</span> <span class='hs-keyglyph'>::</span> <span class='hs-conid'>Int</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-conid'>IO</span> <span class='hs-layout'>(</span><span class='hs-conid'>Either</span> <span class='hs-conid'>Text</span> <span class='hs-layout'>(</span><span class='hs-conid'>Int</span><span class='hs-layout'>,</span> <span class='hs-keyglyph'>[</span><span class='hs-conid'>Int</span><span class='hs-keyglyph'>]</span><span class='hs-layout'>)</span><span class='hs-layout'>)</span>
+<span class=hs-linenum>30: </span><a class=annot href="#"><span class=annottext>GHC.Types.Int -&gt; (GHC.Types.IO (Data.Either.Either Data.Text.Internal.Text (GHC.Types.Int, [GHC.Types.Int])))</span><span class='hs-definition'>genARandomPreFactoredNumberLEn</span></a> <a class=annot href="#"><span class=annottext>GHC.Types.Int</span><span class='hs-varid'>x</span></a> <span class='hs-keyglyph'>|</span> <a class=annot href="#"><span class=annottext>{v : GHC.Types.Int | v == x##a3Hr}</span><span class='hs-varid'>x</span></a> <span class='hs-varop'>&lt;=</span> <a class=annot href="#"><span class=annottext>GHC.Types.Int</span><span class='hs-num'>0</span></a> <span class='hs-keyglyph'>=</span> <a class=annot href="#"><span class=annottext>(Data.Either.Either Data.Text.Internal.Text (GHC.Types.Int, [GHC.Types.Int])) -&gt; (GHC.Types.IO (Data.Either.Either Data.Text.Internal.Text (GHC.Types.Int, [GHC.Types.Int])))</span><span class='hs-varid'>pure</span></a> <span class='hs-varop'>$</span> <a class=annot href="#"><span class=annottext>{v : (Data.Either.Either Data.Text.Internal.Text (GHC.Types.Int, [GHC.Types.Int])) | isLeft v}</span><span class='hs-conid'>Left</span></a> <span class='hs-varop'>$</span> <a class=annot href="#"><span class=annottext>Data.Text.Internal.Text</span><span class='hs-varid'>pack</span></a> <a class=annot href="#"><span class=annottext>[GHC.Types.Char]</span><span class='hs-str'>"Invalid"</span></a>
+<span class=hs-linenum>31: </span><span class='hs-definition'>genARandomPreFactoredNumberLEn</span> <span class='hs-num'>1</span> <span class='hs-keyglyph'>=</span> <a class=annot href="#"><span class=annottext>(Data.Either.Either Data.Text.Internal.Text (GHC.Types.Int, [GHC.Types.Int])) -&gt; (GHC.Types.IO (Data.Either.Either Data.Text.Internal.Text (GHC.Types.Int, [GHC.Types.Int])))</span><span class='hs-varid'>pure</span></a> <span class='hs-varop'>$</span> <a class=annot href="#"><span class=annottext>{v : (Data.Either.Either Data.Text.Internal.Text (GHC.Types.Int, [GHC.Types.Int])) | not (isLeft v)}</span><span class='hs-conid'>Right</span></a> <a class=annot href="#"><span class=annottext>(GHC.Types.Int, [GHC.Types.Int])</span><span class='hs-layout'>(</span></a><a class=annot href="#"><span class=annottext>GHC.Types.Int</span><span class='hs-num'>1</span></a><span class='hs-layout'>,</span> <a class=annot href="#"><span class=annottext>[GHC.Types.Int]</span><span class='hs-keyglyph'>[</span></a><a class=annot href="#"><span class=annottext>GHC.Types.Int</span><span class='hs-num'>1</span></a><span class='hs-keyglyph'>]</span><span class='hs-layout'>)</span>
+<span class=hs-linenum>32: </span><span class='hs-definition'>genARandomPreFactoredNumberLEn</span> <span class='hs-varid'>n</span> <span class='hs-keyglyph'>|</span> <a class=annot href="#"><span class=annottext>{v : GHC.Types.Int | v == x##a3Hr}</span><span class='hs-varid'>n</span></a> <span class='hs-varop'>&gt;=</span> <a class=annot href="#"><span class=annottext>GHC.Types.Int</span><span class='hs-num'>2</span></a> <span class='hs-keyglyph'>=</span> <span class='hs-keyword'>do</span>
+<span class=hs-linenum>33: </span>  <a class=annot href="#"><span class=annottext>(Data.Either.Either [GHC.Types.Char] {v : GHC.Types.Int | $VV##1820##k_ /= 0
+                                                          &amp;&amp; $VV##1820##k_ /= $lq_anf$##7205759403792817765##d6hL##k_
+                                                          &amp;&amp; $VV##1820##k_ /= $lq_anf$##7205759403792817766##d6hM##k_
+                                                          &amp;&amp; $VV##1820##k_ &gt; 0
+                                                          &amp;&amp; $VV##1820##k_ &gt; $lq_anf$##7205759403792817765##d6hL##k_
+                                                          &amp;&amp; $VV##1820##k_ &gt; $lq_anf$##7205759403792817766##d6hM##k_
+                                                          &amp;&amp; $VV##1820##k_ &gt;= 0
+                                                          &amp;&amp; $VV##1820##k_ &gt;= $lq_anf$##7205759403792817765##d6hL##k_
+                                                          &amp;&amp; $VV##1820##k_ &gt;= $lq_anf$##7205759403792817766##d6hM##k_
+                                                          &amp;&amp; $VV##1820##k_ &gt;= $lq_anf$##7205759403792817771##d6hR##k_
+                                                          &amp;&amp; $VV##1820##k_ &gt;= $lq_anf$##7205759403792817772##d6hS##k_
+                                                          &amp;&amp; $VV##1820##k_ &gt;= $lq_anf$##7205759403792817779##d6hZ##k_
+                                                          &amp;&amp; $VV##1820##k_ &gt;= $lq_anf$##7205759403792817780##d6i0##k_
+                                                          &amp;&amp; 0 &lt; $VV##1820##k_
+                                                          &amp;&amp; 2 &lt;= $VV##1820##k_})</span><span class='hs-varid'>rndM</span></a> <span class='hs-keyglyph'>&lt;-</span> <a class=annot href="#"><span class=annottext>(GHC.Types.IO (Data.Either.Either [GHC.Types.Char] {v : GHC.Types.Int | $VV##1820##k_ /= 0
+                                                                        &amp;&amp; $VV##1820##k_ /= $lq_anf$##7205759403792817765##d6hL##k_
+                                                                        &amp;&amp; $VV##1820##k_ /= $lq_anf$##7205759403792817766##d6hM##k_
+                                                                        &amp;&amp; $VV##1820##k_ &gt; 0
+                                                                        &amp;&amp; $VV##1820##k_ &gt; $lq_anf$##7205759403792817765##d6hL##k_
+                                                                        &amp;&amp; $VV##1820##k_ &gt; $lq_anf$##7205759403792817766##d6hM##k_
+                                                                        &amp;&amp; $VV##1820##k_ &gt;= 0
+                                                                        &amp;&amp; $VV##1820##k_ &gt;= $lq_anf$##7205759403792817765##d6hL##k_
+                                                                        &amp;&amp; $VV##1820##k_ &gt;= $lq_anf$##7205759403792817766##d6hM##k_
+                                                                        &amp;&amp; $VV##1820##k_ &gt;= $lq_anf$##7205759403792817771##d6hR##k_
+                                                                        &amp;&amp; $VV##1820##k_ &gt;= $lq_anf$##7205759403792817772##d6hS##k_
+                                                                        &amp;&amp; $VV##1820##k_ &gt;= $lq_anf$##7205759403792817779##d6hZ##k_
+                                                                        &amp;&amp; $VV##1820##k_ &gt;= $lq_anf$##7205759403792817780##d6i0##k_
+                                                                        &amp;&amp; 0 &lt; $VV##1820##k_
+                                                                        &amp;&amp; 2 &lt;= $VV##1820##k_}))</span><span class='hs-varid'>fmap</span></a> <a class=annot href="#"><span class=annottext>GHC.Types.Int -&gt; (Data.Either.Either [GHC.Types.Char] {v : GHC.Types.Int | 2 &lt;= v})</span><span class='hs-varid'>filterInvalid</span></a> <a class=annot href="#"><span class=annottext>(GHC.Types.IO GHC.Types.Int)</span><span class='hs-layout'>(</span></a><span class='hs-varid'>getRndMInt</span> <a class=annot href="#"><span class=annottext>{v : (GHC.Types.Int, GHC.Types.Int) | snd v == x##a3Hr
+                                      &amp;&amp; x_Tuple22 v == x##a3Hr}</span><span class='hs-layout'>(</span></a><a class=annot href="#"><span class=annottext>GHC.Types.Int</span><span class='hs-num'>2</span></a><span class='hs-layout'>,</span> <a class=annot href="#"><span class=annottext>{v : GHC.Types.Int | v == x##a3Hr}</span><span class='hs-varid'>n</span></a><span class='hs-layout'>)</span><span class='hs-layout'>)</span>
+<span class=hs-linenum>34: </span>  <span class='hs-keyword'>case</span> <a class=annot href="#"><span class=annottext>{v : (Data.Either.Either [GHC.Types.Char] {v : GHC.Types.Int | $VV##1820##k_ /= 0
+                                                               &amp;&amp; $VV##1820##k_ /= $lq_anf$##7205759403792817765##d6hL##k_
+                                                               &amp;&amp; $VV##1820##k_ /= $lq_anf$##7205759403792817766##d6hM##k_
+                                                               &amp;&amp; $VV##1820##k_ &gt; 0
+                                                               &amp;&amp; $VV##1820##k_ &gt; $lq_anf$##7205759403792817765##d6hL##k_
+                                                               &amp;&amp; $VV##1820##k_ &gt; $lq_anf$##7205759403792817766##d6hM##k_
+                                                               &amp;&amp; $VV##1820##k_ &gt;= 0
+                                                               &amp;&amp; $VV##1820##k_ &gt;= $lq_anf$##7205759403792817765##d6hL##k_
+                                                               &amp;&amp; $VV##1820##k_ &gt;= $lq_anf$##7205759403792817766##d6hM##k_
+                                                               &amp;&amp; $VV##1820##k_ &gt;= $lq_anf$##7205759403792817771##d6hR##k_
+                                                               &amp;&amp; $VV##1820##k_ &gt;= $lq_anf$##7205759403792817772##d6hS##k_
+                                                               &amp;&amp; $VV##1820##k_ &gt;= $lq_anf$##7205759403792817779##d6hZ##k_
+                                                               &amp;&amp; $VV##1820##k_ &gt;= $lq_anf$##7205759403792817780##d6i0##k_
+                                                               &amp;&amp; 0 &lt; $VV##1820##k_
+                                                               &amp;&amp; 2 &lt;= $VV##1820##k_}) | v == rndM##a3Ht}</span><span class='hs-varid'>rndM</span></a> <span class='hs-keyword'>of</span>
+<span class=hs-linenum>35: </span>    <span class='hs-conid'>Left</span> <span class='hs-keyword'>_</span> <span class='hs-keyglyph'>-&gt;</span> <a class=annot href="#"><span class=annottext>(Data.Either.Either Data.Text.Internal.Text (GHC.Types.Int, [GHC.Types.Int])) -&gt; (GHC.Types.IO (Data.Either.Either Data.Text.Internal.Text (GHC.Types.Int, [GHC.Types.Int])))</span><span class='hs-varid'>pure</span></a> <span class='hs-varop'>$</span> <a class=annot href="#"><span class=annottext>{v : (Data.Either.Either Data.Text.Internal.Text (GHC.Types.Int, [GHC.Types.Int])) | isLeft v}</span><span class='hs-conid'>Left</span></a> <span class='hs-varop'>$</span> <a class=annot href="#"><span class=annottext>Data.Text.Internal.Text</span><span class='hs-varid'>pack</span></a> <a class=annot href="#"><span class=annottext>[GHC.Types.Char]</span><span class='hs-str'>"Invalid"</span></a>
+<span class=hs-linenum>36: </span>    <span class='hs-conid'>Right</span> <span class='hs-varid'>upper</span> <span class='hs-keyglyph'>-&gt;</span> <a class=annot href="#"><span class=annottext>{VV : forall a . GHC.Types.Bool -&gt; a -&gt; a -&gt; a | VV == if'}</span><span class='hs-varid'>if'</span></a> <a class=annot href="#"><span class=annottext>{v : GHC.Types.Bool | v &lt;=&gt; ps##a3KH &lt;= x##a3Hr}</span><span class='hs-layout'>(</span></a><a class=annot href="#"><span class=annottext>{v : GHC.Types.Int | v == ps##a3KH}</span><span class='hs-varid'>ps</span></a> <span class='hs-varop'>&lt;=</span> <a class=annot href="#"><span class=annottext>{v : GHC.Types.Int | v == x##a3Hr}</span><span class='hs-varid'>n</span></a><span class='hs-layout'>)</span> <a class=annot href="#"><span class=annottext>(GHC.Types.IO (Data.Either.Either Data.Text.Internal.Text (GHC.Types.Int, [GHC.Types.Int])))</span><span class='hs-layout'>(</span></a><a class=annot href="#"><span class=annottext>(Data.Either.Either Data.Text.Internal.Text (GHC.Types.Int, [GHC.Types.Int])) -&gt; (GHC.Types.IO (Data.Either.Either Data.Text.Internal.Text (GHC.Types.Int, [GHC.Types.Int])))</span><span class='hs-varid'>pure</span></a> <span class='hs-varop'>$</span> <a class=annot href="#"><span class=annottext>{v : (Data.Either.Either Data.Text.Internal.Text (GHC.Types.Int, [GHC.Types.Int])) | not (isLeft v)}</span><span class='hs-conid'>Right</span></a> <a class=annot href="#"><span class=annottext>{v : (GHC.Types.Int, [GHC.Types.Int]) | v == rsp##a3KE}</span><span class='hs-varid'>rsp</span></a><span class='hs-layout'>)</span> <a class=annot href="#"><span class=annottext>(GHC.Types.IO (Data.Either.Either Data.Text.Internal.Text (GHC.Types.Int, [GHC.Types.Int])))</span><span class='hs-layout'>(</span></a><span class='hs-varid'>genARandomPreFactoredNumberLEn</span> <a class=annot href="#"><span class=annottext>{v : GHC.Types.Int | v == x##a3Hr}</span><span class='hs-varid'>n</span></a><span class='hs-layout'>)</span> <span class='hs-comment'>-- Data.bool.HT if'</span>
+<span class=hs-linenum>37: </span>      <span class='hs-keyword'>where</span>
+<span class=hs-linenum>38: </span>        <a class=annot href="#"><span class=annottext>(GHC.Types.Int, [GHC.Types.Int])</span><span class='hs-varid'>rsp</span></a><span class='hs-keyglyph'>@</span><span class='hs-layout'>(</span><a class=annot href="#"><span class=annottext>GHC.Types.Int</span><span class='hs-varid'>ps</span></a><span class='hs-layout'>,</span> <a class=annot href="#"><span class=annottext>{VV##2059 : [GHC.Types.Int] | false}</span><span class='hs-varid'>sq</span></a><span class='hs-layout'>)</span> <span class='hs-keyglyph'>=</span> <a class=annot href="#"><span class=annottext>({v : GHC.Types.Int | false}, {v : [GHC.Types.Int] | false})&lt;\_ VV -&gt; {v : [GHC.Types.Int] | false}&gt;</span><span class='hs-layout'>(</span></a><a class=annot href="#"><span class=annottext>GHC.Types.Int</span><span class='hs-varid'>product</span></a> <a class=annot href="#"><span class=annottext>{VV##2059 : [GHC.Types.Int] | false}</span><span class='hs-varid'>sq</span></a><span class='hs-layout'>,</span> <a class=annot href="#"><span class=annottext>{v : [{v : GHC.Types.Int | v &gt;= 0
+                           &amp;&amp; 0 &lt; v}] | 1 &lt;= len v}</span><span class='hs-varid'>createSeq</span></a> <a class=annot href="#"><span class=annottext>{v : GHC.Types.Int | v == upper##a3Hu
+                     &amp;&amp; $VV##1820##k_ /= 0
+                     &amp;&amp; $VV##1820##k_ /= $lq_anf$##7205759403792817765##d6hL##k_
+                     &amp;&amp; $VV##1820##k_ /= $lq_anf$##7205759403792817766##d6hM##k_
+                     &amp;&amp; $VV##1820##k_ &gt; 0
+                     &amp;&amp; $VV##1820##k_ &gt; $lq_anf$##7205759403792817765##d6hL##k_
+                     &amp;&amp; $VV##1820##k_ &gt; $lq_anf$##7205759403792817766##d6hM##k_
+                     &amp;&amp; $VV##1820##k_ &gt;= 0
+                     &amp;&amp; $VV##1820##k_ &gt;= $lq_anf$##7205759403792817765##d6hL##k_
+                     &amp;&amp; $VV##1820##k_ &gt;= $lq_anf$##7205759403792817766##d6hM##k_
+                     &amp;&amp; $VV##1820##k_ &gt;= $lq_anf$##7205759403792817771##d6hR##k_
+                     &amp;&amp; $VV##1820##k_ &gt;= $lq_anf$##7205759403792817772##d6hS##k_
+                     &amp;&amp; $VV##1820##k_ &gt;= $lq_anf$##7205759403792817779##d6hZ##k_
+                     &amp;&amp; $VV##1820##k_ &gt;= $lq_anf$##7205759403792817780##d6i0##k_
+                     &amp;&amp; 0 &lt; $VV##1820##k_
+                     &amp;&amp; 2 &lt;= $VV##1820##k_}</span><span class='hs-varid'>upper</span></a><span class='hs-layout'>)</span> <span class='hs-comment'>-- Haskell as-pattern @</span>
+<span class=hs-linenum>39: </span><span class='hs-definition'>genARandomPreFactoredNumberLEn</span> <span class='hs-keyword'>_</span> <span class='hs-keyglyph'>=</span> <a class=annot href="#"><span class=annottext>(Data.Either.Either Data.Text.Internal.Text (GHC.Types.Int, [GHC.Types.Int])) -&gt; (GHC.Types.IO (Data.Either.Either Data.Text.Internal.Text (GHC.Types.Int, [GHC.Types.Int])))</span><span class='hs-varid'>pure</span></a> <span class='hs-varop'>$</span> <a class=annot href="#"><span class=annottext>{v : (Data.Either.Either Data.Text.Internal.Text (GHC.Types.Int, [GHC.Types.Int])) | isLeft v}</span><span class='hs-conid'>Left</span></a> <span class='hs-varop'>$</span> <a class=annot href="#"><span class=annottext>Data.Text.Internal.Text</span><span class='hs-varid'>pack</span></a> <a class=annot href="#"><span class=annottext>[GHC.Types.Char]</span><span class='hs-str'>"Invalid"</span></a>
+<span class=hs-linenum>40: </span>
+<span class=hs-linenum>41: </span><span class='hs-keyword'>{-@</span> <span class='hs-varid'>lazy</span> <span class='hs-varid'>createSeq</span> <span class='hs-keyword'>@-}</span>
+<span class=hs-linenum>42: </span><span class='hs-comment'>-- disabling termination checking</span>
+<span class=hs-linenum>43: </span><span class='hs-keyword'>{-@</span> <span class='hs-varid'>createSeq</span> <span class='hs-keyglyph'>::</span> <span class='hs-conid'>Pos</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-conid'>PrimeFactors</span> <span class='hs-keyword'>@-}</span>
+<span class=hs-linenum>44: </span><span class='hs-comment'>-- | Creates a sequence of prime ints below the input integer.</span>
+<span class=hs-linenum>45: </span><span class='hs-comment'>-- The input has to be positive int. </span>
+<span class=hs-linenum>46: </span><span class='hs-comment'>-- The output will then be a list of primes (of positive ints).</span>
+<span class=hs-linenum>47: </span><span class='hs-definition'>createSeq</span> <span class='hs-keyglyph'>::</span> <span class='hs-conid'>Int</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-keyglyph'>[</span><span class='hs-conid'>Int</span><span class='hs-keyglyph'>]</span>
+<span class=hs-linenum>48: </span><a class=annot href="#"><span class=annottext>{VV##0 : GHC.Types.Int | VV##0 &gt;= 0
                          &amp;&amp; 0 &lt; VV##0} -&gt; {VV##0 : [{VV##0 : GHC.Types.Int | VV##0 &gt;= 0
                                                                              &amp;&amp; 0 &lt; VV##0}] | 1 &lt;= len VV##0}</span><span class='hs-definition'>createSeq</span></a> <span class='hs-num'>1</span> <span class='hs-keyglyph'>=</span> <a class=annot href="#"><span class=annottext>{v : [GHC.Types.Int] | len v == 0}</span><span class='hs-keyglyph'>[</span></a><a class=annot href="#"><span class=annottext>GHC.Types.Int</span><span class='hs-num'>1</span></a><span class='hs-keyglyph'>]</span>
-<span class=hs-linenum>48: </span><span class='hs-definition'>createSeq</span> <span class='hs-varid'>n</span> <span class='hs-keyglyph'>|</span> <a class=annot href="#"><span class=annottext>{v : GHC.Types.Int | v &gt;= 0
+<span class=hs-linenum>49: </span><span class='hs-definition'>createSeq</span> <span class='hs-varid'>n</span> <span class='hs-keyglyph'>|</span> <a class=annot href="#"><span class=annottext>{v : GHC.Types.Int | v &gt;= 0
                      &amp;&amp; 0 &lt; v}</span><span class='hs-varid'>n</span></a> <span class='hs-varop'>&gt;=</span> <a class=annot href="#"><span class=annottext>GHC.Types.Int</span><span class='hs-num'>2</span></a> <span class='hs-keyglyph'>=</span> <span class='hs-keyword'>case</span> <a class=annot href="#"><span class=annottext>GHC.Types.Int -&gt; (Data.Either.Either [GHC.Types.Char] {v : GHC.Types.Int | v &gt;= 0
                                                                            &amp;&amp; 0 &lt; v})</span><span class='hs-varid'>filterInvalidNonPos</span></a> <span class='hs-varop'>$</span> <a class=annot href="#"><span class=annottext>{v : GHC.Types.Int | v &gt;= 0
                      &amp;&amp; 0 &lt; v}</span><span class='hs-varid'>firstPrimeLE</span></a> <a class=annot href="#"><span class=annottext>{v : GHC.Types.Int | v &gt;= 0
                      &amp;&amp; 0 &lt; v}</span><span class='hs-varid'>n</span></a> <span class='hs-keyword'>of</span>
-<span class=hs-linenum>49: </span>  <span class='hs-conid'>Left</span> <span class='hs-keyword'>_</span> <span class='hs-keyglyph'>-&gt;</span> <a class=annot href="#"><span class=annottext>{VV##0 : GHC.Types.Int | VV##0 &gt;= 0
+<span class=hs-linenum>50: </span>  <span class='hs-conid'>Left</span> <span class='hs-keyword'>_</span> <span class='hs-keyglyph'>-&gt;</span> <a class=annot href="#"><span class=annottext>{VV##0 : GHC.Types.Int | VV##0 &gt;= 0
                          &amp;&amp; 0 &lt; VV##0} -&gt; {VV##0 : [{VV##0 : GHC.Types.Int | VV##0 &gt;= 0
                                                                              &amp;&amp; 0 &lt; VV##0}] | 1 &lt;= len VV##0}</span><span class='hs-varid'>createSeq</span></a> <a class=annot href="#"><span class=annottext>GHC.Types.Int</span><span class='hs-num'>1</span></a>
-<span class=hs-linenum>50: </span>  <span class='hs-conid'>Right</span> <span class='hs-varid'>okN</span> <span class='hs-keyglyph'>-&gt;</span> <a class=annot href="#"><span class=annottext>{v : GHC.Types.Int | v &gt;= 0
+<span class=hs-linenum>51: </span>  <span class='hs-conid'>Right</span> <span class='hs-varid'>okN</span> <span class='hs-keyglyph'>-&gt;</span> <a class=annot href="#"><span class=annottext>{v : GHC.Types.Int | v &gt;= 0
                      &amp;&amp; 0 &lt; v} -&gt; {v : [{v : GHC.Types.Int | v &gt;= 0
-                                                             &amp;&amp; 0 &lt; v}] | 1 &lt;= len v}</span><span class='hs-varid'>lstPrimesLE</span></a> <a class=annot href="#"><span class=annottext>{v : GHC.Types.Int | v == okN##a7dZ
+                                                             &amp;&amp; 0 &lt; v}] | 1 &lt;= len v}</span><span class='hs-varid'>lstPrimesLE</span></a> <a class=annot href="#"><span class=annottext>{v : GHC.Types.Int | v == okN##a3Hz
                      &amp;&amp; v &gt;= 0
                      &amp;&amp; 0 &lt; v}</span><span class='hs-varid'>okN</span></a>
-<span class=hs-linenum>51: </span><span class='hs-definition'>createSeq</span> <span class='hs-keyword'>_</span> <span class='hs-keyglyph'>=</span> <a class=annot href="#"><span class=annottext>{VV : forall a . {v : [GHC.Types.Char] | false} -&gt; a | VV == die}</span><span class='hs-varid'>die</span></a> <a class=annot href="#"><span class=annottext>[GHC.Types.Char]</span><span class='hs-str'>"impossible"</span></a>
-<span class=hs-linenum>52: </span>
-<span class=hs-linenum>53: </span><span class='hs-keyword'>{-@</span> <span class='hs-varid'>lstPrimesLE</span> <span class='hs-keyglyph'>::</span> <span class='hs-conid'>Pos</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-conid'>PrimeFactors</span> <span class='hs-keyword'>@-}</span>
-<span class=hs-linenum>54: </span>
+<span class=hs-linenum>52: </span><span class='hs-definition'>createSeq</span> <span class='hs-keyword'>_</span> <span class='hs-keyglyph'>=</span> <a class=annot href="#"><span class=annottext>{VV : forall a . {v : [GHC.Types.Char] | false} -&gt; a | VV == die}</span><span class='hs-varid'>die</span></a> <a class=annot href="#"><span class=annottext>[GHC.Types.Char]</span><span class='hs-str'>"impossible"</span></a>
+<span class=hs-linenum>53: </span>
+<span class=hs-linenum>54: </span><span class='hs-keyword'>{-@</span> <span class='hs-varid'>lstPrimesLE</span> <span class='hs-keyglyph'>::</span> <span class='hs-conid'>Pos</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-conid'>PrimeFactors</span> <span class='hs-keyword'>@-}</span>
 <span class=hs-linenum>55: </span><span class='hs-comment'>-- | Retrieve a list of Primes less than or equal to</span>
-<span class=hs-linenum>56: </span><span class='hs-comment'>-- the input provided See also 'firstPrimeLE'</span>
-<span class=hs-linenum>57: </span><span class='hs-definition'>lstPrimesLE</span> <span class='hs-keyglyph'>::</span> <span class='hs-conid'>Int</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-keyglyph'>[</span><span class='hs-conid'>Int</span><span class='hs-keyglyph'>]</span>
-<span class=hs-linenum>58: </span><a class=annot href="#"><span class=annottext>{VV##0 : GHC.Types.Int | VV##0 &gt;= 0
+<span class=hs-linenum>56: </span><span class='hs-comment'>-- the input provided. See also 'firstPrimeLE'. </span>
+<span class=hs-linenum>57: </span><span class='hs-comment'>-- Argument has to be positive int. </span>
+<span class=hs-linenum>58: </span><span class='hs-comment'>-- Output will be a list of Prime (and positive ints)</span>
+<span class=hs-linenum>59: </span><span class='hs-definition'>lstPrimesLE</span> <span class='hs-keyglyph'>::</span> <span class='hs-conid'>Int</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-keyglyph'>[</span><span class='hs-conid'>Int</span><span class='hs-keyglyph'>]</span>
+<span class=hs-linenum>60: </span><a class=annot href="#"><span class=annottext>{VV##0 : GHC.Types.Int | VV##0 &gt;= 0
                          &amp;&amp; 0 &lt; VV##0} -&gt; {VV##0 : [{VV##0 : GHC.Types.Int | VV##0 &gt;= 0
                                                                              &amp;&amp; 0 &lt; VV##0}] | 1 &lt;= len VV##0}</span><span class='hs-definition'>lstPrimesLE</span></a> <span class='hs-num'>1</span> <span class='hs-keyglyph'>=</span> <a class=annot href="#"><span class=annottext>{v : [GHC.Types.Int] | len v == 0}</span><span class='hs-keyglyph'>[</span></a><a class=annot href="#"><span class=annottext>GHC.Types.Int</span><span class='hs-num'>1</span></a><span class='hs-keyglyph'>]</span>
-<span class=hs-linenum>59: </span><span class='hs-definition'>lstPrimesLE</span> <span class='hs-varid'>n</span> <span class='hs-keyglyph'>|</span> <a class=annot href="#"><span class=annottext>{v : GHC.Types.Int | v &gt;= 0
-                     &amp;&amp; 0 &lt; v}</span><span class='hs-varid'>n</span></a> <span class='hs-varop'>&gt;=</span> <a class=annot href="#"><span class=annottext>GHC.Types.Int</span><span class='hs-num'>2</span></a> <span class='hs-keyglyph'>=</span> <a class=annot href="#"><span class=annottext>GHC.Types.Int</span><span class='hs-num'>1</span></a> <span class='hs-conop'>:</span> <a class=annot href="#"><span class=annottext>{v : [{v : GHC.Types.Int | $VV##621##k_ /= 0
-                           &amp;&amp; $VV##621##k_ &gt; 0
-                           &amp;&amp; $VV##621##k_ &gt;= 0
-                           &amp;&amp; $VV##621##k_ &gt;= $lq_anf$##7205759403792821728##d7jG##k_
-                           &amp;&amp; $VV##621##k_ &gt;= $lq_anf$##7205759403792821729##d7jH##k_
-                           &amp;&amp; 0 &lt; $VV##621##k_}] | len $VV##626##k_ &gt;= 0
-                                                   &amp;&amp; len $VV##626##k_ &lt;= len $ds_d7in##k_}</span><span class='hs-keyglyph'>[</span></a><a class=annot href="#"><span class=annottext>GHC.Types.Int</span><span class='hs-varid'>x</span></a> <span class='hs-keyglyph'>|</span> <span class='hs-varid'>x</span> <span class='hs-keyglyph'>&lt;-</span> <a class=annot href="#"><span class=annottext>[GHC.Types.Int]</span><span class='hs-keyglyph'>[</span></a><a class=annot href="#"><span class=annottext>GHC.Types.Int</span><span class='hs-num'>1</span></a> <span class='hs-keyglyph'>..</span> <a class=annot href="#"><span class=annottext>{v : GHC.Types.Int | v &gt;= 0
+<span class=hs-linenum>61: </span><span class='hs-definition'>lstPrimesLE</span> <span class='hs-varid'>n</span> <span class='hs-keyglyph'>|</span> <a class=annot href="#"><span class=annottext>{v : GHC.Types.Int | v &gt;= 0
+                     &amp;&amp; 0 &lt; v}</span><span class='hs-varid'>n</span></a> <span class='hs-varop'>&gt;=</span> <a class=annot href="#"><span class=annottext>GHC.Types.Int</span><span class='hs-num'>2</span></a> <span class='hs-keyglyph'>=</span> <a class=annot href="#"><span class=annottext>GHC.Types.Int</span><span class='hs-num'>1</span></a> <span class='hs-conop'>:</span> <a class=annot href="#"><span class=annottext>{v : [{v : GHC.Types.Int | $VV##616##k_ /= 0
+                           &amp;&amp; $VV##616##k_ &gt; 0
+                           &amp;&amp; $VV##616##k_ &gt;= 0
+                           &amp;&amp; $VV##616##k_ &gt;= $lq_anf$##7205759403792817716##d6gY##k_
+                           &amp;&amp; $VV##616##k_ &gt;= $lq_anf$##7205759403792817717##d6gZ##k_
+                           &amp;&amp; 0 &lt; $VV##616##k_}] | len $VV##621##k_ &gt;= 0
+                                                   &amp;&amp; len $VV##621##k_ &lt;= len $ds_d6fv##k_}</span><span class='hs-keyglyph'>[</span></a><a class=annot href="#"><span class=annottext>GHC.Types.Int</span><span class='hs-varid'>x</span></a> <span class='hs-keyglyph'>|</span> <span class='hs-varid'>x</span> <span class='hs-keyglyph'>&lt;-</span> <a class=annot href="#"><span class=annottext>[GHC.Types.Int]</span><span class='hs-keyglyph'>[</span></a><a class=annot href="#"><span class=annottext>GHC.Types.Int</span><span class='hs-num'>1</span></a> <span class='hs-keyglyph'>..</span> <a class=annot href="#"><span class=annottext>{v : GHC.Types.Int | v &gt;= 0
                      &amp;&amp; 0 &lt; v}</span><span class='hs-varid'>n</span></a><span class='hs-keyglyph'>]</span><span class='hs-layout'>,</span> <a class=annot href="#"><span class=annottext>GHC.Types.Int</span><span class='hs-varid'>x</span></a> <span class='hs-varop'>&gt;</span> <a class=annot href="#"><span class=annottext>GHC.Types.Int</span><span class='hs-num'>0</span></a><span class='hs-layout'>,</span> <a class=annot href="#"><span class=annottext>GHC.Types.Bool</span><span class='hs-varid'>isPrime</span></a> <a class=annot href="#"><span class=annottext>GHC.Types.Int</span><span class='hs-varid'>x</span></a><span class='hs-keyglyph'>]</span> <span class='hs-comment'>-- the "1: " is there to 'prove' to the SMT solver that the len lst &gt; 0 equivalent to the defn of PrimeFactors</span>
-<span class=hs-linenum>60: </span><span class='hs-definition'>lstPrimesLE</span> <span class='hs-keyword'>_</span> <span class='hs-keyglyph'>=</span> <a class=annot href="#"><span class=annottext>{VV : forall a . {v : [GHC.Types.Char] | false} -&gt; a | VV == die}</span><span class='hs-varid'>die</span></a> <a class=annot href="#"><span class=annottext>[GHC.Types.Char]</span><span class='hs-str'>"impossible"</span></a>
-<span class=hs-linenum>61: </span>
-<span class=hs-linenum>62: </span><span class='hs-comment'>-- {-@ lazy firstPrimeLE @-} -- disabling termination checking</span>
-<span class=hs-linenum>63: </span><span class='hs-comment'>-- {-@ firstPrimeLE :: Pos -&gt; {v:Pos | v==1 || isPrime v} @-}</span>
-<span class=hs-linenum>64: </span><span class='hs-comment'>-- it would be nice to have the above refinement working; it's tighter on the output</span>
-<span class=hs-linenum>65: </span>
-<span class=hs-linenum>66: </span><span class='hs-comment'>-- | Retrieve the first Prime less than or equal to</span>
-<span class=hs-linenum>67: </span><span class='hs-comment'>-- the input provided See also 'lstPrimesLE'</span>
-<span class=hs-linenum>68: </span>
-<span class=hs-linenum>69: </span><span class='hs-keyword'>{-@</span> <span class='hs-varid'>firstPrimeLE</span> <span class='hs-keyglyph'>::</span> <span class='hs-conid'>Pos</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-conid'>Pos</span> <span class='hs-keyword'>@-}</span>
-<span class=hs-linenum>70: </span><span class='hs-definition'>firstPrimeLE</span> <span class='hs-keyglyph'>::</span> <span class='hs-conid'>Int</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-conid'>Int</span>
-<span class=hs-linenum>71: </span><a class=annot href="#"><span class=annottext>{VV##0 : GHC.Types.Int | VV##0 &gt;= 0
+<span class=hs-linenum>62: </span><span class='hs-definition'>lstPrimesLE</span> <span class='hs-keyword'>_</span> <span class='hs-keyglyph'>=</span> <a class=annot href="#"><span class=annottext>{VV : forall a . {v : [GHC.Types.Char] | false} -&gt; a | VV == die}</span><span class='hs-varid'>die</span></a> <a class=annot href="#"><span class=annottext>[GHC.Types.Char]</span><span class='hs-str'>"impossible"</span></a>
+<span class=hs-linenum>63: </span>
+<span class=hs-linenum>64: </span><span class='hs-comment'>-- {-@ lazy firstPrimeLE @-} -- disabling termination checking</span>
+<span class=hs-linenum>65: </span><span class='hs-comment'>-- {-@ firstPrimeLE :: Pos -&gt; {v:Pos | v==1 || isPrime v} @-}</span>
+<span class=hs-linenum>66: </span><span class='hs-comment'>-- it would be nice to have the above refinement working; it's tighter on the output</span>
+<span class=hs-linenum>67: </span><span class='hs-comment'>-- | Retrieve the first Prime less than or equal to</span>
+<span class=hs-linenum>68: </span><span class='hs-comment'>-- the input Integer provided. See also 'lstPrimesLE'. </span>
+<span class=hs-linenum>69: </span><span class='hs-comment'>-- The argument has to be positive int.</span>
+<span class=hs-linenum>70: </span><span class='hs-keyword'>{-@</span> <span class='hs-varid'>firstPrimeLE</span> <span class='hs-keyglyph'>::</span> <span class='hs-conid'>Pos</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-conid'>Pos</span> <span class='hs-keyword'>@-}</span>
+<span class=hs-linenum>71: </span><span class='hs-definition'>firstPrimeLE</span> <span class='hs-keyglyph'>::</span> <span class='hs-conid'>Int</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-conid'>Int</span>
+<span class=hs-linenum>72: </span><a class=annot href="#"><span class=annottext>{VV##0 : GHC.Types.Int | VV##0 &gt;= 0
                          &amp;&amp; 0 &lt; VV##0} -&gt; {VV##0 : GHC.Types.Int | VV##0 &gt;= 0
                                                                    &amp;&amp; 0 &lt; VV##0}</span><span class='hs-definition'>firstPrimeLE</span></a> <span class='hs-num'>1</span> <span class='hs-keyglyph'>=</span> <a class=annot href="#"><span class=annottext>{v : GHC.Prim.Int# | v == 1}</span><span class='hs-num'>1</span></a>
-<span class=hs-linenum>72: </span><span class='hs-definition'>firstPrimeLE</span> <span class='hs-varid'>n</span> <span class='hs-keyglyph'>|</span> <a class=annot href="#"><span class=annottext>GHC.Types.Bool</span><span class='hs-varid'>isPrime</span></a> <a class=annot href="#"><span class=annottext>{v : GHC.Types.Int | v &gt;= 0
+<span class=hs-linenum>73: </span><span class='hs-definition'>firstPrimeLE</span> <span class='hs-varid'>n</span> <span class='hs-keyglyph'>|</span> <a class=annot href="#"><span class=annottext>GHC.Types.Bool</span><span class='hs-varid'>isPrime</span></a> <a class=annot href="#"><span class=annottext>{v : GHC.Types.Int | v &gt;= 0
                      &amp;&amp; 0 &lt; v}</span><span class='hs-varid'>n</span></a> <span class='hs-keyglyph'>=</span> <a class=annot href="#"><span class=annottext>{v : GHC.Types.Int | v &gt;= 0
                      &amp;&amp; 0 &lt; v}</span><span class='hs-varid'>n</span></a>
-<span class=hs-linenum>73: </span><span class='hs-definition'>firstPrimeLE</span> <span class='hs-varid'>n</span> <span class='hs-keyglyph'>|</span> <a class=annot href="#"><span class=annottext>{v : GHC.Types.Int | v &gt;= 0
+<span class=hs-linenum>74: </span><span class='hs-definition'>firstPrimeLE</span> <span class='hs-varid'>n</span> <span class='hs-keyglyph'>|</span> <a class=annot href="#"><span class=annottext>{v : GHC.Types.Int | v &gt;= 0
                      &amp;&amp; 0 &lt; v}</span><span class='hs-varid'>n</span></a> <span class='hs-varop'>&gt;</span> <a class=annot href="#"><span class=annottext>GHC.Types.Int</span><span class='hs-num'>0</span></a> <span class='hs-keyglyph'>=</span> <a class=annot href="#"><span class=annottext>{VV##0 : GHC.Types.Int | VV##0 &gt;= 0
                          &amp;&amp; 0 &lt; VV##0} -&gt; {VV##0 : GHC.Types.Int | VV##0 &gt;= 0
                                                                    &amp;&amp; 0 &lt; VV##0}</span><span class='hs-varid'>firstPrimeLE</span></a> <a class=annot href="#"><span class=annottext>GHC.Types.Int</span><span class='hs-layout'>(</span></a><a class=annot href="#"><span class=annottext>{v : GHC.Types.Int | v &gt;= 0
                      &amp;&amp; 0 &lt; v}</span><span class='hs-varid'>n</span></a> <span class='hs-comment'>-</span> <a class=annot href="#"><span class=annottext>GHC.Types.Int</span><span class='hs-num'>1</span></a><span class='hs-layout'>)</span>
-<span class=hs-linenum>74: </span><span class='hs-definition'>firstPrimeLE</span> <span class='hs-keyword'>_</span> <span class='hs-keyglyph'>=</span> <a class=annot href="#"><span class=annottext>{VV : forall a . {v : [GHC.Types.Char] | false} -&gt; a | VV == die}</span><span class='hs-varid'>die</span></a> <a class=annot href="#"><span class=annottext>[GHC.Types.Char]</span><span class='hs-str'>"impossible"</span></a>
-<span class=hs-linenum>75: </span>
-<span class=hs-linenum>76: </span><span class='hs-comment'>-- helper functions</span>
-<span class=hs-linenum>77: </span><span class='hs-comment'>-- get a random integer given a lower and upper bound</span>
-<span class=hs-linenum>78: </span><span class='hs-definition'>getRndMInt</span> <span class='hs-keyglyph'>::</span> <span class='hs-layout'>(</span><span class='hs-conid'>Int</span><span class='hs-layout'>,</span> <span class='hs-conid'>Int</span><span class='hs-layout'>)</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-conid'>IO</span> <span class='hs-conid'>Int</span>
-<span class=hs-linenum>79: </span><a class=annot href="#"><span class=annottext>({VV##1398 : GHC.Types.Int | $VV##1398##k_ /= 0
-                             &amp;&amp; $VV##1398##k_ &gt; 0
-                             &amp;&amp; $VV##1398##k_ &gt;= 0
-                             &amp;&amp; 0 &lt; $VV##1398##k_
-                             &amp;&amp; 2 &lt;= $VV##1398##k_}, {VV##1400 : GHC.Types.Int | $VV##1400##k_ /= 0
-                                                                                 &amp;&amp; $VV##1400##k_ &gt; 0
-                                                                                 &amp;&amp; $VV##1400##k_ &gt;= 0
-                                                                                 &amp;&amp; 0 &lt; $VV##1400##k_
-                                                                                 &amp;&amp; 2 &lt;= $VV##1400##k_})&lt;\_ VV -&gt; {VV##1403 : GHC.Types.Int | $VV##1403##k_ /= 0
-                                                                                                                                              &amp;&amp; $VV##1403##k_ &gt; 0
-                                                                                                                                              &amp;&amp; $VV##1403##k_ &gt;= 0
-                                                                                                                                              &amp;&amp; $VV##1403##k_ &gt;= $lq_tmp$x##1402##k_
-                                                                                                                                              &amp;&amp; 0 &lt; $VV##1403##k_
-                                                                                                                                              &amp;&amp; 2 &lt;= $VV##1403##k_}&gt; -&gt; (GHC.Types.IO GHC.Types.Int)</span><span class='hs-definition'>getRndMInt</span></a> <span class='hs-layout'>(</span><span class='hs-varid'>l</span><span class='hs-layout'>,</span> <span class='hs-varid'>u</span><span class='hs-layout'>)</span> <span class='hs-keyglyph'>=</span> <a class=annot href="#"><span class=annottext>{v : (System.Random.Internal.StatefulGen (System.Random.Stateful.AtomicGenM System.Random.Internal.StdGen) GHC.Types.IO) | v == $dStatefulGen_a7f3}</span><span class='hs-varid'>uniformRM</span></a> <a class=annot href="#"><span class=annottext>{v : (GHC.Types.Int, GHC.Types.Int) | fst v == l##a7e4
-                                      &amp;&amp; snd v == u##a7e5
-                                      &amp;&amp; x_Tuple21 v == l##a7e4
-                                      &amp;&amp; x_Tuple22 v == u##a7e5}</span><span class='hs-layout'>(</span></a><a class=annot href="#"><span class=annottext>{v : GHC.Types.Int | v == l##a7e4
+<span class=hs-linenum>75: </span><span class='hs-definition'>firstPrimeLE</span> <span class='hs-keyword'>_</span> <span class='hs-keyglyph'>=</span> <a class=annot href="#"><span class=annottext>{VV : forall a . {v : [GHC.Types.Char] | false} -&gt; a | VV == die}</span><span class='hs-varid'>die</span></a> <a class=annot href="#"><span class=annottext>[GHC.Types.Char]</span><span class='hs-str'>"impossible"</span></a>
+<span class=hs-linenum>76: </span>
+<span class=hs-linenum>77: </span><span class='hs-comment'>-- helper functions</span>
+<span class=hs-linenum>78: </span><span class='hs-comment'>-- et a random integer given a lower and upper bound</span>
+<span class=hs-linenum>79: </span><span class='hs-comment'>-- | Get a Random Integer with uniform probability in a range. </span>
+<span class=hs-linenum>80: </span><span class='hs-definition'>getRndMInt</span> <span class='hs-keyglyph'>::</span> <span class='hs-layout'>(</span><span class='hs-conid'>Int</span><span class='hs-layout'>,</span> <span class='hs-conid'>Int</span><span class='hs-layout'>)</span> <span class='hs-keyglyph'>-&gt;</span> <span class='hs-conid'>IO</span> <span class='hs-conid'>Int</span>
+<span class=hs-linenum>81: </span><a class=annot href="#"><span class=annottext>({VV##1393 : GHC.Types.Int | $VV##1393##k_ /= 0
+                             &amp;&amp; $VV##1393##k_ &gt; 0
+                             &amp;&amp; $VV##1393##k_ &gt;= 0
+                             &amp;&amp; 0 &lt; $VV##1393##k_
+                             &amp;&amp; 2 &lt;= $VV##1393##k_}, {VV##1395 : GHC.Types.Int | $VV##1395##k_ /= 0
+                                                                                 &amp;&amp; $VV##1395##k_ &gt; 0
+                                                                                 &amp;&amp; $VV##1395##k_ &gt;= 0
+                                                                                 &amp;&amp; 0 &lt; $VV##1395##k_
+                                                                                 &amp;&amp; 2 &lt;= $VV##1395##k_})&lt;\_ VV -&gt; {VV##1398 : GHC.Types.Int | $VV##1398##k_ /= 0
+                                                                                                                                              &amp;&amp; $VV##1398##k_ &gt; 0
+                                                                                                                                              &amp;&amp; $VV##1398##k_ &gt;= 0
+                                                                                                                                              &amp;&amp; $VV##1398##k_ &gt;= $lq_tmp$x##1397##k_
+                                                                                                                                              &amp;&amp; 0 &lt; $VV##1398##k_
+                                                                                                                                              &amp;&amp; 2 &lt;= $VV##1398##k_}&gt; -&gt; (GHC.Types.IO GHC.Types.Int)</span><span class='hs-definition'>getRndMInt</span></a> <span class='hs-layout'>(</span><span class='hs-varid'>l</span><span class='hs-layout'>,</span> <span class='hs-varid'>u</span><span class='hs-layout'>)</span> <span class='hs-keyglyph'>=</span> <a class=annot href="#"><span class=annottext>{v : (System.Random.Internal.StatefulGen (System.Random.Stateful.AtomicGenM System.Random.Internal.StdGen) GHC.Types.IO) | v == $dStatefulGen_a3ID}</span><span class='hs-varid'>uniformRM</span></a> <a class=annot href="#"><span class=annottext>{v : (GHC.Types.Int, GHC.Types.Int) | fst v == l##a3HE
+                                      &amp;&amp; snd v == u##a3HF
+                                      &amp;&amp; x_Tuple21 v == l##a3HE
+                                      &amp;&amp; x_Tuple22 v == u##a3HF}</span><span class='hs-layout'>(</span></a><a class=annot href="#"><span class=annottext>{v : GHC.Types.Int | v == l##a3HE
+                     &amp;&amp; $VV##1393##k_ /= 0
+                     &amp;&amp; $VV##1393##k_ &gt; 0
+                     &amp;&amp; $VV##1393##k_ &gt;= 0
+                     &amp;&amp; 0 &lt; $VV##1393##k_
+                     &amp;&amp; 2 &lt;= $VV##1393##k_}</span><span class='hs-varid'>l</span></a><span class='hs-layout'>,</span> <a class=annot href="#"><span class=annottext>{v : GHC.Types.Int | v == u##a3HF
+                     &amp;&amp; $VV##1395##k_ /= 0
                      &amp;&amp; $VV##1398##k_ /= 0
+                     &amp;&amp; $VV##1395##k_ &gt; 0
                      &amp;&amp; $VV##1398##k_ &gt; 0
+                     &amp;&amp; $VV##1395##k_ &gt;= 0
                      &amp;&amp; $VV##1398##k_ &gt;= 0
+                     &amp;&amp; $VV##1398##k_ &gt;= $lq_tmp$x##1397##k_
+                     &amp;&amp; 0 &lt; $VV##1395##k_
                      &amp;&amp; 0 &lt; $VV##1398##k_
-                     &amp;&amp; 2 &lt;= $VV##1398##k_}</span><span class='hs-varid'>l</span></a><span class='hs-layout'>,</span> <a class=annot href="#"><span class=annottext>{v : GHC.Types.Int | v == u##a7e5
-                     &amp;&amp; $VV##1400##k_ /= 0
-                     &amp;&amp; $VV##1403##k_ /= 0
-                     &amp;&amp; $VV##1400##k_ &gt; 0
-                     &amp;&amp; $VV##1403##k_ &gt; 0
-                     &amp;&amp; $VV##1400##k_ &gt;= 0
-                     &amp;&amp; $VV##1403##k_ &gt;= 0
-                     &amp;&amp; $VV##1403##k_ &gt;= $lq_tmp$x##1402##k_
-                     &amp;&amp; 0 &lt; $VV##1400##k_
-                     &amp;&amp; 0 &lt; $VV##1403##k_
-                     &amp;&amp; 2 &lt;= $VV##1400##k_
-                     &amp;&amp; 2 &lt;= $VV##1403##k_}</span><span class='hs-varid'>u</span></a><span class='hs-layout'>)</span> <a class=annot href="#"><span class=annottext>{v : (System.Random.Stateful.AtomicGenM System.Random.Internal.StdGen) | v == globalStdGen}</span><span class='hs-varid'>globalStdGen</span></a> <span class='hs-keyglyph'>::</span> <span class='hs-conid'>IO</span> <span class='hs-conid'>Int</span>
+                     &amp;&amp; 2 &lt;= $VV##1395##k_
+                     &amp;&amp; 2 &lt;= $VV##1398##k_}</span><span class='hs-varid'>u</span></a><span class='hs-layout'>)</span> <a class=annot href="#"><span class=annottext>{v : (System.Random.Stateful.AtomicGenM System.Random.Internal.StdGen) | v == globalStdGen}</span><span class='hs-varid'>globalStdGen</span></a> <span class='hs-keyglyph'>::</span> <span class='hs-conid'>IO</span> <span class='hs-conid'>Int</span>
 </pre>
 </body>
 </html>
