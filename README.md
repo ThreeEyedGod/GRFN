@@ -15,15 +15,17 @@ Synopsis
 Uses Refinement Types (LiquidHaskell), Property Testing (QuickCheck), Stan for Static analysis
 
 ### Standard
-hlint; github actions, IDE:Cursor+hoogle-vscode+ormolu
+hlint; github actions, IDE:Cursor+hoogle-vscode+ormolu ; Haddock 
 
 Issues
 -------
 ### Problems
-This was developed on Apple/M1. Liquidhaskell proved difficult to work with stack at this time (late 2023), so used cabal. 
+1. This was developed on Apple/M1. Liquidhaskell proved difficult to work with stack at this time (late 2023), so used cabal. 
+2. Haddock needed an older version: cabal install haddock-2.27.0 --allow-newer
 
 ### To-do
 A test to check the uniform randomness of the output needs to be put in. 
 
-
+### Documentation
+  file:///Users/mandeburung/Documents/grfn/dist-newstyle/build/aarch64-osx/ghc-9.4.7/grfn-0.1.0.0/doc/html/grfn/index.html
 

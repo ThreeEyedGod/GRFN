@@ -27,7 +27,7 @@ import System.Random.Stateful (globalStdGen, uniformRM)
 -- disabling termination checking
 -- | This is the Entry Function
 -- With an integer input it should generate a tuple of a number less than the integer i/p and its factors
-genARandomPreFactoredNumberLEn :: Int -> IO (Either Text (Int, [Int]))
+genARandomPreFactoredNumberLEn :: Int -> IO (Either Text (Int, [Int])) 
 genARandomPreFactoredNumberLEn x | x <= 0 = pure $ Left $ pack "Invalid"
 genARandomPreFactoredNumberLEn 1 = pure $ Right (1, [1])
 genARandomPreFactoredNumberLEn n | n >= 2 = do
@@ -58,6 +58,8 @@ lstPrimesLE _ = die "impossible"
 -- {-@ lazy firstPrimeLE @-} -- disabling termination checking
 -- {-@ firstPrimeLE :: Pos -> {v:Pos | v==1 || isPrime v} @-}
 -- it would be nice to have the above refinement working; it's tighter on the output
+-- | Retrieve the first Prime less than or equal to 
+-- the input provided 
 {-@ firstPrimeLE :: Pos -> Pos @-}
 firstPrimeLE :: Int -> Int
 firstPrimeLE 1 = 1
