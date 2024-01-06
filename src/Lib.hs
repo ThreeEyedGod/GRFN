@@ -1,10 +1,6 @@
 {-# LANGUAGE NoImplicitPrelude #-}
 
-{-- | ... Module header comment
-    genARandomPreFactoredNumberLEn is the external callable function
-    firstPrimeLE and create Seq should not be called externally
--}
-
+-- | Module for accessing this math function
 module Lib
   ( genARandomPreFactoredNumberLEn
     ,firstPrimeLE

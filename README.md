@@ -27,5 +27,5 @@ Issues
 A test to check the uniform randomness of the output needs to be put in. 
 
 ### Documentation
-  file:///Users/mandeburung/Documents/grfn/dist-newstyle/build/aarch64-osx/ghc-9.4.7/grfn-0.1.0.0/doc/html/grfn/index.html
+  ~/grfn/dist-newstyle/build/aarch64-osx/ghc-9.4.7/grfn-0.1.0.0/doc/html/grfn/index.html
 

@@ -1,6 +1,9 @@
 ### Haskell
 dist
-dist-*
+dist-newstyle/cache
+dist-newstyle/packagedb
+dist-newstyle/tmp
+dist-newstyle/build/aarch64-osx/ghc-9.4.7/grfn-0.1.0.0/*
 !/dist-newstyle/build/aarch64-osx/ghc-9.4.7/grfn-0.1.0.0/doc
 cabal-dev
 *.o
