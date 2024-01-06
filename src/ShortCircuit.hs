@@ -1,6 +1,7 @@
 {-# LANGUAGE NoImplicitPrelude #-}
 
 {-@ LIQUID "--skip-module" @-}
+
 -- | Module for nifty functions leveraging lazy evaluation
 module ShortCircuit
   ( -- * Type classes
@@ -89,7 +90,7 @@ lastFalseOf = foldr (&&) true
 
 -- | Returns the first False-sh value of a provided list
 firstFalseOf :: (Shortcircuit a, HasTrue a) => [a] -> a
-firstFalseOf =  foldr (flip (&&)) true  -- foldl (&&) true stan reported that foldl was space-leaking hence moved to the current one
+firstFalseOf = foldr (flip (&&)) true -- foldl (&&) true stan reported that foldl was space-leaking hence moved to the current one
 
 -- | Short-circuit two actions, performing the second only if the first returned a false-ish value.
 orM :: (Monad m, Shortcircuit a) => m a -> m a -> m a
@@ -109,8 +110,7 @@ lastFalseOfM = foldr andM (pure true)
 
 -- | Returns the first False-ish value from a monadic list
 firstFalseOfM :: (Monad m, Shortcircuit a, HasTrue a) => [m a] -> m a
-firstFalseOfM =  foldr (flip andM) (pure true) --foldl andM (pure true) stan reported that foldl was space - leaking hence moved to the current one
-
+firstFalseOfM = foldr (flip andM) (pure true) -- foldl andM (pure true) stan reported that foldl was space - leaking hence moved to the current one
 
 instance HasTrue Bool where
   true = True

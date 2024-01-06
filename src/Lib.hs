@@ -2,10 +2,10 @@
 
 -- | Module for accessing this math function
 module Lib
-  ( genARandomPreFactoredNumberLEn
-    ,firstPrimeLE
-    ,lstPrimesLE
-    ,createSeq
+  ( genARandomPreFactoredNumberLEn,
+    firstPrimeLE,
+    lstPrimesLE,
+    createSeq,
   )
 where
 
@@ -20,6 +20,7 @@ import System.Random.Stateful (globalStdGen, uniformRM)
 
 {-@ lazy genARandomPreFactoredNumberLEn @-}
 -- disabling termination checking
+
 -- | This is the Entry Function.
 -- Provide an integer input and it should generate a tuple of a number less than the integer i/p and its factors
 genARandomPreFactoredNumberLEn :: Int -> IO (Either Text (Int, [Int]))
@@ -37,8 +38,9 @@ genARandomPreFactoredNumberLEn _ = pure $ Left $ pack "Invalid"
 {-@ lazy createSeq @-}
 -- disabling termination checking
 {-@ createSeq :: Pos -> PrimeFactors @-}
+
 -- | Creates a sequence of prime ints below the input integer.
--- The input has to be positive int. 
+-- The input has to be positive int.
 -- The output will then be a list of primes (of positive ints).
 createSeq :: Int -> [Int]
 createSeq 1 = [1]
@@ -48,9 +50,10 @@ createSeq n | n >= 2 = case filterInvalidNonPos $ firstPrimeLE n of
 createSeq _ = die "impossible"
 
 {-@ lstPrimesLE :: Pos -> PrimeFactors @-}
+
 -- | Retrieve a list of Primes less than or equal to
--- the input provided. See also 'firstPrimeLE'. 
--- Argument has to be positive int. 
+-- the input provided. See also 'firstPrimeLE'.
+-- Argument has to be positive int.
 -- Output will be a list of Prime (and positive ints)
 lstPrimesLE :: Int -> [Int]
 lstPrimesLE 1 = [1]
@@ -60,9 +63,11 @@ lstPrimesLE _ = die "impossible"
 -- {-@ lazy firstPrimeLE @-} -- disabling termination checking
 -- {-@ firstPrimeLE :: Pos -> {v:Pos | v==1 || isPrime v} @-}
 -- it would be nice to have the above refinement working; it's tighter on the output
+
 -- | Retrieve the first Prime less than or equal to
--- the input Integer provided. See also 'lstPrimesLE'. 
+-- the input Integer provided. See also 'lstPrimesLE'.
 -- The argument has to be positive int.
+
 {-@ firstPrimeLE :: Pos -> Pos @-}
 firstPrimeLE :: Int -> Int
 firstPrimeLE 1 = 1
@@ -72,6 +77,7 @@ firstPrimeLE _ = die "impossible"
 
 -- helper functions
 -- et a random integer given a lower and upper bound
--- | Get a Random Integer with uniform probability in a range. 
+
+-- | Get a Random Integer with uniform probability in a range.
 getRndMInt :: (Int, Int) -> IO Int
 getRndMInt (l, u) = uniformRM (l, u) globalStdGen :: IO Int

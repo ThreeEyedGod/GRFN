@@ -1,13 +1,12 @@
 import Data.Numbers.Primes
-import Lib
-import Test.Hspec (Spec, describe, it, shouldBe, shouldNotReturn, shouldReturn)
-
+import Data.Text (pack)
+import Lib (createSeq, firstPrimeLE, genARandomPreFactoredNumberLEn, lstPrimesLE)
 import System.IO.Error (isDoesNotExistError, tryIOError)
 import Test.Framework (Test, defaultMain, testGroup)
 import Test.Framework.Providers.QuickCheck2 (testProperty)
+import Test.Hspec (Spec, describe, it, shouldBe, shouldNotReturn, shouldReturn)
 import Test.QuickCheck (Arbitrary, Gen, NonNegative (..), Positive (..), Property, arbitrary, choose, elements, expectFailure, forAll, listOf, quickCheck, suchThat, (==>))
 import Test.QuickCheck.Monadic (assert, forAllM, monadicIO, pick, pre, run)
-import Data.Text (pack)
 
 main :: IO ()
 main = defaultMain tests
