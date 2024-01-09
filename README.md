@@ -15,7 +15,7 @@ Synopsis
 Uses Refinement Types (LiquidHaskell), Property Testing (QuickCheck), Stan for Static analysis
 
 ### Standard
-hlint; github actions, IDE:Cursor+hoogle-vscode+ormolu ; Haddock 
+hlint; github actions, IDE:Cursor+hoogle-vscode+ormolu ; Haddock ; makefile
 
 Issues
 -------

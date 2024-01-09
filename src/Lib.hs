@@ -61,7 +61,7 @@ lstPrimesLE n | n >= 2 = 1 : [x | x <- [1 .. n], x > 0, isPrime x] -- the "1: " 
 lstPrimesLE _ = die "impossible"
 
 -- {-@ lazy firstPrimeLE @-} -- disabling termination checking
--- {-@ firstPrimeLE :: Pos -> {v:Pos | v==1 || isPrime v} @-}
+--{-@ firstPrimeLE :: Pos -> {v:Pos | v==1 || isPrime v} @-}
 -- it would be nice to have the above refinement working; it's tighter on the output
 
 -- | Retrieve the first Prime less than or equal to
