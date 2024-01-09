@@ -1,5 +1,3 @@
-{-# LANGUAGE TemplateHaskell #-}
-
 import Data.Numbers.Primes
 import Data.Text (pack)
 import Lib (createSeq, firstPrimeLE, genARandomPreFactoredNumberLEn, lstPrimesLE)
@@ -14,7 +12,7 @@ main :: IO ()
 main = hspec $ do
   libH
 
--- Rigorous test arguments.
+-- Rigorous test arguments. unused as of now
 rigorousArgs :: Args
 rigorousArgs =
   Args
@@ -37,7 +35,7 @@ libH = describe "All Property Tests" $ do
 
 libHProperty1 :: Spec
 libHProperty1 = do
-  modifyMaxSuccess (const 100) $
+  modifyMaxSuccess (const 100) $ 
     prop
       "propcheckIfPrimeOdd"
       prop_checkIfPrimeIsOdd
@@ -102,9 +100,8 @@ prop_checkIffiltersValidInput n = n > -10 && n < 1 ==> monadicIO $ do
     Left err -> assert (err == pack "Invalid")
     Right _ -> assert (1 == 2)
 
--- classify does not work
 prop_checkValidOutput1 :: Positive Int -> Property
-prop_checkValidOutput1 (Positive n) = n > 2 && n < 50 ==> classify (n > 30) "n GT 30" $ monadicIO $ do
+prop_checkValidOutput1 (Positive n) = n > 2 && n < 50 ==> classify (n > 30) "n GT 30" $ collect n $ monadicIO $ do
   -- if n upper end is set at 100 then it results in an error https://www.cnblogs.com/BlogOfASBOIER/p/13096167.html
   x <- run $ genARandomPreFactoredNumberLEn n
   case x of
