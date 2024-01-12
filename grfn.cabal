@@ -1,7 +1,7 @@
 cabal-version:       3.0
 
 name:                grfn
-version:             0.1.0.0
+version:             1.0.0.0
 -- synopsis:
 -- description:
 homepage:            https://github.com/threeeyedgod/grfn#readme

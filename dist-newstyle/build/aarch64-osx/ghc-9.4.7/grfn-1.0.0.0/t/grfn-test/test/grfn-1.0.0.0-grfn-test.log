@@ -1,0 +1,138 @@
+Test suite grfn-test: RUNNING...
+
+All Property Tests
+  propcheckIfPrimeOdd [✔]
+    +++ OK, passed 100 tests; 266 discarded (100% n GT 2).
+  prop_ensureIfPrimeActuallyIsLess [✔]
+    +++ OK, passed 100 tests; 156 discarded:
+    12% 4
+     8% 3
+     6% 12
+     5% 17
+     5% 8
+     4% 11
+     4% 15
+     4% 20
+     4% 22
+     4% 26
+     4% 28
+     4% 5
+     4% 7
+     3% 13
+     3% 19
+     3% 21
+     3% 23
+     3% 24
+     3% 27
+     3% 9
+     2% 14
+     2% 16
+     2% 18
+     2% 25
+     2% 6
+     1% 10
+  prop_checkSeqisOnlyPrimes [✔]
+    +++ OK, passed 100 tests; 156 discarded.
+  prop_checkIfLEn [✔]
+    +++ OK, passed 100 tests; 156 discarded.
+  prop_checkIffiltersValidInput [✔]
+    +++ OK, passed 100 tests; 638 discarded.
+  prop_checkValidOutput1 [✔]
+    +++ OK, passed 100 tests; 78 discarded:
+    66% n LT 30
+    
+     9% 4
+     7% 3
+     5% 12
+     5% 34
+     5% 7
+     4% 11
+     4% 13
+     4% 8
+     3% 30
+     3% 44
+     3% 6
+     2% 17
+     2% 18
+     2% 20
+     2% 21
+     2% 22
+     2% 25
+     2% 31
+     2% 32
+     2% 33
+     2% 39
+     2% 40
+     2% 41
+     2% 46
+     2% 49
+     2% 5
+     2% 9
+     1% 10
+     1% 14
+     1% 15
+     1% 16
+     1% 19
+     1% 23
+     1% 24
+     1% 26
+     1% 29
+     1% 37
+     1% 38
+     1% 42
+     1% 43
+     1% 45
+     1% 47
+     1% 48
+  prop_checkAccurateOutput [✔]
+    +++ OK, passed 100 tests; 78 discarded:
+    66% n LT 30
+    
+     9% 4
+     7% 3
+     5% 12
+     5% 34
+     5% 7
+     4% 11
+     4% 13
+     4% 8
+     3% 30
+     3% 44
+     3% 6
+     2% 17
+     2% 18
+     2% 20
+     2% 21
+     2% 22
+     2% 25
+     2% 31
+     2% 32
+     2% 33
+     2% 39
+     2% 40
+     2% 41
+     2% 46
+     2% 49
+     2% 5
+     2% 9
+     1% 10
+     1% 14
+     1% 15
+     1% 16
+     1% 19
+     1% 23
+     1% 24
+     1% 26
+     1% 29
+     1% 37
+     1% 38
+     1% 42
+     1% 43
+     1% 45
+     1% 47
+     1% 48
+
+Finished in 0.0054 seconds
+7 examples, 0 failures
+Test suite grfn-test: PASS
+Test suite logged to: /Users/mandeburung/Documents/grfn/dist-newstyle/build/aarch64-osx/ghc-9.4.7/grfn-1.0.0.0/t/grfn-test/test/grfn-1.0.0.0-grfn-test.log

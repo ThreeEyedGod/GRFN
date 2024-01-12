@@ -1,11 +1,11 @@
-import Data.Numbers.Primes
+import Data.Numbers.Primes (isPrime)
 import Data.Text (pack)
 import Lib (createSeq, firstPrimeLE, genARandomPreFactoredNumberLEn, lstPrimesLE)
 import System.IO.Error (isDoesNotExistError, tryIOError)
 import Test.Hspec (Spec, describe, hspec, it, shouldBe, shouldNotReturn, shouldReturn)
 import Test.Hspec.Core.QuickCheck (modifyMaxSuccess)
 import Test.Hspec.QuickCheck (prop)
-import Test.QuickCheck (Arbitrary, Args (..), Gen, NonNegative (..), Positive (..), Property, arbitrary, chatty, choose, classify, collect, cover, elements, expectFailure, forAll, forAllProperties, listOf, printTestCase, quickCheck, quickCheckWithResult, suchThat, verbose, verboseCheckWithResult, withMaxSuccess, (==>))
+import Test.QuickCheck (Arbitrary, Args (..), Gen, NonNegative (..), Positive (..), Property, arbitrary, chatty, choose, classify, collect, cover, elements, expectFailure, forAll, forAllProperties, listOf, printTestCase, quickCheck, quickCheckWithResult, suchThat, verbose, verboseCheckWithResult, withMaxSuccess, (==>), printTestCase)
 import Test.QuickCheck.Monadic (assert, forAllM, monadicIO, pick, pre, run)
 
 main :: IO ()
@@ -32,10 +32,11 @@ libH = describe "All Property Tests" $ do
   libHProperty4
   libHProperty5
   libHProperty6
+  libHProperty7
 
 libHProperty1 :: Spec
 libHProperty1 = do
-  modifyMaxSuccess (const 100) $ 
+  modifyMaxSuccess (const 100) $
     prop
       "propcheckIfPrimeOdd"
       prop_checkIfPrimeIsOdd
@@ -75,6 +76,13 @@ libHProperty6 = do
       "prop_checkValidOutput1"
       prop_checkValidOutput1
 
+libHProperty7 :: Spec
+libHProperty7 = do
+  modifyMaxSuccess (const 100) $ 
+    prop
+      "prop_checkAccurateOutput"
+      prop_checkAccurateOutput
+
 -- banks on the property that firstPrimeLE must be odd and the sum of two odds must be even
 prop_checkIfPrimeIsOdd :: Positive Int -> Positive Int -> Property
 prop_checkIfPrimeIsOdd (Positive n) (Positive m) = n > 2 && n < 30 && m < 50 && m > 2 ==> classify (n > 2) "n GT 2" $ even (firstPrimeLE n + firstPrimeLE m)
@@ -101,9 +109,29 @@ prop_checkIffiltersValidInput n = n > -10 && n < 1 ==> monadicIO $ do
     Right _ -> assert (1 == 2)
 
 prop_checkValidOutput1 :: Positive Int -> Property
-prop_checkValidOutput1 (Positive n) = n > 2 && n < 50 ==> classify (n > 30) "n GT 30" $ collect n $ monadicIO $ do
+prop_checkValidOutput1 (Positive n) = n > 2 && n < 50 ==> classify (n < 30) "n LT 30" $ collect n $ monadicIO $ do
   -- if n upper end is set at 100 then it results in an error https://www.cnblogs.com/BlogOfASBOIER/p/13096167.html
   x <- run $ genARandomPreFactoredNumberLEn n
   case x of
     Left err -> assert (err == pack "Invalid")
     Right y -> assert (fst y >= (head $ snd y))
+
+prop_checkAccurateOutput :: Positive Int -> Property
+prop_checkAccurateOutput (Positive n) = n > 2 && n < 50 ==> classify (n < 30) "n LT 30" $ collect n $ printTestCase "Failed case" $ monadicIO $ do
+  -- if n upper end is set at 100 then it results in an error https://www.cnblogs.com/BlogOfASBOIER/p/13096167.html
+  x <- run $ genARandomPreFactoredNumberLEn n
+  case x of
+    Left err -> assert (err == pack "Invalid")
+    Right y -> assert (1:(primeFactors $ fst y) == snd y)
+
+primes :: [Int]
+primes = 2 : filter ((== 1) . length . primeFactors) [3, 5 ..]
+
+primeFactors :: Int -> [Int]
+primeFactors n = factor n primes
+  where
+    factor _ [] = []
+    factor m (p : ps)
+      | p * p > m = [m]
+      | m `mod` p == 0 = p : factor (m `div` p) (p : ps)
+      | otherwise = factor m ps
