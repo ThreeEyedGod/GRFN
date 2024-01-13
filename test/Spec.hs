@@ -122,7 +122,7 @@ prop_checkAccurateOutput (Positive n) = n > 2 && n < 50 ==> classify (n < 30) "n
   x <- run $ genARandomPreFactoredNumberLEn n
   case x of
     Left err -> assert (err == pack "Invalid")
-    Right y -> assert (1:(primeFactors $ fst y) == snd y)
+    Right y -> assert (1 : (primeFactors $ fst y) == snd y)
 
 primes :: [Int]
 primes = 2 : filter ((== 1) . length . primeFactors) [3, 5 ..]
