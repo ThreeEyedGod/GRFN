@@ -1,6 +1,6 @@
 import Data.Numbers.Primes (isPrime)
 import Data.Text (pack)
-import Lib (createSeq, firstPrimeLE, genARandomPreFactoredNumberLEn, lstPrimesLE)
+import Lib (createSeq', genARandomPreFactoredNumberLEn)
 import System.IO.Error (isDoesNotExistError, tryIOError)
 import Test.Hspec (Spec, describe, hspec, it, shouldBe, shouldNotReturn, shouldReturn)
 import Test.Hspec.Core.QuickCheck (modifyMaxSuccess)
@@ -26,27 +26,12 @@ rigorousArgs =
 
 libH :: Spec
 libH = describe "All Property Tests" $ do
-  libHProperty1
-  libHProperty2
   libHProperty3
   libHProperty4
   libHProperty5
   libHProperty6
   libHProperty7
 
-libHProperty1 :: Spec
-libHProperty1 = do
-  modifyMaxSuccess (const 100) $
-    prop
-      "propcheckIfPrimeOdd"
-      prop_checkIfPrimeIsOdd
-
-libHProperty2 :: Spec
-libHProperty2 = do
-  modifyMaxSuccess (const 100) $
-    prop
-      "prop_ensureIfPrimeActuallyIsLess"
-      prop_ensureIfPrimeIsActuallyLess
 
 libHProperty3 :: Spec
 libHProperty3 = do
@@ -83,15 +68,8 @@ libHProperty7 = do
       "prop_checkAccurateOutput"
       prop_checkAccurateOutput
 
--- banks on the property that firstPrimeLE must be odd and the sum of two odds must be even
-prop_checkIfPrimeIsOdd :: Positive Int -> Positive Int -> Property
-prop_checkIfPrimeIsOdd (Positive n) (Positive m) = n > 2 && n < 30 && m < 50 && m > 2 ==> classify (n > 2) "n GT 2" $ even (firstPrimeLE n + firstPrimeLE m)
-
-prop_ensureIfPrimeIsActuallyLess :: Positive Int -> Property
-prop_ensureIfPrimeIsActuallyLess (Positive n) = n > 2 && n < 30 ==> collect n $ firstPrimeLE n <= n
-
 prop_checkSeqisOnlyPrimes :: Positive Int -> Property
-prop_checkSeqisOnlyPrimes (Positive n) = n > 2 && n < 30 ==> filter (not . Data.Numbers.Primes.isPrime) (createSeq n) == [1]
+prop_checkSeqisOnlyPrimes (Positive n) = n > 2 && n < 30 ==> filter (not . Data.Numbers.Primes.isPrime) (createSeq' n) == [1]
 
 prop_checkIfLEn :: Positive Int -> Property
 prop_checkIfLEn (Positive n) = n > 2 && n < 30 ==> monadicIO $ do
