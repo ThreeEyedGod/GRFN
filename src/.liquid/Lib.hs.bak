@@ -2,10 +2,11 @@
 
 -- | Module for accessing this math function
 module Lib
-  ( genARandomPreFactoredNumberLEn,
-    firstPrimeLE,
-    lstPrimesLE,
-    createSeq,
+  (  genARandomPreFactoredNumberLEn
+    ,firstPrimeLE
+    ,lstPrimesLE
+    ,createSeq
+    ,createSeq'
   )
 where
 
@@ -13,7 +14,7 @@ where
 import Data.Bool.HT (if')
 import Data.Numbers.Primes (isPrime)
 import Data.Text (pack)
-import Protolude hiding (bool, die, (||))
+import Protolude hiding (bool, die)
 import RefinementHelper
 -- import ShortCircuit (if') -- now after refactoring using bool, this is not being used
 import System.Random.Stateful (globalStdGen, uniformRM)
@@ -32,7 +33,7 @@ genARandomPreFactoredNumberLEn n | n >= 2 = do
     Left _ -> pure $ Left $ pack "Invalid"
     Right upper -> if' (ps <= n) (pure $ Right rsp) (genARandomPreFactoredNumberLEn n) -- Data.bool.HT if'
       where
-        rsp@(ps, sq) = (product sq, createSeq upper) -- Haskell as-pattern @
+        rsp@(ps, sq) = (product sq, createSeq' upper) -- Haskell as-pattern @
 genARandomPreFactoredNumberLEn _ = pure $ Left $ pack "Invalid"
 
 {-@ lazy createSeq @-}
@@ -48,6 +49,22 @@ createSeq n | n >= 2 = case filterInvalidNonPos $ firstPrimeLE n of
   Left _ -> createSeq 1
   Right okN -> lstPrimesLE okN
 createSeq _ = die "impossible"
+
+-------
+
+{-@ lazy createSeq' @-}
+-- disabling termination checking
+{-@ createSeq' :: Pos -> PrimeFactors @-}
+
+-- | Creates a sequence of prime ints below the input integer.
+-- The input has to be positive int.
+-- The output will then be a list of primes (of positive ints).
+createSeq' :: Int -> [Int]
+createSeq' 1 = [1]
+createSeq' n | n >= 2 = 1 : [x | x <- filter isPrime [2 .. n], x > 0 ]
+createSeq' _ = die "impossible"
+
+-------
 
 {-@ lstPrimesLE :: Pos -> PrimeFactors @-}
 
