@@ -130,3 +130,4 @@ instance Shortcircuit (Maybe a) where
 instance Shortcircuit (Either a b) where
   isTrue (Left _) = False
   isTrue (Right _) = True
+
