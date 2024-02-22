@@ -1,102 +1,67 @@
 Test suite grfn-test: RUNNING...
 
 All Property Tests
-  prop_checkSeqisOnlyPrimes [✔]
-    +++ OK, passed 100 tests; 156 discarded.
-  prop_checkIfLEn [✔]
-    +++ OK, passed 100 tests; 156 discarded.
-  prop_checkIffiltersValidInput [✔]
-    +++ OK, passed 100 tests; 931 discarded.
-  prop_checkValidOutput1 [✔]
-    +++ OK, passed 100 tests; 95 discarded:
-    80% n LT 30
+  prop_checkIfLTEn [✔]
+    +++ OK, passed 100 tests; 142 discarded.
+  prop_checkIffiltersValidInput11 [✔]
+    +++ OK, passed 100 tests; 909 discarded.
+  prop_checkValidOutput11 [✔]
+    +++ OK, passed 100 tests; 84 discarded:
+    81% n LT 30
     
-    10% 3
-     7% 12
-     5% 11
-     5% 5
-     4% 15
-     4% 19
-     4% 4
-     3% 10
+     8% 3
+     8% 5
+     6% 15
+     6% 4
+     5% 20
+     4% 11
+     4% 12
+     4% 26
+     4% 39
+     4% 6
      3% 14
-     3% 16
+     3% 17
+     3% 21
      3% 23
-     3% 24
-     3% 27
-     3% 41
-     3% 6
-     3% 7
-     2% 13
-     2% 25
-     2% 28
-     2% 31
-     2% 40
-     2% 42
+     3% 29
+     3% 9
+     2% 18
+     2% 19
+     2% 22
+     2% 35
+     2% 44
      2% 45
-     2% 46
      2% 8
-     2% 9
-     1% 17
-     1% 18
-     1% 20
-     1% 21
-     1% 22
-     1% 26
-     1% 29
-     1% 32
+     1% 10
+     1% 16
+     1% 24
+     1% 25
+     1% 27
+     1% 31
      1% 33
-     1% 34
-     1% 36
-     1% 39
-     1% 44
+     1% 38
+     1% 40
+     1% 41
+     1% 46
+     1% 47
      1% 48
-  prop_checkAccurateOutput [✔]
-    +++ OK, passed 100 tests; 95 discarded:
-    80% n LT 30
-    
-    10% 3
-     7% 12
-     5% 11
-     5% 5
-     4% 15
-     4% 19
-     4% 4
-     3% 10
-     3% 14
-     3% 16
-     3% 23
-     3% 24
-     3% 27
-     3% 41
-     3% 6
-     3% 7
-     2% 13
-     2% 25
-     2% 28
-     2% 31
-     2% 40
-     2% 42
-     2% 45
-     2% 46
-     2% 8
-     2% 9
-     1% 17
-     1% 18
-     1% 20
-     1% 21
-     1% 22
-     1% 26
-     1% 29
-     1% 32
-     1% 33
-     1% 34
-     1% 36
-     1% 39
-     1% 44
-     1% 48
+     1% 49
+     1% 7
+  prop_checkAccurateOutput11 [✘]
 
-Finished in 0.0101 seconds
-5 examples, 0 failures
-Test suite grfn-test: PASS
+Failures:
+
+  test/Spec.hs:58:5: 
+  1) All Property Tests prop_checkAccurateOutput11
+       Assertion failed (after 26 tests and 1 shrink):
+         Positive {getPositive = 18}
+         Failed case
+
+  To rerun use: --match "/All Property Tests/prop_checkAccurateOutput11/" --seed 1865144536
+
+Randomized with seed 1865144536
+
+Finished in 0.0082 seconds
+4 examples, 1 failure
+Test suite grfn-test: FAIL
 Test suite logged to: /Users/mandeburung/Documents/grfn/dist-newstyle/build/aarch64-osx/ghc-9.4.7/grfn-1.0.0.0/t/grfn-test/test/grfn-1.0.0.0-grfn-test.log

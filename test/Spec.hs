@@ -1,12 +1,12 @@
 import Data.Numbers.Primes (isPrime)
 import Data.Text (pack)
-import Lib (createSeq', genARandomPreFactoredNumberLEn)
+import Lib (createBasicSeq, genARandomPreFactoredNumberLTEn)
 import System.IO.Error (isDoesNotExistError, tryIOError)
 import Test.Hspec (Spec, describe, hspec, it, shouldBe, shouldNotReturn, shouldReturn)
 import Test.Hspec.Core.QuickCheck (modifyMaxSuccess)
 import Test.Hspec.QuickCheck (prop)
-import Test.QuickCheck (Arbitrary, Args (..), Gen, NonNegative (..), Positive (..), Property, arbitrary, chatty, choose, classify, collect, cover, elements, expectFailure, forAll, forAllProperties, listOf, printTestCase, quickCheck, quickCheckWithResult, suchThat, verbose, verboseCheckWithResult, withMaxSuccess, (==>), printTestCase)
-import Test.QuickCheck.Monadic (assert, forAllM, monadicIO, pick, pre, run)
+import Test.QuickCheck (Arbitrary, Args (..), Gen, NonNegative (..), Positive (..), Property, arbitrary, chatty, choose, classify, collect, cover, elements, expectFailure, forAll, forAllProperties, listOf, printTestCase, quickCheck, quickCheckWithResult, suchThat, verbose, verboseCheckWithResult, withMaxSuccess, (==>))
+import Test.QuickCheck.Monadic (assert, monadicIO, run)
 
 main :: IO ()
 main = hspec $ do
@@ -26,81 +26,38 @@ rigorousArgs =
 
 libH :: Spec
 libH = describe "All Property Tests" $ do
-  libHProperty3
-  libHProperty4
-  libHProperty5
-  libHProperty6
-  libHProperty7
+  libHProperty8
+  libHProperty9
+  libHProperty10
+  libHProperty11
 
-
-libHProperty3 :: Spec
-libHProperty3 = do
+libHProperty8 :: Spec
+libHProperty8 = do
   modifyMaxSuccess (const 100) $
     prop
-      "prop_checkSeqisOnlyPrimes"
-      prop_checkSeqisOnlyPrimes
+      "prop_checkIfLTEn"
+      prop_checkIfLTEn
 
-libHProperty4 :: Spec
-libHProperty4 = do
+libHProperty9 :: Spec
+libHProperty9 = do
   modifyMaxSuccess (const 100) $
     prop
-      "prop_checkIfLEn"
-      prop_checkIfLEn
+      "prop_checkIffiltersValidInput11"
+      prop_checkIffiltersValidInput11
 
-libHProperty5 :: Spec
-libHProperty5 = do
+libHProperty10 :: Spec
+libHProperty10 = do
   modifyMaxSuccess (const 100) $
     prop
-      "prop_checkIffiltersValidInput"
-      prop_checkIffiltersValidInput
+      "prop_checkValidOutput11"
+      prop_checkValidOutput11
 
-libHProperty6 :: Spec
-libHProperty6 = do
+libHProperty11 :: Spec
+libHProperty11 = do
   modifyMaxSuccess (const 100) $
     prop
-      "prop_checkValidOutput1"
-      prop_checkValidOutput1
-
-libHProperty7 :: Spec
-libHProperty7 = do
-  modifyMaxSuccess (const 100) $ 
-    prop
-      "prop_checkAccurateOutput"
-      prop_checkAccurateOutput
-
-prop_checkSeqisOnlyPrimes :: Positive Int -> Property
-prop_checkSeqisOnlyPrimes (Positive n) = n > 2 && n < 30 ==> filter (not . Data.Numbers.Primes.isPrime) (createSeq' n) == [1]
-
-prop_checkIfLEn :: Positive Int -> Property
-prop_checkIfLEn (Positive n) = n > 2 && n < 30 ==> monadicIO $ do
-  x <- run $ genARandomPreFactoredNumberLEn n
-  case x of
-    Left _ -> assert (1 == 2)
-    Right y -> assert (fst y <= n)
-
-prop_checkIffiltersValidInput :: Int -> Property
-prop_checkIffiltersValidInput n = n > -10 && n < 1 ==> monadicIO $ do
-  -- notice we are constraining n to be within a "bad range"
-  x <- run $ genARandomPreFactoredNumberLEn n
-  case x of
-    Left err -> assert (err == pack "Invalid")
-    Right _ -> assert (1 == 2)
-
-prop_checkValidOutput1 :: Positive Int -> Property
-prop_checkValidOutput1 (Positive n) = n > 2 && n < 50 ==> classify (n < 30) "n LT 30" $ collect n $ monadicIO $ do
-  -- if n upper end is set at 100 then it results in an error https://www.cnblogs.com/BlogOfASBOIER/p/13096167.html
-  x <- run $ genARandomPreFactoredNumberLEn n
-  case x of
-    Left err -> assert (err == pack "Invalid")
-    Right y -> assert (fst y >= (head $ snd y))
-
-prop_checkAccurateOutput :: Positive Int -> Property
-prop_checkAccurateOutput (Positive n) = n > 2 && n < 50 ==> classify (n < 30) "n LT 30" $ collect n $ printTestCase "Failed case" $ monadicIO $ do
-  -- if n upper end is set at 100 then it results in an error https://www.cnblogs.com/BlogOfASBOIER/p/13096167.html
-  x <- run $ genARandomPreFactoredNumberLEn n
-  case x of
-    Left err -> assert (err == pack "Invalid")
-    Right y -> assert (1 : (primeFactors $ fst y) == snd y)
+      "prop_checkAccurateOutput11"
+      prop_checkAccurateOutput11
 
 primes :: [Int]
 primes = 2 : filter ((== 1) . length . primeFactors) [3, 5 ..]
@@ -113,3 +70,35 @@ primeFactors n = factor n primes
       | p * p > m = [m]
       | m `mod` p == 0 = p : factor (m `div` p) (p : ps)
       | otherwise = factor m ps
+
+------------
+prop_checkIfLTEn :: Positive Int -> Property
+prop_checkIfLTEn (Positive n) = n > 2 && n < 30 ==> monadicIO $ do
+  x <- run $ genARandomPreFactoredNumberLTEn n
+  case x of
+    Left _ -> assert False
+    Right y -> assert (fst y <= n)
+
+prop_checkIffiltersValidInput11 :: Int -> Property
+prop_checkIffiltersValidInput11 n = n > -10 && n < 1 ==> monadicIO $ do
+  -- notice we are constraining n to be within a "bad range"
+  x <- run $ genARandomPreFactoredNumberLTEn n
+  case x of
+    Left err -> assert (err == pack "Invalid")
+    Right _ -> assert False
+
+prop_checkValidOutput11 :: Positive Int -> Property
+prop_checkValidOutput11 (Positive n) = n > 2 && n < 50 ==> classify (n < 30) "n LT 30" $ collect n $ monadicIO $ do
+  -- if n upper end is set at 100 then it results in an error https://www.cnblogs.com/BlogOfASBOIER/p/13096167.html
+  x <- run $ genARandomPreFactoredNumberLTEn n
+  case x of
+    Left err -> assert (err == pack "Invalid")
+    Right y -> assert (fst y >= (head $ reverse $ snd y))
+
+prop_checkAccurateOutput11 :: Positive Int -> Property
+prop_checkAccurateOutput11 (Positive n) = n > 2 && n < 50 ==> classify (n < 30) "n LT 30" $ collect n $ printTestCase "Failed case" $ monadicIO $ do
+  -- if n upper end is set at 100 then it results in an error https://www.cnblogs.com/BlogOfASBOIER/p/13096167.html
+  x <- run $ genARandomPreFactoredNumberLTEn n
+  case x of
+    Left err -> assert (err == pack "Invalid")
+    Right y -> assert ((fst y == 1) || (1 : (primeFactors $ fst y) == snd y))

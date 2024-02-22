@@ -4,8 +4,22 @@ module RefinementHelper (die, filterInvalid, filterInvalidNonPos) where
 import Protolude hiding (die)
 import Prelude (String, error)
 
+-- type Pos = {v:Int | 0 < v}
+
 -- so that isPrime can be used in refinement
 {-@ measure isPrime :: Int -> Bool @-}
+
+{-@ predicate Btwn Lo N Hi = Lo <= N && N < Hi @-}
+{-@ predicate BtwnXclu Lo V Hi = (Lo < V && V < Hi) @-}
+{-@ predicate Lt X Y = X < Y        @-}
+{-@ predicate Ge X Y = not (Lt X Y) @-}
+{-@ predicate Lte X Y = X <= Y        @-}
+{-@ predicate Gt X Y = not (Lte X Y) @-}
+{-@ predicate Ne X Y = X /= Y @-}
+
+{-@ type Rng Lo Hi = {v:Int | (Btwn Lo v Hi)} @-}
+{-@ type RngPos Lo Hi = {v:Pos | (Btwn Lo v Hi)} @-}
+{-@ type TuplePos F S = {v:(Pos, Pos) | fst v == F && snd v == S && (Ge S F)} @-}
 
 -- To assert that code is unreachable
 {-@ die :: {v:String | false} -> a @-}

@@ -27,7 +27,7 @@ Issues
 2. Haddock needed an older version: cabal install haddock-2.27.0 --allow-newer
 
 ### To-do
-A test to check the uniform randomness of the output needs to be put in. 
+A test to check the uniform randomness of the output needs to be put in. The NIST csrc site has [literature](https://csrc.nist.gov/search?keywords=test+suite+random+number+generation&ipp=25&sortBy=relevance&showOnly=publications%2Cprojects%2Cnews%2Cevents%2Cpresentations%2Cglossary%2Ctopics&topicsMatch=ANY&status=Final%2CDraft) and [algorithms](https://csrc.nist.rip/groups/ST/toolkit/rng/documents/nissc-paper.pdf) and [test suites](https://csrc.nist.gov/pubs/itlb/2000/12/a-statistical-test-suite-for-random-and-pseudorand/final).
 
 ### Documentation
   ~/grfn/dist-newstyle/build/aarch64-osx/ghc-9.4.7/grfn-0.1.0.0/doc/html/grfn/index.html
