@@ -19,12 +19,13 @@ import RefinementHelper
 import System.Random.Stateful (globalStdGen, uniformRM)
 
 {-@ lazy createBasicSeq @-}
-{-@ createBasicSeq :: Pos -> IO (Either Text [Pos]) @-}
+--{-@ createBasicSeq :: n:Pos -> IO (Either Text {o:[Pos] | True == descPosList o }) @-}
+{-@ createBasicSeq :: n:Pos -> IO (Either Text [Pos]) @-}
 
 -- | Provided an Int, creates a sequence of random integers LTE n decreasing with multiples ending at 1
 createBasicSeq :: Int -> IO (Either Text [Int])
 createBasicSeq x | x <= 0 = pure $ Left $ pack "Invalid"
-createBasicSeq 1 = pure $ Right [1]
+createBasicSeq 1  = pure $ Right [1]
 createBasicSeq n | n >= 2 = do
   seed <- getRndMInt (1, n)
   x <- createBasicSeq seed
@@ -51,7 +52,7 @@ genARandomPreFactoredNumberLTEn n | n >= 2 = do
 genARandomPreFactoredNumberLTEn _ = pure $ Left $ pack "Invalid"
 
 -- helper functions
-{-@ getRndMInt :: x:{(Pos, Pos) | fst x <= snd x && fst x > 0} -> IO Pos @-}
+{-@ getRndMInt :: x:{(Pos, Pos) | fst x <= snd x && fst x > 0} -> IO {y:Pos | y >= fst x && y <= snd x} @-}
 -- Get a random integer given a lower and upper bound
 
 -- | Get a Random Integer with uniform probability in the range [1,n]

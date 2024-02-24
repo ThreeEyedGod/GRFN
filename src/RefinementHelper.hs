@@ -1,13 +1,14 @@
 -- | Module for helping out refinements with LH in other modules
-module RefinementHelper (die, filterInvalid, filterInvalidNonPos) where
+module RefinementHelper (die, filterInvalid, filterInvalidNonPos, descPosList) where
 
 import Protolude hiding (die)
-import Prelude (String, error)
+import Prelude (String, error) 
 
 -- type Pos = {v:Int | 0 < v}
 
 -- so that isPrime can be used in refinement
 {-@ measure isPrime :: Int -> Bool @-}
+{-@ measure maximum :: Ord a => [a] -> a @-}
 
 {-@ predicate Btwn Lo N Hi = Lo <= N && N < Hi @-}
 {-@ predicate BtwnXclu Lo V Hi = (Lo < V && V < Hi) @-}
@@ -20,6 +21,15 @@ import Prelude (String, error)
 {-@ type Rng Lo Hi = {v:Int | (Btwn Lo v Hi)} @-}
 {-@ type RngPos Lo Hi = {v:Pos | (Btwn Lo v Hi)} @-}
 {-@ type TuplePos F S = {v:(Pos, Pos) | fst v == F && snd v == S && (Ge S F)} @-}
+
+{-@ measure descPosList :: [Pos] -> Bool @-}
+{-@ descPosList :: [Pos] -> Bool @-}
+descPosList :: [Int] -> Bool
+descPosList [] = True
+descPosList x = True
+descPosList (x : xs) = (x >= val) && descPosList xs
+                        where 
+                            val = fromMaybe 0 (head xs)
 
 -- To assert that code is unreachable
 {-@ die :: {v:String | false} -> a @-}
