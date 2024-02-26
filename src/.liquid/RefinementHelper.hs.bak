@@ -1,16 +1,21 @@
+{-# LANGUAGE NoMonomorphismRestriction #-}
+
 -- | Module for helping out refinements with LH in other modules
-module RefinementHelper (die, filterInvalid, filterInvalidNonPos, descPosList) where
+module RefinementHelper (die, filterInvalid, filterInvalidNonPos) where
 
 import Protolude hiding (die)
-import Prelude (String, error) 
+import Prelude (String, error)
 
--- type Pos = {v:Int | 0 < v}
+-- for reference type Pos = {v:Int | 0 < v}
 
--- so that isPrime can be used in refinement
+-- so that these functions can be used in refinement
 {-@ measure isPrime :: Int -> Bool @-}
 {-@ measure maximum :: Ord a => [a] -> a @-}
+{-@ measure product :: [Int] -> Int @-}
 
 {-@ predicate Btwn Lo N Hi = Lo <= N && N < Hi @-}
+{-@ predicate BtwnBothIncl Lo N Hi = Lo <= N && N <= Hi @-}
+
 {-@ predicate BtwnXclu Lo V Hi = (Lo < V && V < Hi) @-}
 {-@ predicate Lt X Y = X < Y        @-}
 {-@ predicate Ge X Y = not (Lt X Y) @-}
@@ -19,17 +24,19 @@ import Prelude (String, error)
 {-@ predicate Ne X Y = X /= Y @-}
 
 {-@ type Rng Lo Hi = {v:Int | (Btwn Lo v Hi)} @-}
-{-@ type RngPos Lo Hi = {v:Pos | (Btwn Lo v Hi)} @-}
+{-@ type RngPos Lo Hi = {v:Pos | (BtwnBothIncl Lo v Hi)} @-}
+{-@ type LstPosMaxN Lo Hi = v:[RngPos Lo Hi] @-}
 {-@ type TuplePos F S = {v:(Pos, Pos) | fst v == F && snd v == S && (Ge S F)} @-}
 
-{-@ measure descPosList :: [Pos] -> Bool @-}
-{-@ descPosList :: [Pos] -> Bool @-}
-descPosList :: [Int] -> Bool
-descPosList [] = True
-descPosList x = True
-descPosList (x : xs) = (x >= val) && descPosList xs
-                        where 
-                            val = fromMaybe 0 (head xs)
+-- Haskell Type Definitions
+-- factoredInt :: (Int, [Int])
+-- {-@ factoredInt :: (Int, [Int])<{\i fl -> i = product fl}> @-}
+-- factoredInt = (9, [1,3,3])
+
+mustGoDown :: [Integer]
+{-@ type DecrList a = [a]<{\xi xj -> xi >= xj}> @-}
+{-@ mustGoDown :: DecrList Integer @-}
+mustGoDown = [3, 2, 1]
 
 -- To assert that code is unreachable
 {-@ die :: {v:String | false} -> a @-}

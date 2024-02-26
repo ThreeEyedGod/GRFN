@@ -4,6 +4,8 @@
 module Lib
   ( genARandomPreFactoredNumberLTEn,
     createBasicSeq,
+    -- ,uniformFactorsLEn
+    getRndMInt,
   )
 where
 
@@ -19,23 +21,26 @@ import RefinementHelper
 import System.Random.Stateful (globalStdGen, uniformRM)
 
 {-@ lazy createBasicSeq @-}
---{-@ createBasicSeq :: n:Pos -> IO (Either Text {o:[Pos] | True == descPosList o }) @-}
-{-@ createBasicSeq :: n:Pos -> IO (Either Text [Pos]) @-}
+{-@ createBasicSeq :: n:Pos -> IO (Either Text (LstPosMaxN 1 n)) @-}
+-- {-@ createBasicSeq :: n:Pos -> IO (Either Text [Pos]) @-}
 
--- | Provided an Int, creates a sequence of random integers LTE n decreasing with multiples ending at 1
+-- | Provided an Int, creates a sequence of random integers LTE n decreasing possibly with multiples ending at single 1
 createBasicSeq :: Int -> IO (Either Text [Int])
 createBasicSeq x | x <= 0 = pure $ Left $ pack "Invalid"
-createBasicSeq 1  = pure $ Right [1]
+createBasicSeq 1 = pure $ Right []
 createBasicSeq n | n >= 2 = do
   seed <- getRndMInt (1, n)
   x <- createBasicSeq seed
   case x of
     Left _ -> pure $ Left $ pack "Invalid"
-    Right nxt -> pure $ Right (seed : nxt)
+    Right [] -> pure $ Left $ pack "Invalid"
+    Right nxt@(x1 : _) -> do
+      case (seed <= n && seed > 0 && x1 <= n && x1 > 0 && ((seed - x1) >= 0)) of
+        True -> pure $ Right (seed : nxt)
+        False -> pure $ Left $ pack "Invalid"
 createBasicSeq _ = pure $ Left $ pack "Invalid"
 
 {-@ lazy genARandomPreFactoredNumberLTEn @-}
--- disabling termination checking
 
 -- | This is the Entry Function.
 -- Provide an integer input and it should generate a tuple of a number less than the integer i/p and its factors
@@ -60,6 +65,4 @@ getRndMInt :: (Int, Int) -> IO Int
 getRndMInt (l, u) | l <= u && l > 0 = do
   result <- uniformRM (l, u) globalStdGen :: IO Int
   pure $ result `min` u `max` l
-getRndMInt (l, u) | (l <= 0 || u <= 0) || (l > u) = die "impossible"
-getRndMInt (l, u) | l < 0 && u < 0 = die "impossible"
 getRndMInt _ = die "impossible"

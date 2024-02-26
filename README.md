@@ -15,7 +15,7 @@ The Adam Kalai algorithm itself is an easier (but less efficient) version of [Er
 Synopsis
 ---------
 ### Highlights
-Uses Refinement Types (LiquidHaskell), Property Testing (QuickCheck), Stan for Static analysis
+Formal Verification using Refinement Types (LiquidHaskell), Property Testing (QuickCheck), Stan for Static analysis
 
 ### Standard
 hlint; github actions, IDE:Cursor+hoogle-vscode+ormolu ; Haddock ; makefile
