@@ -4,21 +4,35 @@
 module Lib
   ( genARandomPreFactoredNumberLTEn,
     createBasicSeq,
-    -- ,uniformFactorsLEn
     getRndMInt,
+    mkStartRndIoIntLstn1,
+    filterIndexed,
+    indexedR,
+    indexedPairs,
+    makeList
   )
 where
 
 -- import Data.Bool (bool) -- after refactoring yet again, using Data.bool.HT this is no longer being used
-import Data.Bool.HT (if')
-import Data.Numbers.Primes (isPrime)
+
 -- import ShortCircuit (if') -- now after refactoring using bool, this is not being used
 
 -- disabling termination checking
+
+import Control.Monad (replicateM)
+import Control.Monad.Loops (unfoldWhileM)
+import Control.Parallel
+import Data.Bool.HT (if')
+import Data.List.Index (indexed)
+import Data.Numbers.Primes (isPrime)
 import Data.Text (pack)
-import Protolude hiding (bool, die)
+import Debug.Trace (trace, traceM)
+import Protolude hiding (bool, die, head, trace, traceM)
 import RefinementHelper
-import System.Random.Stateful (globalStdGen, uniformRM)
+import System.Random.Stateful (globalStdGen, randomRIO, uniformRM)
+import Prelude (head, (!!), tail, String)
+import Data.Ix (inRange)
+import Data.Semigroup ((<>))
 
 {-@ lazy createBasicSeq @-}
 {-@ createBasicSeq :: n:Pos -> IO (Either Text (LstPosMaxN 1 n)) @-}
@@ -63,6 +77,155 @@ genARandomPreFactoredNumberLTEn _ = pure $ Left $ pack "Invalid"
 -- | Get a Random Integer with uniform probability in the range [1,n]
 getRndMInt :: (Int, Int) -> IO Int
 getRndMInt (l, u) | l <= u && l > 0 = do
-  result <- uniformRM (l, u) globalStdGen :: IO Int
+  result <- uniformRM (l, u) globalStdGen
   pure $ result `min` u `max` l
 getRndMInt _ = die "impossible"
+
+{-@ ignore makeList @-}
+makeList :: Int -> IO [Int]
+makeList 1 = pure []
+makeList n = do
+  seed <- getRndMInt (1, n) -- int becomes IO Int becomes int
+  fmap (seed :) (makeList seed)
+
+
+  --liftM2 (:) (pure seed) (makeList seed)
+  --y <- makeList seed -- int becomes io [int] becomes [int]
+  --pure $ seed : y  -- int : [int] becomes io [int]
+--makeList n = getRndMInt (1,n) >>= \seed -> makeList seed >>= \y -> pure $ seed : y
+
+tests :: [String]
+tests = "y" : "Y" : [y <> e <> s | y <- ["y", "Y"], e <- ["e", "E", ""], s <- ["s", "S"]]
+
+quicksort :: (Ord a) => [a] -> [a]
+quicksort [] = []
+quicksort (x : xs) = smallSorted ++ [x] ++ bigSorted
+  where
+    smallSorted = quicksort [a | a <- xs, a <= x]
+    bigSorted = quicksort [a | a <- xs, a > x]
+
+-- showMat :: Matrix Digit -> String
+-- showMat xs = concat [dot x | x <- xs]
+--   where
+--     dot n = [if b == ' ' || b == ',' then '.' else b | b <- n]
+
+
+
+-- (1) Create a list of integers s1 ≥ s2 ≥ . . . ≥ sk = 1, where s1 is chosen uniformly at
+-- random in [1, N] and if si has been chosen and si > 1, then si+1 is chosen uniformly
+-- at random in [1, si
+-- ]. Call this list S. After choosing 1, go to Step 2.
+-- (2) Let r be the product of the prime elements of S.
+-- (3) If r > N, return to Step 1. Otherwise, output r, along with its prime factorization,
+-- with probability r/N. If you did not output r, return to Step 1.
+
+{-@ ignore mkStartRndIoIntLstn1 @-}
+mkStartRndIoIntLstn1 :: Int -> IO [Int]
+--mkStartRndIoIntLstn1 n =  sequence $ filterIndexed myPred [x | y <- reverse [1 .. n], x <- trace ("DEBUG: y " ++ show y) [getRndMInt (1, y)]]
+--mkStartRndIoIntLstn1 n = sequence [x | y <- reverse [1 .. n], x <- trace ("DEBUG: y " ++ show y) [getRndMInt (1, y)] ]
+mkStartRndIoIntLstn1 n = sequence [x | y <- reverse [1 .. n], Right x <- trace ("DEBUG: y " ++ show y) [filterOut n]]
+
+
+
+buildGrid :: (Num a) => [a] -> [a] -> [[(a, a)]]
+buildGrid [] _ = []
+buildGrid (r : rs) cs = [(r, c) | c <- cs] : buildGrid rs cs
+
+
+{-@ ignore filterOut @-}
+filterOut :: Int -> Either Text (IO Int) 
+filterOut i | i==1 = Left $ pack "itsaOne" | otherwise = Right $ getRndMInt (1, i)
+
+
+
+
+
+{-@ ignore indexedPairs @-}
+indexedPairs :: [Int] -> [((Int, Int), (Int, Int))]
+indexedPairs xs = zip (tail $ indexedR xs) $ indexedR xs
+
+indexedR :: [a] -> [(Int, a)]
+indexedR xs = map (\(indx, val) -> (length xs - indx, val)) $ indexed xs
+    
+filterIndexed :: (Int -> a -> Bool) -> [a] -> [a]
+filterIndexed p xs = [x|(i,x) <- indexed xs, p i x]
+
+myPred  :: ((Int, Int), (Int, Int)) -> Bool
+myPred ((ia, va), (ip, vp)) 
+  | ip == 0 = True
+  | otherwise = False
+
+replaceFirst elem y xs | (l, _ : r) <- break (== y) xs = l ++ [elem] ++ r | otherwise = xs
+
+{-@ ignore replaceFirst' @-}
+replaceFirst' elem y xs =
+  [ c
+    | let (l, _ : r) = break (== y) xs
+          c =
+            if not (null r)
+              then l ++ [elem] ++ r
+              else l
+      --a <- c
+  ]
+
+  
+
+-- -- | Maze cells are identified by integers
+-- type Cell = Int
+
+-- -- | A maze is a map from cells to adjacent cells
+-- type Maze = Cell -> [Cell]
+
+-- maze :: Maze
+-- maze =
+--   ( [ [1],
+--       [0, 2, 5],
+--       [1, 3],
+--       [2],
+--       [5],
+--       [4, 6, 1, 9],
+--       [5, 7],
+--       [6, 11],
+--       [12],
+--       [5, 13],
+--       [9],
+--       [7, 15],
+--       [8, 16],
+--       [14, 9, 17],
+--       [13, 15],
+--       [14, 11],
+--       [12, 17],
+--       [13, 16, 18],
+--       [17, 19],
+--       [18]
+--     ]
+--       !!
+--   )
+
+-- {-@ ignore solve @-}
+
+-- -- | Find paths from the given start to the end
+-- solve :: Maze -> Cell -> Cell -> [[Cell]]
+-- solve maze start = solve' []
+--   where
+--     -- solve' :: [Cell] -> Cell -> [[Cell]]
+--     solve' path end =
+--       let path' = end : path
+--        in if start == end
+--             then return path'
+--             else -- else do
+--             --     neighbor <- maze end
+--             --     guard (neighbor `notElem` path)
+--             --     solve' path' neighbor
+
+--               [result | neighbor <- maze end, neighbor `notElem` path, result <- solve' path' neighbor]
+
+-- randomBool :: Int -> IO Bool
+-- randomBool p = do
+--   n <- randomRIO (1, 100)
+--   pure (n > p)
+
+-- -- isActionRandom :: Float -> Int -> Int -> Int -> IO [Bool]
+-- -- isActionRandom eps n m step = sequence $ [randomBool (floor (eps - (0.01 * fromIntegral y) * 100))
+-- --                             | x <- [1..(n*m)]
+-- --                             , y <- [floor (fromIntegral x / (fromIntegral (m * step)))]]

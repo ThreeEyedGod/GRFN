@@ -20,6 +20,26 @@
   (major1) == 4 && (major2) <  17 || \
   (major1) == 4 && (major2) == 17 && (minor) <= 2)
 #endif /* MIN_VERSION_base */
+/* package ilist-0.4.0.1 */
+#ifndef VERSION_ilist
+#define VERSION_ilist "0.4.0.1"
+#endif /* VERSION_ilist */
+#ifndef MIN_VERSION_ilist
+#define MIN_VERSION_ilist(major1,major2,minor) (\
+  (major1) <  0 || \
+  (major1) == 0 && (major2) <  4 || \
+  (major1) == 0 && (major2) == 4 && (minor) <= 0)
+#endif /* MIN_VERSION_ilist */
+/* package lens-5.2.3 */
+#ifndef VERSION_lens
+#define VERSION_lens "5.2.3"
+#endif /* VERSION_lens */
+#ifndef MIN_VERSION_lens
+#define MIN_VERSION_lens(major1,major2,minor) (\
+  (major1) <  5 || \
+  (major1) == 5 && (major2) <  2 || \
+  (major1) == 5 && (major2) == 2 && (minor) <= 3)
+#endif /* MIN_VERSION_lens */
 /* package liquidhaskell-0.9.4.7.0 */
 #ifndef VERSION_liquidhaskell
 #define VERSION_liquidhaskell "0.9.4.7.0"
@@ -30,6 +50,26 @@
   (major1) == 0 && (major2) <  9 || \
   (major1) == 0 && (major2) == 9 && (minor) <= 4)
 #endif /* MIN_VERSION_liquidhaskell */
+/* package monad-loops-0.4.3 */
+#ifndef VERSION_monad_loops
+#define VERSION_monad_loops "0.4.3"
+#endif /* VERSION_monad_loops */
+#ifndef MIN_VERSION_monad_loops
+#define MIN_VERSION_monad_loops(major1,major2,minor) (\
+  (major1) <  0 || \
+  (major1) == 0 && (major2) <  4 || \
+  (major1) == 0 && (major2) == 4 && (minor) <= 3)
+#endif /* MIN_VERSION_monad_loops */
+/* package parallel-3.2.2.0 */
+#ifndef VERSION_parallel
+#define VERSION_parallel "3.2.2.0"
+#endif /* VERSION_parallel */
+#ifndef MIN_VERSION_parallel
+#define MIN_VERSION_parallel(major1,major2,minor) (\
+  (major1) <  3 || \
+  (major1) == 3 && (major2) <  2 || \
+  (major1) == 3 && (major2) == 2 && (minor) <= 2)
+#endif /* MIN_VERSION_parallel */
 /* package primes-0.2.1.0 */
 #ifndef VERSION_primes
 #define VERSION_primes "0.2.1.0"
@@ -40,19 +80,19 @@
   (major1) == 0 && (major2) <  2 || \
   (major1) == 0 && (major2) == 2 && (minor) <= 1)
 #endif /* MIN_VERSION_primes */
-/* package protolude-0.3.3 */
+/* package protolude-0.3.4 */
 #ifndef VERSION_protolude
-#define VERSION_protolude "0.3.3"
+#define VERSION_protolude "0.3.4"
 #endif /* VERSION_protolude */
 #ifndef MIN_VERSION_protolude
 #define MIN_VERSION_protolude(major1,major2,minor) (\
   (major1) <  0 || \
   (major1) == 0 && (major2) <  3 || \
-  (major1) == 0 && (major2) == 3 && (minor) <= 3)
+  (major1) == 0 && (major2) == 3 && (minor) <= 4)
 #endif /* MIN_VERSION_protolude */
-/* package random-1.2.1.1 */
+/* package random-1.2.1.2 */
 #ifndef VERSION_random
-#define VERSION_random "1.2.1.1"
+#define VERSION_random "1.2.1.2"
 #endif /* VERSION_random */
 #ifndef MIN_VERSION_random
 #define MIN_VERSION_random(major1,major2,minor) (\
@@ -70,9 +110,9 @@
   (major1) == 2 && (major2) <  0 || \
   (major1) == 2 && (major2) == 0 && (minor) <= 2)
 #endif /* MIN_VERSION_text */
-/* package utility-ht-0.0.17 */
+/* package utility-ht-0.0.17.1 */
 #ifndef VERSION_utility_ht
-#define VERSION_utility_ht "0.0.17"
+#define VERSION_utility_ht "0.0.17.1"
 #endif /* VERSION_utility_ht */
 #ifndef MIN_VERSION_utility_ht
 #define MIN_VERSION_utility_ht(major1,major2,minor) (\
