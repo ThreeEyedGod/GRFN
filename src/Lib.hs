@@ -2,10 +2,9 @@
 
 -- | Module for accessing this math function
 module Lib
-  ( genARandomPreFactoredNumberLTEn,
-    createBasicSeq,
+  ( genARandomPreFactoredNumberLTEn',
     getRndMInt,
-    makeList
+    makeList,
   )
 where
 
@@ -19,16 +18,16 @@ import Control.Monad (replicateM)
 import Control.Monad.Loops (unfoldWhileM)
 import Control.Parallel
 import Data.Bool.HT (if')
+import Data.Ix (inRange)
 import Data.List.Index (indexed)
 import Data.Numbers.Primes (isPrime)
+import Data.Semigroup ((<>))
 import Data.Text (pack)
 import Debug.Trace (trace, traceM)
 import Protolude hiding (bool, die, head, trace, traceM)
 import RefinementHelper
 import System.Random.Stateful (globalStdGen, randomRIO, uniformRM)
-import Prelude (head, (!!), tail, String)
-import Data.Ix (inRange)
-import Data.Semigroup ((<>))
+import Prelude (String, head, tail, (!!))
 
 {-@ lazy createBasicSeq @-}
 {-@ createBasicSeq :: n:Pos -> IO (Either Text (LstPosMaxN 1 n)) @-}
@@ -77,9 +76,29 @@ getRndMInt (l, u) | l <= u && l > 0 = do
   pure $ result `min` u `max` l
 getRndMInt _ = die "impossible"
 
-{-@ ignore makeList @-}
+{-@ makeList :: n:Pos -> IO [Pos] @-}
+{-@ lazy makeList @-}
+
+-- | Provided an Int, creates a sequence of random integers LTE n decreasing possibly with multiples ending at single 1
 makeList :: Int -> IO [Int]
 makeList 1 = pure []
-makeList n = do
+makeList n | n >= 1 = do
   seed <- getRndMInt (1, n) -- int becomes IO Int becomes int
   fmap (seed :) (makeList seed)
+makeList _ = die "impossible"
+
+{-@ lazy genARandomPreFactoredNumberLTEn' @-}
+
+-- | This is the Entry Function.
+-- Provide an integer input and it should generate a tuple of a number less than the integer i/p and its factors
+genARandomPreFactoredNumberLTEn' :: Int -> IO (Either Text (Int, [Int]))
+genARandomPreFactoredNumberLTEn' x | x <= 0 = pure $ Left $ pack "Invalid"
+genARandomPreFactoredNumberLTEn' 1 = pure $ Right (1, [1])
+genARandomPreFactoredNumberLTEn' n = do
+  solnSet <- makeList n
+  case solnSet of
+    [] -> pure $ Left $ pack "Invalid"
+    seqNumbers -> if' (ps <= n) (pure $ Right rsp) (genARandomPreFactoredNumberLTEn' n)
+      where
+        rsp@(ps, sq) = (product sq, 1 : [y | y <- filter isPrime seqNumbers, y > 0]) -- product [] is 1, surprising
+genARandomPreFactoredNumberLTEn' _ = pure $ Left $ pack "Invalid"
