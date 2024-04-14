@@ -2,9 +2,9 @@ Test suite grfn-test: RUNNING...
 
 All Property Tests
   prop_checkIfLTEn [✔]
-    +++ OK, passed 100 tests; 128 discarded.
+    +++ OK, passed 100 tests; 155 discarded.
   prop_checkIffiltersValidInput11 [✔]
-    +++ OK, passed 100 tests; 960 discarded.
+    +++ OK, passed 100 tests; 829 discarded.
   prop_checkValidOutput11 [✘]
   prop_checkAccurateOutput11 [✘]
 
@@ -22,19 +22,19 @@ Failures:
        (after 1 test)
          Positive {getPositive = 3}
 
-  To rerun use: --match "/All Property Tests/prop_checkValidOutput11/" --seed 316871615
+  To rerun use: --match "/All Property Tests/prop_checkValidOutput11/" --seed 512889615
 
   test/Spec.hs:58:5: 
   2) All Property Tests prop_checkAccurateOutput11
-       Assertion failed (after 2 tests):
+       Assertion failed (after 6 tests and 1 shrink):
          Positive {getPositive = 3}
          Failed case
 
-  To rerun use: --match "/All Property Tests/prop_checkAccurateOutput11/" --seed 316871615
+  To rerun use: --match "/All Property Tests/prop_checkAccurateOutput11/" --seed 512889615
 
-Randomized with seed 316871615
+Randomized with seed 512889615
 
-Finished in 0.0061 seconds
+Finished in 0.0062 seconds
 4 examples, 2 failures
 Test suite grfn-test: FAIL
 Test suite logged to: /Users/mandeburung/Documents/grfn/dist-newstyle/build/aarch64-osx/ghc-9.4.7/grfn-1.0.0.0/t/grfn-test/test/grfn-1.0.0.0-grfn-test.log

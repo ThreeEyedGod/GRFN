@@ -1,6 +1,6 @@
-import Data.Numbers.Primes (isPrime)
+--import Data.Numbers.Primes (isPrime)
 import Data.Text (pack)
-import Lib (makeList, genARandomPreFactoredNumberLTEn')
+import Lib (genARandomPreFactoredNumberLTEn')
 import System.IO.Error (isDoesNotExistError, tryIOError)
 import Test.Hspec (Spec, describe, hspec, it, shouldBe, shouldNotReturn, shouldReturn)
 import Test.Hspec.Core.QuickCheck (modifyMaxSuccess)

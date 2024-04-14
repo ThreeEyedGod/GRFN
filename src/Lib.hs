@@ -14,20 +14,12 @@ where
 
 -- disabling termination checking
 
-import Control.Monad (replicateM)
-import Control.Monad.Loops (unfoldWhileM)
-import Control.Parallel
 import Data.Bool.HT (if')
-import Data.Ix (inRange)
-import Data.List.Index (indexed)
 import Data.Numbers.Primes (isPrime)
-import Data.Semigroup ((<>))
 import Data.Text (pack)
-import Debug.Trace (trace, traceM)
 import Protolude hiding (bool, die, head, trace, traceM)
 import RefinementHelper
-import System.Random.Stateful (globalStdGen, randomRIO, uniformRM)
-import Prelude (String, head, tail, (!!))
+import System.Random.Stateful (globalStdGen, uniformRM)
 
 {-@ getRndMInt :: x:{(Pos, Pos) | fst x <= snd x && fst x > 0} -> IO {y:Pos | y >= fst x && y <= snd x} @-}
 
@@ -50,11 +42,11 @@ makeList n | n >= 1 = do
   fmap (seed :) (makeList seed)
 makeList _ = die "impossible"
 
-{-@ genARandomPreFactoredNumberLTEn' :: n:Int -> IO (Either Text (Pos, [RngPrimes 1 n])) @-}
+{-@ genARandomPreFactoredNumberLTEn' :: n:Int -> IO (Either Text (Pos, RngPrimeFactors 1 n)) @-}
 {-@ lazy genARandomPreFactoredNumberLTEn' @-}
 
 -- | This is the Entry Function.
--- Provide an integer input and it should generate a tuple of a number less than the integer i/p and its factors
+-- Provide an integer input and it should generate a tuple of a number less than the integer i/p and its prime factors
 genARandomPreFactoredNumberLTEn' :: Int -> IO (Either Text (Int, [Int]))
 genARandomPreFactoredNumberLTEn' x | x <= 0 = pure $ Left $ pack "Invalid"
 genARandomPreFactoredNumberLTEn' 1 = pure $ Right (1, [1])
@@ -62,4 +54,4 @@ genARandomPreFactoredNumberLTEn' n = do
   solnSet <- makeList n
   let rsp@(ps, sq) = (product sq, filter isPrime solnSet)
   if' (ps <= n) (pure $ Right rsp) (genARandomPreFactoredNumberLTEn' n)
-genARandomPreFactoredNumberLTEn' _ = pure $ Left $ pack "Invalid"
+--genARandomPreFactoredNumberLTEn' _ = pure $ Left $ pack "Invalid"
