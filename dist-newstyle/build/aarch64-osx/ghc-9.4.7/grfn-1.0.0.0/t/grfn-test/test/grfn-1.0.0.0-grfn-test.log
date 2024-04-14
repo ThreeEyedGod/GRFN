@@ -2,68 +2,39 @@ Test suite grfn-test: RUNNING...
 
 All Property Tests
   prop_checkIfLTEn [✔]
-    +++ OK, passed 100 tests; 190 discarded.
+    +++ OK, passed 100 tests; 128 discarded.
   prop_checkIffiltersValidInput11 [✔]
-    +++ OK, passed 100 tests; 885 discarded.
-  prop_checkValidOutput11 [✔]
-    +++ OK, passed 100 tests; 101 discarded:
-    74% n LT 30
-    
-     9% 3
-     6% 7
-     4% 11
-     4% 13
-     4% 14
-     4% 18
-     4% 20
-     4% 26
-     4% 36
-     4% 4
-     4% 9
-     3% 34
-     3% 41
-     3% 45
-     3% 6
-     3% 8
-     2% 10
-     2% 15
-     2% 16
-     2% 17
-     2% 19
-     2% 21
-     2% 28
-     2% 30
-     2% 44
-     2% 5
-     1% 12
-     1% 22
-     1% 24
-     1% 25
-     1% 27
-     1% 32
-     1% 35
-     1% 37
-     1% 38
-     1% 39
-     1% 40
-     1% 47
-     1% 48
-     1% 49
+    +++ OK, passed 100 tests; 960 discarded.
+  prop_checkValidOutput11 [✘]
   prop_checkAccurateOutput11 [✘]
 
 Failures:
 
+  test/Spec.hs:51:5: 
+  1) All Property Tests prop_checkValidOutput11
+       uncaught exception: ErrorCall
+       Prelude.head: empty list
+       CallStack (from HasCallStack):
+         error, called at libraries/base/GHC/List.hs:1646:3 in base:GHC.List
+         errorEmptyList, called at libraries/base/GHC/List.hs:85:11 in base:GHC.List
+         badHead, called at libraries/base/GHC/List.hs:81:28 in base:GHC.List
+         head, called at test/Spec.hs:96:34 in main:Main
+       (after 1 test)
+         Positive {getPositive = 3}
+
+  To rerun use: --match "/All Property Tests/prop_checkValidOutput11/" --seed 316871615
+
   test/Spec.hs:58:5: 
-  1) All Property Tests prop_checkAccurateOutput11
-       Assertion failed (after 16 tests):
-         Positive {getPositive = 9}
+  2) All Property Tests prop_checkAccurateOutput11
+       Assertion failed (after 2 tests):
+         Positive {getPositive = 3}
          Failed case
 
-  To rerun use: --match "/All Property Tests/prop_checkAccurateOutput11/" --seed 1871787884
+  To rerun use: --match "/All Property Tests/prop_checkAccurateOutput11/" --seed 316871615
 
-Randomized with seed 1871787884
+Randomized with seed 316871615
 
-Finished in 0.0078 seconds
-4 examples, 1 failure
+Finished in 0.0061 seconds
+4 examples, 2 failures
 Test suite grfn-test: FAIL
 Test suite logged to: /Users/mandeburung/Documents/grfn/dist-newstyle/build/aarch64-osx/ghc-9.4.7/grfn-1.0.0.0/t/grfn-test/test/grfn-1.0.0.0-grfn-test.log
