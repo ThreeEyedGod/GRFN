@@ -25,12 +25,14 @@ import Prelude (String, error)
 
 {-@ type Rng Lo Hi = {v:Int | (Btwn Lo v Hi)} @-}
 {-@ type RngPos Lo Hi = {v:Pos | (BtwnBothIncl Lo v Hi)} @-}
+{-@ type RngPrimes Lo Hi = {v:Pos | (v==1) || (isPrime v) && (BtwnBothIncl Lo v Hi)} @-}
+
 {-@ type LstPosMaxN Lo Hi = v:[RngPos Lo Hi] @-}
 {-@ type TuplePos F S = {v:(Pos, Pos) | fst v == F && snd v == S && (Ge S F)} @-}
 
 -- Haskell Type Definitions
+-- {-@ factoredInt :: (Int, [Int])<{\i fl -> i == product fl}> @-}
 -- factoredInt :: (Int, [Int])
--- {-@ factoredInt :: (Int, [Int])<{\i fl -> i = product fl}> @-}
 -- factoredInt = (9, [1,3,3])
 
 mustGoDown :: [Integer]

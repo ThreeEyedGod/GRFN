@@ -38,17 +38,19 @@ getRndMInt (l, u) | l <= u && l > 0 = do
   pure $ result `min` u `max` l
 getRndMInt _ = die "impossible"
 
-{-@ makeList :: n:Pos -> IO [Pos] @-}
+
+{-@ makeList :: n:Pos -> IO [RngPos 1 n] @-}
 {-@ lazy makeList @-}
 
 -- | Provided an Int, creates a sequence of random integers LTE n decreasing possibly with multiples ending at single 1
 makeList :: Int -> IO [Int]
-makeList 1 = pure []
+makeList 1 = pure [1] -- pure [] also works
 makeList n | n >= 1 = do
   seed <- getRndMInt (1, n) -- int becomes IO Int becomes int
   fmap (seed :) (makeList seed)
 makeList _ = die "impossible"
 
+{-@ genARandomPreFactoredNumberLTEn' :: n:Int -> IO (Either Text (Pos, [RngPrimes 1 n])) @-}
 {-@ lazy genARandomPreFactoredNumberLTEn' @-}
 
 -- | This is the Entry Function.
