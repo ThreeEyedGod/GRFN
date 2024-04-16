@@ -38,7 +38,10 @@ makeList n | n > 1 = do
   fmap (seed :) (makeList seed)
 makeList _ = die "impossible"
 
-{-@ genARandomPreFactoredNumberLTEn' :: n:Int -> IO (Either Text ({x:Pos | Lte x n}, RngPrimeFactors 1 n)) @-}
+-- ***** this is wrong the last n ain't right !! ******
+
+{-@ genARandomPreFactoredNumberLTEn' :: n:Int -> IO (Either Text ({x:Pos | Lte x n}, RngPrimeFactors 1 n n)) @-}
+
 {-@ lazy genARandomPreFactoredNumberLTEn' @-}
 
 -- | This is the Entry Function.
@@ -53,6 +56,7 @@ genARandomPreFactoredNumberLTEn' n = do
 
 -- | let it be true if it is prime or the integer 1
 
-{-@ lazy isPrimeOr1 @-}
+{-@ isPrimeOr1 :: Pos -> Bool @-}
 isPrimeOr1 :: Int -> Bool
+isPrimeOr1 n | n < 1 = die "impossible"
 isPrimeOr1 n = (n == 1) || isPrime n

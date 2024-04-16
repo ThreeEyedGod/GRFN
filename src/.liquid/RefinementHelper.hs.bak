@@ -26,7 +26,8 @@ import Prelude (String, error)
 {-@ type Rng Lo Hi = {v:Int | (Btwn Lo v Hi)} @-}
 {-@ type RngPos Lo Hi = {v:Pos | (BtwnBothIncl Lo v Hi)} @-}
 {-@ type RngPrimes Lo Hi = {v:Pos | (v==1) || (isPrime v) && (BtwnBothIncl Lo v Hi)} @-}
-{-@ type RngPrimeFactors Lo Hi = {v:[RngPrimes Lo Hi] | ((Lo==1) && (Hi==1)) || (product v == Hi)} @-}
+{-@ type RngPrimeFactors Lo Hi N = {v:[RngPrimes Lo Hi] | ((Lo==1) && (Hi==1)) || (product v == N)} @-}
+
 
 {-@ type LstPosMaxN Lo Hi = v:[RngPos Lo Hi] @-}
 {-@ type TuplePos F S = {v:(Pos, Pos) | fst v == F && snd v == S && (Ge S F)} @-}

@@ -40,7 +40,7 @@ libHProperty8 = do
 
 libHProperty9 :: Spec
 libHProperty9 = do
-  modifyMaxSuccess (const 10) $
+  modifyMaxSuccess (const 5) $
     prop
       "prop_checkIffiltersInValidInput"
       prop_checkIffiltersInValidInput

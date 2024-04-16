@@ -2,99 +2,108 @@ Test suite grfn-test: RUNNING...
 
 All Property Tests
   prop_checkIfLTEn [✔]
-    +++ OK, passed 100 tests; 165 discarded.
-  prop_checkIffiltersInValidInput [✔]
-    +++ OK, passed 10 tests; 28 discarded.
+    +++ OK, passed 100 tests; 169 discarded.
+  prop_checkIffiltersInValidInput [✘]
   prop_checkValidOutput [✔]
-    +++ OK, passed 100 tests; 85 discarded:
-    73% n LT 30
+    +++ OK, passed 100 tests; 90 discarded:
+    75% n LT 30
     
-    11% 3
-     6% 10
-     5% 6
-     5% 9
-     4% 14
-     4% 20
-     4% 23
-     4% 31
+     7% 3
+     5% 10
+     5% 13
+     5% 24
+     5% 4
+     4% 34
+     4% 5
+     4% 6
      3% 11
+     3% 15
      3% 16
+     3% 17
+     3% 20
+     3% 21
+     3% 23
+     3% 25
      3% 26
-     3% 36
-     3% 4
-     3% 41
-     2% 12
-     2% 13
-     2% 17
-     2% 18
-     2% 21
-     2% 25
-     2% 27
+     3% 28
+     2% 14
+     2% 30
+     2% 32
+     2% 33
      2% 35
-     2% 37
-     2% 40
+     2% 41
      2% 42
      2% 45
-     2% 7
-     1% 19
-     1% 22
-     1% 24
-     1% 28
-     1% 30
-     1% 33
-     1% 39
-     1% 43
+     2% 9
+     1% 12
+     1% 18
+     1% 27
+     1% 29
+     1% 31
+     1% 36
+     1% 40
      1% 44
      1% 47
      1% 48
-     1% 5
+     1% 49
+     1% 7
      1% 8
   prop_checkAccurateOutput [✔]
-    +++ OK, passed 100 tests; 85 discarded:
-    73% n LT 30
+    +++ OK, passed 100 tests; 90 discarded:
+    75% n LT 30
     
-    11% 3
-     6% 10
-     5% 6
-     5% 9
-     4% 14
-     4% 20
-     4% 23
-     4% 31
+     7% 3
+     5% 10
+     5% 13
+     5% 24
+     5% 4
+     4% 34
+     4% 5
+     4% 6
      3% 11
+     3% 15
      3% 16
+     3% 17
+     3% 20
+     3% 21
+     3% 23
+     3% 25
      3% 26
-     3% 36
-     3% 4
-     3% 41
-     2% 12
-     2% 13
-     2% 17
-     2% 18
-     2% 21
-     2% 25
-     2% 27
+     3% 28
+     2% 14
+     2% 30
+     2% 32
+     2% 33
      2% 35
-     2% 37
-     2% 40
+     2% 41
      2% 42
      2% 45
-     2% 7
-     1% 19
-     1% 22
-     1% 24
-     1% 28
-     1% 30
-     1% 33
-     1% 39
-     1% 43
+     2% 9
+     1% 12
+     1% 18
+     1% 27
+     1% 29
+     1% 31
+     1% 36
+     1% 40
      1% 44
      1% 47
      1% 48
-     1% 5
+     1% 49
+     1% 7
      1% 8
 
-Finished in 0.0042 seconds
-4 examples, 0 failures
-Test suite grfn-test: PASS
+Failures:
+
+  test/Spec.hs:44:5: 
+  1) All Property Tests prop_checkIffiltersInValidInput
+       Gave up after 4 tests; 50 discarded!
+
+  To rerun use: --match "/All Property Tests/prop_checkIffiltersInValidInput/" --seed 1418876154
+
+Randomized with seed 1418876154
+
+Finished in 0.0064 seconds
+4 examples, 1 failure
+Test suite grfn-test: FAIL
 Test suite logged to: /Users/mandeburung/Documents/grfn/dist-newstyle/build/aarch64-osx/ghc-9.4.7/grfn-1.0.0.0/t/grfn-test/test/grfn-1.0.0.0-grfn-test.log
