@@ -38,7 +38,7 @@ makeList n | n > 1 = do
   fmap (seed :) (makeList seed)
 makeList _ = die "impossible"
 
-{-@ genARandomPreFactoredNumberLTEn' :: n:Int -> IO (Either Text (Pos, RngPrimeFactors 1 n)) @-}
+{-@ genARandomPreFactoredNumberLTEn' :: n:Int -> IO (Either Text ({x:Pos | Lte x n}, RngPrimeFactors 1 n)) @-}
 {-@ lazy genARandomPreFactoredNumberLTEn' @-}
 
 -- | This is the Entry Function.
