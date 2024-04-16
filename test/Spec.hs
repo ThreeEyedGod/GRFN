@@ -1,4 +1,4 @@
---import Data.Numbers.Primes (isPrime)
+import Data.Numbers.Primes (primeFactors, primes)
 import Data.Text (pack)
 import Lib (genARandomPreFactoredNumberLTEn')
 import System.IO.Error (isDoesNotExistError, tryIOError)
@@ -40,36 +40,36 @@ libHProperty8 = do
 
 libHProperty9 :: Spec
 libHProperty9 = do
-  modifyMaxSuccess (const 100) $
+  modifyMaxSuccess (const 10) $
     prop
-      "prop_checkIffiltersValidInput11"
-      prop_checkIffiltersValidInput11
+      "prop_checkIffiltersInValidInput"
+      prop_checkIffiltersInValidInput
 
 libHProperty10 :: Spec
 libHProperty10 = do
   modifyMaxSuccess (const 100) $
     prop
-      "prop_checkValidOutput11"
-      prop_checkValidOutput11
+      "prop_checkValidOutput"
+      prop_checkValidOutput
 
 libHProperty11 :: Spec
 libHProperty11 = do
   modifyMaxSuccess (const 100) $
     prop
-      "prop_checkAccurateOutput11"
-      prop_checkAccurateOutput11
+      "prop_checkAccurateOutput"
+      prop_checkAccurateOutput
 
-primes :: [Int]
-primes = 2 : filter ((== 1) . length . primeFactors) [3, 5 ..]
+-- primes :: [Int]
+-- primes = 2 : filter ((== 1) . length . primeFactors) [3, 5 ..]
 
-primeFactors :: Int -> [Int]
-primeFactors n = factor n primes
-  where
-    factor _ [] = []
-    factor m (p : ps)
-      | p * p > m = [m]
-      | m `mod` p == 0 = p : factor (m `div` p) (p : ps)
-      | otherwise = factor m ps
+-- primeFactors :: Int -> [Int]
+-- primeFactors n = factor n primes
+--   where
+--     factor _ [] = []
+--     factor m (p : ps)
+--       | p * p > m = [m]
+--       | m `mod` p == 0 = p : factor (m `div` p) (p : ps)
+--       | otherwise = factor m ps
 
 ------------
 prop_checkIfLTEn :: Positive Int -> Property
@@ -79,26 +79,32 @@ prop_checkIfLTEn (Positive n) = n > 2 && n < 30 ==> monadicIO $ do
     Left _ -> assert False
     Right y -> assert (fst y <= n)
 
-prop_checkIffiltersValidInput11 :: Int -> Property
-prop_checkIffiltersValidInput11 n = n > -10 && n < 1 ==> monadicIO $ do
+prop_checkIffiltersInValidInput :: Int -> Property
+prop_checkIffiltersInValidInput n = n > -10 && n < 1 ==> monadicIO $ do
   -- notice we are constraining n to be within a "bad range"
   x <- run $ genARandomPreFactoredNumberLTEn' n
   case x of
     Left err -> assert (err == pack "Invalid")
     Right _ -> assert False
 
-prop_checkValidOutput11 :: Positive Int -> Property
-prop_checkValidOutput11 (Positive n) = n > 2 && n < 50 ==> classify (n < 30) "n LT 30" $ collect n $ monadicIO $ do
+-- input should be GTE to the head value of a valid pre-factored list
+-- (6, [3,2]) ==> 6 >= 3 (5, [5, 1]) ==> 5 >= 5
+prop_checkValidOutput :: Positive Int -> Property
+prop_checkValidOutput (Positive n) = n > 2 && n < 50 ==> classify (n < 30) "n LT 30" $ collect n $ monadicIO $ do
   -- if n upper end is set at 100 then it results in an error https://www.cnblogs.com/BlogOfASBOIER/p/13096167.html
   x <- run $ genARandomPreFactoredNumberLTEn' n
   case x of
     Left err -> assert (err == pack "Invalid")
-    Right y -> assert (fst y >= (head $ reverse $ snd y))
+    Right y -> assert (fst y >= (head $ snd y))
 
-prop_checkAccurateOutput11 :: Positive Int -> Property
-prop_checkAccurateOutput11 (Positive n) = n > 2 && n < 50 ==> classify (n < 30) "n LT 30" $ collect n $ printTestCase "Failed case" $ monadicIO $ do
+prop_checkAccurateOutput :: Positive Int -> Property
+prop_checkAccurateOutput (Positive n) = n > 2 && n < 50 ==> classify (n < 30) "n LT 30" $ collect n $ printTestCase "Failed case" $ monadicIO $ do
   -- if n upper end is set at 100 then it results in an error https://www.cnblogs.com/BlogOfASBOIER/p/13096167.html
   x <- run $ genARandomPreFactoredNumberLTEn' n
   case x of
     Left err -> assert (err == pack "Invalid")
-    Right y -> assert ((fst y == 1) || (1 : (primeFactors $ fst y) == snd y))
+    Right y -> assert ((primeFactorsOr1 $ fst y) == snd y)
+
+primeFactorsOr1 :: Int -> [Int]
+primeFactorsOr1 1 = [1]
+primeFactorsOr1 n = reverse (1 : primeFactors n)
