@@ -28,14 +28,14 @@ import Prelude (String, error)
 {-@ type RngPrimes Lo Hi = {v:Pos | (v==1) || (isPrime v) && (BtwnBothIncl Lo v Hi)} @-}
 {-@ type RngPrimeFactors Lo Hi N = {v:[RngPrimes Lo Hi] | ((Lo==1) && (Hi==1)) || (product v == N)} @-}
 
-
 {-@ type LstPosMaxN Lo Hi = v:[RngPos Lo Hi] @-}
 {-@ type TuplePos F S = {v:(Pos, Pos) | fst v == F && snd v == S && (Ge S F)} @-}
 
 -- Haskell Type Definitions
--- {-@ factoredInt :: (Int, [Int])<{\i fl -> i == product fl}> @-}
--- factoredInt :: (Int, [Int])
--- factoredInt = (9, [1,3,3])
+-- {-@ type factoredInt i [j] :: (i, [j])<{\n fl -> n == product fl}> @-}
+-- {-@ factoredIntex :: (Int, [Int]) @-}
+-- factoredIntex :: (Int, [Int])
+-- factoredIntex = (9, [1,3,3])
 
 mustGoDown :: [Integer]
 {-@ type DecrList a = [a]<{\xi xj -> xi >= xj}> @-}
