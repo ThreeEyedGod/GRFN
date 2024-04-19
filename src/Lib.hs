@@ -31,9 +31,7 @@ getRndMInt _ = die "impossible"
 -- | Provided an Int, creates a sequence of random integers LTE n decreasing possibly with multiples ending at single 1
 makeList :: Int -> IO [Int]
 makeList 1 = pure [] -- pure [] also works
-makeList n | n > 1 = do
-  seed <- getRndMInt (1, n) -- int becomes IO Int becomes int
-  fmap (seed :) (makeList seed)
+makeList n | n > 1 = getRndMInt (1, n) >>= \seed -> (seed :) <$> makeList seed
 makeList _ = die "impossible"
 
 {-@ lazy genARandomPreFactoredNumberLTEn' @-}
