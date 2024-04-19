@@ -22,9 +22,7 @@ import System.Random.Stateful (globalStdGen, uniformRM)
 
 -- | Get a Random Integer with uniform probability in the range [1,n]
 getRndMInt :: (Int, Int) -> IO Int
-getRndMInt (l, u) | l <= u && l > 0 = do
-  result <- uniformRM (l, u) globalStdGen
-  pure $ result `min` u `max` l
+getRndMInt (l, u) | l <= u && l > 0 = max l . min u <$> uniformRM (l, u) globalStdGen
 getRndMInt _ = die "impossible"
 
 {-@ makeList :: n:Pos -> IO [RngPos 1 n] @-}
