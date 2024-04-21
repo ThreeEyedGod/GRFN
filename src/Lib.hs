@@ -14,6 +14,7 @@ where
 import Data.Bool.HT (if')
 import Data.Numbers.Primes (isPrime, primeFactors, primes)
 import Data.Text (pack)
+import Data.Tuple.Sequence (sequenceT)
 import Protolude hiding (bool, die, head, trace, traceM)
 import RefinementHelper
 import System.Random.Stateful (globalStdGen, uniformRM)
@@ -31,7 +32,8 @@ getRndMInt _ = die "impossible"
 -- | Provided an Int, creates a sequence of random integers LTE n decreasing possibly with multiples ending at single 1
 makeList :: Int -> IO [Int]
 makeList 1 = pure [] -- pure [] also works
-makeList n | n > 1 = getRndMInt (1, n) >>= \seed -> (seed :) <$> makeList seed
+makeList n | n > 1 = getRndMInt (1, n) >>= joinPass -- getRndMInt (1, n) >>= \seed -> (seed :) <$> makeList seed
+        where joinPass seed = (seed :) <$> makeList seed
 makeList _ = die "impossible"
 
 {-@ lazy genARandomPreFactoredNumberLTEn' @-}
