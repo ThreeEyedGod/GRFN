@@ -47,8 +47,8 @@ genARandomPreFactoredNumberLTEn' 1 = pure $ Right (1, [1])
 genARandomPreFactoredNumberLTEn' n = makeList n >>= haltOrContinue n
   where
     haltOrContinue n' solnSet
-      | ps <= n' = pure $ Right result
-      | otherwise = genARandomPreFactoredNumberLTEn' n
+      | ps <= n' = pure $ Right result 
+      | otherwise = genARandomPreFactoredNumberLTEn' n' -- keep doing till result occurs
       where
         result@(ps, sq) = (product sq, filter isPrimeOr1 solnSet) -- note: product [] = 1
 
