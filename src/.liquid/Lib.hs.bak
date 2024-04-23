@@ -9,13 +9,13 @@ module Lib
 where
 
 -- import Data.Bool (bool) -- after refactoring yet again, using Data.bool.HT this is no longer being used
--- import ShortCircuit (if', (??)) -- now after refactoring using bool, this is not being used
+-- now after refactoring using bool, this is not being used
 
-import Data.Bool.HT (if')
-import Data.Numbers.Primes (isPrime, primeFactors, primes)
+-- import Control.Conditional (ifM, (<&&>))
+-- import Data.Bool.HT (if')
+import Data.Numbers.Primes (isPrime)
 import Data.Text (pack)
-import Data.Tuple.Sequence (sequenceT)
-import Protolude hiding (bool, die, head, trace, traceM)
+import Protolude hiding (bool, die, head, ifM, trace, traceM)
 import RefinementHelper
 import System.Random.Stateful (globalStdGen, uniformRM)
 
@@ -32,8 +32,9 @@ getRndMInt _ = die "impossible"
 -- | Provided an Int, creates a sequence of random integers LTE n decreasing possibly with multiples ending at single 1
 makeList :: Int -> IO [Int]
 makeList 1 = pure [] -- pure [] also works
-makeList n | n > 1 = getRndMInt (1, n) >>= joinPass -- getRndMInt (1, n) >>= \seed -> (seed :) <$> makeList seed
-        where joinPass seed = (seed :) <$> makeList seed
+makeList n | n > 1 = getRndMInt (1, n) >>= valConsApply -- getRndMInt (1, n) >>= \seed -> (seed :) <$> makeList seed
+  where
+    valConsApply seed = (seed :) <$> makeList seed
 makeList _ = die "impossible"
 
 {-@ lazy genARandomPreFactoredNumberLTEn' @-}
@@ -43,10 +44,13 @@ makeList _ = die "impossible"
 genARandomPreFactoredNumberLTEn' :: Int -> IO (Either Text (Int, [Int]))
 genARandomPreFactoredNumberLTEn' x | x <= 0 = pure $ Left $ pack "Invalid"
 genARandomPreFactoredNumberLTEn' 1 = pure $ Right (1, [1])
-genARandomPreFactoredNumberLTEn' n = do
-  solnSet <- makeList n
-  let rsp@(ps, sq) = (product sq, filter isPrimeOr1 solnSet) -- note: product [] = 1
-  if' (ps <= n) (pure $ Right rsp) (genARandomPreFactoredNumberLTEn' n)
+genARandomPreFactoredNumberLTEn' n = makeList n >>= haltOrContinue n
+  where
+    haltOrContinue n' solnSet
+      | ps <= n' = pure $ Right result
+      | otherwise = genARandomPreFactoredNumberLTEn' n
+      where
+        result@(ps, sq) = (product sq, filter isPrimeOr1 solnSet) -- note: product [] = 1
 
 -- | let it be true if it is prime or the integer 1
 
