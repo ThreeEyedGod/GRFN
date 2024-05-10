@@ -70,6 +70,16 @@
   (major1) == 2 && (major2) <  0 || \
   (major1) == 2 && (major2) == 0 && (minor) <= 2)
 #endif /* MIN_VERSION_text */
+/* package tuple-0.3.0.2 */
+#ifndef VERSION_tuple
+#define VERSION_tuple "0.3.0.2"
+#endif /* VERSION_tuple */
+#ifndef MIN_VERSION_tuple
+#define MIN_VERSION_tuple(major1,major2,minor) (\
+  (major1) <  0 || \
+  (major1) == 0 && (major2) <  3 || \
+  (major1) == 0 && (major2) == 3 && (minor) <= 0)
+#endif /* MIN_VERSION_tuple */
 
 /* tool gcc-15.0.0 */
 #ifndef TOOL_VERSION_gcc

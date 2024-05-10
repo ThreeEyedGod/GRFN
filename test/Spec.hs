@@ -8,6 +8,7 @@ import Test.Hspec.QuickCheck (prop)
 import Test.QuickCheck (Arbitrary, Args (..), Gen, NonNegative (..), Positive (..), Property, arbitrary, chatty, choose, classify, collect, cover, elements, expectFailure, forAll, forAllProperties, listOf, printTestCase, quickCheck, quickCheckWithResult, suchThat, verbose, verboseCheckWithResult, withMaxSuccess, (==>))
 import Test.QuickCheck.Monadic (assert, monadicIO, run)
 
+
 main :: IO ()
 main = hspec $ do
   libH
@@ -30,6 +31,7 @@ libH = describe "All Property Tests" $ do
   libHProperty9
   libHProperty10
   libHProperty11
+
 
 libHProperty8 :: Spec
 libHProperty8 = do

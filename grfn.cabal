@@ -30,7 +30,7 @@ library
                       --,parallel
                       --,ilist >= 0.4.0.1
                       --,monad-loops >= 0.4.3
-                      --,tuple >= 0.3.0.2
+                      ,tuple >= 0.3.0.2
                       --,cond >= 0.4
   default-language:    Haskell2010
   ghc-options:         -Wall
@@ -45,6 +45,7 @@ library
                        -fplugin=LiquidHaskell
                        -fwrite-ide-info
                        -hiedir=.hie
+                       
 executable grfn-exe
   hs-source-dirs:      app
   main-is:             Main.hs
@@ -89,6 +90,7 @@ test-suite grfn-test
                        -threaded
                        -rtsopts
                        -with-rtsopts=-N
+                       -XTemplateHaskell
 
 source-repository head
   type:     git
