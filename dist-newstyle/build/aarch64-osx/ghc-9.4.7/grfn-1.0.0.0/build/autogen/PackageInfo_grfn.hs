@@ -20,6 +20,6 @@ version = Version [1,0,0,0] []
 synopsis :: String
 synopsis = ""
 copyright :: String
-copyright = "2023 ThreeEyedGod"
+copyright = "2024 ThreeEyedGod"
 homepage :: String
 homepage = "https://github.com/threeeyedgod/grfn#readme"

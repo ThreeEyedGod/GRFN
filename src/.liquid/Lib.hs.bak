@@ -1,19 +1,10 @@
-{-# LANGUAGE ApplicativeDo #-}
-{-# LANGUAGE BangPatterns #-}
 {-# LANGUAGE NoImplicitPrelude #-}
 
 -- | Module for accessing this math function
 module Lib
   ( genARandomPreFactoredNumberLTEn',
     getRndMInt,
-    makeList,
-    getName,
-    testMap,
-    testSequence,
-    testLiftM2,
-    test1LiftM2,
-    testfMap,
-    test2liftM2,
+    makeList
   )
 where
 
@@ -26,11 +17,10 @@ where
 import Control.Applicative ((<*>))
 import Data.Numbers.Primes (isPrime)
 import Data.Text (pack)
-import Data.Tuple.Sequence
 import Protolude hiding (bool, die, getLine, head, ifM, trace, traceM)
 import RefinementHelper
 import System.Random.Stateful (globalStdGen, uniformRM)
-import Prelude (String, even, getLine, id, odd)
+import Prelude (String)
 
 {-@ getRndMInt :: x:{(Pos, Pos) | fst x <= snd x && fst x > 0} -> IO {y:Pos | y >= fst x && y <= snd x} @-}
 
@@ -53,30 +43,10 @@ makeList n | n > 1 = (getRndMInt >=>: makeList) (1, n)
 makeList _ = die "impossible"
 
 infixr 1 >=>:
-
 -- | Left-to-right Kleisli composition of monads plus prepend elem using standard operators
 (>=>:) :: (Monad m) => (a -> m b) -> (b -> m [b]) -> (a -> m [b])
--- f >=>: g = \x -> f x >>= \u -> (u :) <$> g u
 f >=>: g = f >=> \u -> (u :) <$> g u
 
-{-@ ignore echo @-}
-echo :: IO ()
-echo = getLine >>= putStrLn
-
-{-@ ignore echo1 @-}
-echo1 :: Int -> IO [Int]
-echo1 n = getRndMInt (1, n) >>= makeList
-
-{-@ ignore echo2 @-}
-echo2 :: Int -> IO [Int]
-echo2 n = myCons <$> (getRndMInt (1, n)) <*> echo1 n >>= id
-
--- writeFile <$> getFilename <*> getString >>= id   :: IO ()
--- writeFile :: FilePath -> String -> IO ()
-
-{-@ ignore myCons @-}
-myCons :: Int -> [Int] -> IO [Int]
-myCons x xs = pure $ x : xs
 
 {-@ lazy genARandomPreFactoredNumberLTEn' @-}
 
@@ -99,62 +69,3 @@ genARandomPreFactoredNumberLTEn' n = makeList n >>= haltOrContinue n
 isPrimeOr1 :: Int -> Bool
 isPrimeOr1 n | n < 1 = die "impossible"
 isPrimeOr1 n = (n == 1) || isPrime n
-
------------------
-getName :: IO String
-getName = (<>) <$> get "Name: " <*> ((' ' :) <$> get "Surname: ")
-  where
-    get :: String -> IO String
-    get s = putStr s >> getLine
-
-testMap :: [Bool]
-testMap = map ($ 4) [even, odd]
-
-{-@ ignore testSequence @-}
-testSequence :: [Bool]
-testSequence = sequence [even, odd] 4
-
-{-@ ignore testLiftM2 @-}
-testLiftM2 :: Bool
-testLiftM2 = liftM2 (&&) even odd 4
-
-{-@ ignore test1LiftM2 @-}
-test1LiftM2 :: IO String
-test1LiftM2 = liftM2 (>>) putStrLn return "hello"
-
--- perform functions in/on a monad, lifting
-{-@ ignore testfMap @-}
-testfMap :: Maybe Int
-testfMap = fmap (+ 2) (Just 2) --  functor
-
-{-@ ignore test2liftM2 @-}
-test2liftM2 :: Maybe Int
-test2liftM2 = liftM2 (+) (Just 4) (Just 2)
-
-{-@ ignore pal @-}
-pal :: [a] -> [a]
--- pal = (++) <$> id <*> reverse -- this is the original but the below also works
-pal = (++) <*> reverse
-
-{-@ ignore listApplicative @-}
-listApplicative :: [Int]
-listApplicative = [(+ 1), (* 2)] <*> [2, 4]
-
-{-@ ignore listAp2 @-}
-listAp2 :: [Int]
--- listAp2 =  pure (+) <*> [2, 3, 4] <*> pure 4
-listAp2 = (+) <$> [2, 3, 4] <*> pure 4
-
-testFunctor1 :: Maybe Int
--- testFunctor1 = fmap negate Nothing
-testFunctor1 = negate <$> Just 2
-
-testAp1 :: IO Bool
-testAp1 =
-  (==) <$> readFile "/usr/share/dict/words"
-    <*> readFile "/usr/share/dict/words"
-
-testAp2 :: IO Bool
-testAp2 =
-  (==) <$> readFile "/usr/share/dict/words"
-    <*> readFile "/usr/share/dict/propernames"
