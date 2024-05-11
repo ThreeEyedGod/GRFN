@@ -10,11 +10,12 @@ where
 
 import Data.Numbers.Primes (isPrime)
 import Data.Text (pack)
-import Protolude hiding (bool, die, getLine, head, ifM, trace, traceM)
+import Protolude hiding (die)
 import RefinementHelper
 import System.Random.Stateful (globalStdGen, uniformRM)
 
 {-@ lazy genARandomPreFactoredNumberLTEn @-}
+{-@ genARandomPreFactoredNumberLTEn :: n:Pos -> IO (Either Text (Pos, [RngPos 1 n])) @-}
 
 -- | This is the Entry Function.
 -- Provide an integer input and it should generate a tuple of a number less than the input integer and its prime factors

@@ -23,6 +23,7 @@ import Prelude (String, error)
 {-@ predicate Gt X Y = not (Lte X Y) @-}
 {-@ predicate Ne X Y = X /= Y @-}
 
+
 {-@ type Rng Lo Hi = {v:Pos | (Btwn Lo v Hi)} @-}
 {-@ type RngPos Lo Hi = {v:Pos | (BtwnBothIncl Lo v Hi)} @-}
 {-@ type RngPrimes Lo Hi = {v:Pos | (v==1) || (isPrime v) && (BtwnBothIncl Lo v Hi)} @-}
