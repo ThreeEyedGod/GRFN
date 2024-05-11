@@ -15,10 +15,10 @@ jobs:
       matrix:
         stack: ["latest"]
         ghc: ["9.4.7"]
-        cabal: ["3.8.1.0"]
+        cabal: ["3.10.3.0"]
         ghcup: ["latest"]
         runner:
-          - macos-latest
+          - ubuntu-latest
         resolver:
           - lts-21.21  
 

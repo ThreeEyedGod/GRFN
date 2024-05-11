@@ -1,5 +1,8 @@
 {-# LANGUAGE CPP #-}
 {-# LANGUAGE NoRebindableSyntax #-}
+#if __GLASGOW_HASKELL__ >= 810
+{-# OPTIONS_GHC -Wno-prepositive-qualified-module #-}
+#endif
 {-# OPTIONS_GHC -fno-warn-missing-import-lists #-}
 {-# OPTIONS_GHC -w #-}
 module Paths_grfn (
@@ -41,6 +44,7 @@ getBinDir, getLibDir, getDynLibDir, getDataDir, getLibexecDir, getSysconfDir :: 
 
 
 
+
 bindir, libdir, dynlibdir, datadir, libexecdir, sysconfdir :: FilePath
 bindir     = "/Users/mandeburung/.cabal/bin"
 libdir     = "/Users/mandeburung/.cabal/lib/aarch64-osx-ghc-9.4.7/grfn-1.0.0.0-inplace-grfn-exe"
@@ -55,7 +59,6 @@ getDynLibDir  = catchIO (getEnv "grfn_dynlibdir")  (\_ -> return dynlibdir)
 getDataDir    = catchIO (getEnv "grfn_datadir")    (\_ -> return datadir)
 getLibexecDir = catchIO (getEnv "grfn_libexecdir") (\_ -> return libexecdir)
 getSysconfDir = catchIO (getEnv "grfn_sysconfdir") (\_ -> return sysconfdir)
-
 
 
 
