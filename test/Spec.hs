@@ -1,9 +1,9 @@
 import Data.Numbers.Primes (primeFactors, primes)
 import Data.Text (pack)
-import Lib (genARandomPreFactoredNumberLTEn')
+import Lib (genARandomPreFactoredNumberLTEn)
 import System.IO.Error (isDoesNotExistError, tryIOError)
 import Test.Hspec (Spec, describe, hspec, it, shouldBe, shouldNotReturn, shouldReturn)
-import Test.Hspec.Core.QuickCheck (modifyMaxSuccess)
+import Test.Hspec.Core.QuickCheck (modifyMaxSuccess, modifyMaxDiscardRatio)
 import Test.Hspec.QuickCheck (prop)
 import Test.QuickCheck (Arbitrary, Args (..), Gen, NonNegative (..), Positive (..), Property, arbitrary, chatty, choose, classify, collect, cover, elements, expectFailure, forAll, forAllProperties, listOf, printTestCase, quickCheck, quickCheckWithResult, suchThat, verbose, verboseCheckWithResult, withMaxSuccess, (==>))
 import Test.QuickCheck.Monadic (assert, monadicIO, run)
@@ -42,7 +42,7 @@ libHProperty8 = do
 
 libHProperty9 :: Spec
 libHProperty9 = do
-  modifyMaxSuccess (const 5) $
+  modifyMaxSuccess (const 10) $ modifyMaxDiscardRatio (const 11) $
     prop
       "prop_checkIffiltersInValidInput"
       prop_checkIffiltersInValidInput
@@ -76,7 +76,7 @@ libHProperty11 = do
 ------------
 prop_checkIfLTEn :: Positive Int -> Property
 prop_checkIfLTEn (Positive n) = n > 2 && n < 30 ==> monadicIO $ do
-  x <- run $ genARandomPreFactoredNumberLTEn' n
+  x <- run $ genARandomPreFactoredNumberLTEn n
   case x of
     Left _ -> assert False
     Right y -> assert (fst y <= n)
@@ -84,7 +84,7 @@ prop_checkIfLTEn (Positive n) = n > 2 && n < 30 ==> monadicIO $ do
 prop_checkIffiltersInValidInput :: Int -> Property
 prop_checkIffiltersInValidInput n = n > -10 && n < 1 ==> monadicIO $ do
   -- notice we are constraining n to be within a "bad range"
-  x <- run $ genARandomPreFactoredNumberLTEn' n
+  x <- run $ genARandomPreFactoredNumberLTEn n
   case x of
     Left err -> assert (err == pack "Invalid")
     Right _ -> assert False
@@ -94,7 +94,7 @@ prop_checkIffiltersInValidInput n = n > -10 && n < 1 ==> monadicIO $ do
 prop_checkValidOutput :: Positive Int -> Property
 prop_checkValidOutput (Positive n) = n > 2 && n < 50 ==> classify (n < 30) "n LT 30" $ collect n $ monadicIO $ do
   -- if n upper end is set at 100 then it results in an error https://www.cnblogs.com/BlogOfASBOIER/p/13096167.html
-  x <- run $ genARandomPreFactoredNumberLTEn' n
+  x <- run $ genARandomPreFactoredNumberLTEn n
   case x of
     Left err -> assert (err == pack "Invalid")
     Right y -> assert (fst y >= (head $ snd y))
@@ -102,7 +102,7 @@ prop_checkValidOutput (Positive n) = n > 2 && n < 50 ==> classify (n < 30) "n LT
 prop_checkAccurateOutput :: Positive Int -> Property
 prop_checkAccurateOutput (Positive n) = n > 2 && n < 50 ==> classify (n < 30) "n LT 30" $ collect n $ printTestCase "Failed case" $ monadicIO $ do
   -- if n upper end is set at 100 then it results in an error https://www.cnblogs.com/BlogOfASBOIER/p/13096167.html
-  x <- run $ genARandomPreFactoredNumberLTEn' n
+  x <- run $ genARandomPreFactoredNumberLTEn n
   case x of
     Left err -> assert (err == pack "Invalid")
     Right y -> assert ((primeFactorsOr1 $ fst y) == snd y)
