@@ -13,12 +13,12 @@ jobs:
   myBuild:
     strategy:
       matrix:
-        stack: ["latest"]
-        ghc: ["9.4.7"]
+        stack: ["2.15.5"]
+        ghc: ["9.8.2"]
         cabal: ["3.10.3.0"]
-        ghcup: ["latest"]
+        ghcup: ["0.1.22.0"]
         runner:
-          - ubuntu-latest
+          - macos-12
         resolver:
           - lts-21.21  
 
