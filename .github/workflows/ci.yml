@@ -15,7 +15,7 @@ jobs:
       matrix:
         stack: ["latest"]
         ghc: ["9.4.7"]
-        cabal: ["3.8.1.0"]
+        cabal: ["3.10.2.1"]
         ghcup: ["latest"]
         runner:
           - macOS-latest
