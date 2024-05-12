@@ -15,7 +15,7 @@ The Adam Kalai algorithm itself is an easier (but less efficient) version of [Er
 Synopsis
 ---------
 ### Highlights
-Formal Verification using Refinement Types (LiquidHaskell), Property Testing (QuickCheck), Stan for Static analysis
+**Refactored to use Kleisli + applicative**; Formal Verification using Refinement Types (LiquidHaskell), Property Testing (QuickCheck), Stan for Static analysis
 
 ### Standard
 hlint; github actions, IDE:Cursor+hoogle-vscode+ormolu ; Haddock ; makefile
@@ -25,10 +25,10 @@ Issues
 ### Problems
 1. This was developed on Apple/M1. Liquidhaskell proved difficult to work with stack at this time (late 2023), so used cabal. 
 2. Haddock needed an older version: cabal install haddock-2.27.0 --allow-newer
+3. macos-latest runner on Github/actions seems to have no support for haskell/cabal. Now using ubuntu
 
 ### To-do
 A test to check the uniform randomness of the output needs to be put in. The NIST csrc site has [literature](https://csrc.nist.gov/search?keywords=test+suite+random+number+generation&ipp=25&sortBy=relevance&showOnly=publications%2Cprojects%2Cnews%2Cevents%2Cpresentations%2Cglossary%2Ctopics&topicsMatch=ANY&status=Final%2CDraft) and [algorithms](https://csrc.nist.rip/groups/ST/toolkit/rng/documents/nissc-paper.pdf) and [test suites](https://csrc.nist.gov/pubs/itlb/2000/12/a-statistical-test-suite-for-random-and-pseudorand/final).
 
 ### Documentation
   ~/grfn/dist-newstyle/build/aarch64-osx/ghc-9.4.7/grfn-0.1.0.0/doc/html/grfn/index.html
-
