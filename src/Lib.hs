@@ -3,8 +3,6 @@
 -- | Module for accessing this math function
 module Lib
   ( genARandomPreFactoredNumberLTEn,
-    getRndMInt,
-    makeList,
   )
 where
 
@@ -15,7 +13,7 @@ import RefinementHelper
 import System.Random.Stateful (globalStdGen, uniformRM)
 
 {-@ lazy genARandomPreFactoredNumberLTEn @-}
-{-@ genARandomPreFactoredNumberLTEn :: n:Pos -> IO (Either Text (Pos, [RngPos 1 n])) @-}
+{-@ genARandomPreFactoredNumberLTEn :: n:Pos -> IO (Either Text (Pos, [RngPrimes 1 n])) @-}
 
 -- | This is the Entry Function.
 -- Provide an integer input and it should generate a tuple of a number less than the input integer and its prime factors
@@ -29,13 +27,6 @@ genARandomPreFactoredNumberLTEn n = makeList n >>= haltOrContinue n
       | otherwise = genARandomPreFactoredNumberLTEn n' -- keep doing till result occurs
       where
         result@(ps, sq) = (product sq, filter isPrimeOr1 solnSet) -- note: product [] = 1
-
-{--
-makeList n | n > 1 = do
-seed <- getRndMInt (1, n) -- this gets int from IO Int from int
-nxt <- makeList seed -- this gets [int] from IO [Int] from int
-pure $ seed : nxt -- this gets IO [Int] from [int] from int and [int]
---}
 
 {-@ makeList :: n:Pos -> IO [RngPos 1 n] @-}
 {-@ lazy makeList @-}
