@@ -1,4 +1,18 @@
+{-- |
+-- Module      : Lib
+-- Description : Implementing Adam Kalai's easier algo for getting uniform pre-factored integers
+-- Copyright   : (c) VN, 2024
+-- License     : GPL-3
+-- Maintainer  : @live.in
+-- Stability   : Experimental
+-- Portability : MacOS, Windows, Ubuntu 
+--
+-- @uses LiquidHaskell, Applicatives@.
+-}
+
 {-# LANGUAGE NoMonomorphismRestriction #-}
+
+{-@ LIQUID "--notermination"           @-}
 
 -- | Module for helping out refinements with LH in other modules
 module RefinementHelper (die, filterInvalid) where
@@ -11,7 +25,7 @@ import Prelude (String, error)
 -- so that these functions can be used in refinement
 {-@ measure isPrime :: Int-> Bool @-}
 {-@ measure maximum :: Ord a => [a] -> a @-}
-{-@ measure product :: [Int] ->Int @-}
+{-@ measure product :: [Int] -> Int @-}
 
 {-@ predicate Btwn Lo N Hi = Lo <= N && N < Hi @-}
 {-@ predicate BtwnBothIncl Lo N Hi = Lo <= N && N <= Hi @-}
@@ -23,7 +37,6 @@ import Prelude (String, error)
 {-@ predicate Gt X Y = not (Lte X Y) @-}
 {-@ predicate Ne X Y = X /= Y @-}
 
-
 {-@ type Rng Lo Hi = {v:Pos | (Btwn Lo v Hi)} @-}
 {-@ type RngPos Lo Hi = {v:Pos | (BtwnBothIncl Lo v Hi)} @-}
 {-@ type RngPrimes Lo Hi = {v:Pos | (v==1) || (isPrime v) && (BtwnBothIncl Lo v Hi)} @-}
@@ -32,16 +45,10 @@ import Prelude (String, error)
 {-@ type LstPosMaxN Lo Hi = v:[RngPos Lo Hi] @-}
 {-@ type TuplePos F S = {v:(Pos, Pos) | fst v == F && snd v == S && (Ge S F)} @-}
 
--- Haskell Type Definitions
--- {-@ type factoredInt i [j] :: (i, [j])<{\n fl -> n == product fl}> @-}
--- {-@ factoredIntex :: (Int, [Int]) @-}
--- factoredIntex :: (Int, [Int])
--- factoredIntex = (9, [1,3,3])
+{-@ type TupleIntList = (Pos, [Pos]) @-}
+{-@ type TupleIntListFactored = {u: TupleIntList | fst u == 1 || (product (snd u)) == (fst u) } @-}
+{-@ type EitherTupleIntListFactors N = Either Text {rght:TupleIntListFactored | fst rght <= N } @-}
 
-mustGoDown :: [Int]
-{-@ type DecrList a = [a]<{\xi xj -> xi >= xj}> @-}
-{-@ mustGoDown :: DecrList Int @-}
-mustGoDown = [3, 2, 1]
 
 -- To assert that code is unreachable
 {-@ die :: {v:String | false} -> a @-}

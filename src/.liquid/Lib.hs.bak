@@ -13,7 +13,8 @@ import RefinementHelper
 import System.Random.Stateful (globalStdGen, uniformRM)
 
 {-@ lazy genARandomPreFactoredNumberLTEn @-}
-{-@ genARandomPreFactoredNumberLTEn :: n:Pos -> IO (Either Text (Pos, [RngPrimes 1 n])) @-}
+{-@ genARandomPreFactoredNumberLTEn :: n:Pos -> IO (EitherTupleIntListFactors n) @-}
+-- promise
 
 -- | This is the Entry Function.
 -- Provide an integer input and it should generate a tuple of a number less than the input integer and its prime factors
@@ -31,7 +32,7 @@ genARandomPreFactoredNumberLTEn n = makeList n >>= haltOrContinue n
 {-@ makeList :: n:Pos -> IO [RngPos 1 n] @-}
 {-@ lazy makeList @-}
 
--- | Provided an Int, creates a sequence of random integers LTE n decreasing possibly with multiples ending at single 1
+-- | Provided an Int, creates a sequence of random integers LTE n decreasing order, possibly with multiples ending at single 1
 makeList :: Int -> IO [Int]
 makeList 1 = pure [] -- pure [] also works
 makeList n | n > 1 = (getRndMInt >=>: makeList) (1, n)

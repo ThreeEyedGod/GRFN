@@ -5,7 +5,7 @@ import System.IO.Error (isDoesNotExistError, tryIOError)
 import Test.Hspec (Spec, describe, hspec, it, shouldBe, shouldNotReturn, shouldReturn)
 import Test.Hspec.Core.QuickCheck (modifyMaxSuccess, modifyMaxDiscardRatio)
 import Test.Hspec.QuickCheck (prop)
-import Test.QuickCheck (Arbitrary, Args (..), Gen, NonNegative (..), Positive (..), Property, arbitrary, chatty, choose, classify, collect, cover, elements, expectFailure, forAll, forAllProperties, listOf, printTestCase, quickCheck, quickCheckWithResult, suchThat, verbose, verboseCheckWithResult, withMaxSuccess, (==>))
+import Test.QuickCheck (Arbitrary, Args (..), Gen, NonNegative (..), Positive (..), Negative (..), Property, arbitrary, chatty, choose, classify, collect, cover, elements, expectFailure, forAll, forAllProperties, listOf, printTestCase, quickCheck, quickCheckWithResult, suchThat, verbose, verboseCheckWithResult, withMaxSuccess, (==>))
 import Test.QuickCheck.Monadic (assert, monadicIO, run)
 
 
@@ -61,18 +61,6 @@ libHProperty11 = do
       "prop_checkAccurateOutput"
       prop_checkAccurateOutput
 
--- primes :: [Int]
--- primes = 2 : filter ((== 1) . length . primeFactors) [3, 5 ..]
-
--- primeFactors :: Int -> [Int]
--- primeFactors n = factor n primes
---   where
---     factor _ [] = []
---     factor m (p : ps)
---       | p * p > m = [m]
---       | m `mod` p == 0 = p : factor (m `div` p) (p : ps)
---       | otherwise = factor m ps
-
 ------------
 prop_checkIfLTEn :: Positive Int -> Property
 prop_checkIfLTEn (Positive n) = n > 2 && n < 30 ==> monadicIO $ do
@@ -81,8 +69,8 @@ prop_checkIfLTEn (Positive n) = n > 2 && n < 30 ==> monadicIO $ do
     Left _ -> assert False
     Right y -> assert (fst y <= n)
 
-prop_checkIffiltersInValidInput :: Int -> Property
-prop_checkIffiltersInValidInput n = n > -10 && n < 1 ==> monadicIO $ do
+prop_checkIffiltersInValidInput :: Negative Int -> Property
+prop_checkIffiltersInValidInput (Negative n) = n > -10 && n < 1 ==> monadicIO $ do
   -- notice we are constraining n to be within a "bad range"
   x <- run $ genARandomPreFactoredNumberLTEn n
   case x of
