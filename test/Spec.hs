@@ -5,7 +5,7 @@ import System.IO.Error (isDoesNotExistError, tryIOError)
 import Test.Hspec (Spec, describe, hspec, it, shouldBe, shouldNotReturn, shouldReturn)
 import Test.Hspec.Core.QuickCheck (modifyMaxSuccess, modifyMaxDiscardRatio)
 import Test.Hspec.QuickCheck (prop)
-import Test.QuickCheck (Arbitrary, Args (..), Gen, NonNegative (..), Positive (..), Negative (..), Property, arbitrary, chatty, choose, classify, collect, cover, elements, expectFailure, forAll, forAllProperties, listOf, printTestCase, quickCheck, quickCheckWithResult, suchThat, verbose, verboseCheckWithResult, withMaxSuccess, (==>))
+import Test.QuickCheck (Arbitrary, Args (..), Gen, NonNegative (..), Positive (..), Negative (..), Property, arbitrary, chatty, choose, classify, collect, cover, elements, expectFailure, forAll, forAllProperties, listOf, printTestCase, quickCheck, quickCheckWithResult, suchThat, verbose, verboseCheckWithResult, withMaxSuccess, (==>), counterexample)
 import Test.QuickCheck.Monadic (assert, monadicIO, run)
 
 
@@ -42,7 +42,7 @@ libHProperty8 = do
 
 libHProperty9 :: Spec
 libHProperty9 = do
-  modifyMaxSuccess (const 2) $ modifyMaxDiscardRatio (const 11) $
+  modifyMaxSuccess (const 5) $ modifyMaxDiscardRatio (const 10) $
     prop
       "prop_checkIffiltersInValidInput"
       prop_checkIffiltersInValidInput
@@ -88,7 +88,7 @@ prop_checkValidOutput (Positive n) = n > 2 && n < 50 ==> classify (n < 30) "n LT
     Right y -> assert (fst y >= (head $ snd y))
 
 prop_checkAccurateOutput :: Positive Int -> Property
-prop_checkAccurateOutput (Positive n) = n > 2 && n < 50 ==> classify (n < 30) "n LT 30" $ collect n $ printTestCase "Failed case" $ monadicIO $ do
+prop_checkAccurateOutput (Positive n) = n > 2 && n < 50 ==> classify (n < 30) "n LT 30" $ collect n $ counterexample "Failed case" $ monadicIO $ do
   -- if n upper end is set at 100 then it results in an error https://www.cnblogs.com/BlogOfASBOIER/p/13096167.html
   x <- run $ genARandomPreFactoredNumberLTEn n
   case x of
