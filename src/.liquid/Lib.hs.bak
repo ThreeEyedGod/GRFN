@@ -3,14 +3,35 @@
 -- | Module for accessing this math function
 module Lib
   ( genARandomPreFactoredNumberLTEn,
+    preFactoredNumOfBitSize,
   )
 where
 
+import Control.Monad.Loops (iterateWhile)
+import Data.Ix (inRange)
 import Data.Numbers.Primes (isPrime)
 import Data.Text (pack)
+import GHC.Conc (getNumProcessors)
 import Protolude hiding (die)
 import RefinementHelper
+--import ShortCircuit (firstTrueOfM, orM)
 import System.Random.Stateful (globalStdGen, uniformRM)
+
+{-@ ignore preFactoredNumOfBitSize @-}
+--{-@ preFactoredNumOfBitSize :: n:Pos -> IO (EitherTupleIntListFactors n) @-}
+preFactoredNumOfBitSize :: Int -> IO (Either Text (Int, [Int]))
+preFactoredNumOfBitSize x | x <= 0 = pure $ Left $ pack "Invalid"
+preFactoredNumOfBitSize 1 = pure $ Right (1, [1])
+preFactoredNumOfBitSize n | n>1 = iterateWhile ((2 ^ n) ^|) (genARandomPreFactoredNumberLTEn (2 ^ (n + 1) - 1))
+preFactoredNumOfBitSize _ = pure $ Left $ pack "Invalid"
+
+infix 1 ^|
+
+-- | An operator to compare the Right first value of the tuple to another for lesser than truthiness
+(^|) :: Int -> Either Text (Int, [Int]) -> Bool
+bound ^| eOR = case eOR of
+  Left _ -> False
+  Right v -> fst v < bound
 
 {-@ lazy genARandomPreFactoredNumberLTEn @-}
 {-@ genARandomPreFactoredNumberLTEn :: n:Pos -> IO (EitherTupleIntListFactors n) @-}

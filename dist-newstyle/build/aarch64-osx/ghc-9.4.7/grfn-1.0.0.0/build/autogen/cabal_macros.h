@@ -30,6 +30,16 @@
   (major1) == 0 && (major2) <  9 || \
   (major1) == 0 && (major2) == 9 && (minor) <= 4)
 #endif /* MIN_VERSION_liquidhaskell */
+/* package monad-loops-0.4.3 */
+#ifndef VERSION_monad_loops
+#define VERSION_monad_loops "0.4.3"
+#endif /* VERSION_monad_loops */
+#ifndef MIN_VERSION_monad_loops
+#define MIN_VERSION_monad_loops(major1,major2,minor) (\
+  (major1) <  0 || \
+  (major1) == 0 && (major2) <  4 || \
+  (major1) == 0 && (major2) == 4 && (minor) <= 3)
+#endif /* MIN_VERSION_monad_loops */
 /* package primes-0.2.1.0 */
 #ifndef VERSION_primes
 #define VERSION_primes "0.2.1.0"
