@@ -34,21 +34,22 @@ import System.Random.Stateful (globalStdGen, uniformRM)
 {-@ ignore preFactoredNumOfBitSizePar @-}
 -- {-@ preFactoredNumOfBitSizePar :: n:Pos -> IO (EitherTupleIntListFactors n) @-}
 
--- | This is the Entry Function with a Bitsize value executed in parallel
--- Provide an integer input and it should generate a tuple of a number in the range [2^y, 2^y+1 -1]and its prime factors
+-- | This is one of three Entry Functions. Takes an Int for Bitsize value.  This function is leverages parallel execution
+-- Provide an integer input and it should generate a tuple of a number in the range [2^y, 2^y+1 -1] and its prime factors
 preFactoredNumOfBitSizePar :: Int -> IO (Either Text (Int, [Int]))
 preFactoredNumOfBitSizePar n | n <= 0 = pure $ Left $ pack "Invalid"
 preFactoredNumOfBitSizePar 1 = pure $ Right (1, [1])
 preFactoredNumOfBitSizePar n | n > 1 = do
-  value <- withPool 2 $ \pool -> parallelFirst pool [Just <$> preFactoredNumOfBitSize n, Just <$> preFactoredNumOfBitSize n]
+  numProcs <- getNumProcessors 
+  value <- withPool (numProcs-2) $ \pool -> parallelFirst pool $ replicate (numProcs-2) (Just <$> preFactoredNumOfBitSize n)
   return $ fromJust value
 preFactoredNumOfBitSizePar _ = pure $ Left $ pack "Invalid"
 
 {-@ ignore preFactoredNumOfBitSize @-}
 -- {-@ preFactoredNumOfBitSize :: n:Pos -> IO (EitherTupleIntListFactors n) @-}
 
--- | This is the Entry Function with a Bitsize value
--- Provide an integer input and it should generate a tuple of a number in the range [2^y, 2^y+1 -1]and its prime factors
+-- | This is one of three Entry Functions. Takes an Int as a Bitsize value.
+-- Provide an integer input and it should generate a tuple of a number in the range [2^y, 2^y+1 -1] and its prime factors
 preFactoredNumOfBitSize :: Int -> IO (Either Text (Int, [Int]))
 preFactoredNumOfBitSize n | n <= 0 = pure $ Left $ pack "Invalid"
 preFactoredNumOfBitSize 1 = pure $ Right (1, [1])
@@ -67,7 +68,7 @@ bound ^| eOR = case eOR of
 {-@ genARandomPreFactoredNumberLTEn :: n:Pos -> IO (EitherTupleIntListFactors n) @-}
 -- contract for this function
 
--- | This is the Entry Function with a int bound
+-- | This is the Entry Function with a Int bound
 -- Provide an integer input and it should generate a tuple of a number less than the input integer and its prime factors
 genARandomPreFactoredNumberLTEn :: Int -> IO (Either Text (Int, [Int]))
 genARandomPreFactoredNumberLTEn x | x <= 0 = pure $ Left $ pack "Invalid"
@@ -102,18 +103,17 @@ infixr 1 >=>:
 (>=>:) :: (Monad m) => (a -> m b) -> (b -> m [b]) -> (a -> m [b])
 f >=>: g = f >=> \u -> (u :) <$> g u
 
--- | let it be true if it is prime or the integer 1
+-- | True if it is prime or the Int 1
 
 {-@ isPrimeOr1 :: Pos -> Bool @-}
 isPrimeOr1 :: Int -> Bool
 isPrimeOr1 n | n < 1 = die "impossible"
 isPrimeOr1 n = (n == 1) || isPrime n
 
-timeit :: IO a -> IO (Maybe a, Int, NominalDiffTime)
+-- | Helper function that can be used to time execution
+timeit :: IO a -> IO (Maybe a, NominalDiffTime)
 timeit action = do
-  numProcs <- getNumProcessors
   start <- getCurrentTime
-  -- value <- action
-  value <- withPool 4 $ \pool -> parallelFirst pool [Just <$> action, Just <$> action, Just <$> action, Just <$> action]
+  value <- action
   end <- getCurrentTime
-  return (value, numProcs, (diffUTCTime end start))
+  return (Just value, (diffUTCTime end start))
