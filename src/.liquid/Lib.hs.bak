@@ -1,3 +1,14 @@
+{-- |
+-- Module      : Lib
+-- Description : Implementing Adam Kalai's easier algo for getting uniform pre-factored integers
+-- Copyright   : (c) VN, 2024
+-- License     : GPL-3
+-- Maintainer  : ThreeEyedGod
+-- Stability   : Experimental
+-- Portability : MacOS, Windows, Ubuntu
+--
+-- @uses LiquidHaskell, Applicatives@.
+-}
 {-# LANGUAGE NoImplicitPrelude #-}
 
 -- | Module for accessing this math function
@@ -11,18 +22,20 @@ import Control.Monad.Loops (iterateWhile)
 import Data.Ix (inRange)
 import Data.Numbers.Primes (isPrime)
 import Data.Text (pack)
+import Data.Time.Clock
 import GHC.Conc (getNumProcessors)
 import Protolude hiding (die)
 import RefinementHelper
---import ShortCircuit (firstTrueOfM, orM)
 import System.Random.Stateful (globalStdGen, uniformRM)
+import Control.Concurrent.ParallelIO.Local
+
 
 {-@ ignore preFactoredNumOfBitSize @-}
---{-@ preFactoredNumOfBitSize :: n:Pos -> IO (EitherTupleIntListFactors n) @-}
+-- {-@ preFactoredNumOfBitSize :: n:Pos -> IO (EitherTupleIntListFactors n) @-}
 preFactoredNumOfBitSize :: Int -> IO (Either Text (Int, [Int]))
-preFactoredNumOfBitSize x | x <= 0 = pure $ Left $ pack "Invalid"
+preFactoredNumOfBitSize n | n <= 0 = pure $ Left $ pack "Invalid"
 preFactoredNumOfBitSize 1 = pure $ Right (1, [1])
-preFactoredNumOfBitSize n | n>1 = iterateWhile ((2 ^ n) ^|) (genARandomPreFactoredNumberLTEn (2 ^ (n + 1) - 1))
+preFactoredNumOfBitSize n | n > 1 = iterateWhile ((2 ^ n) ^|) (genARandomPreFactoredNumberLTEn (2 ^ (n + 1) - 1))
 preFactoredNumOfBitSize _ = pure $ Left $ pack "Invalid"
 
 infix 1 ^|
@@ -35,7 +48,7 @@ bound ^| eOR = case eOR of
 
 {-@ lazy genARandomPreFactoredNumberLTEn @-}
 {-@ genARandomPreFactoredNumberLTEn :: n:Pos -> IO (EitherTupleIntListFactors n) @-}
--- promise
+-- contract for this function
 
 -- | This is the Entry Function.
 -- Provide an integer input and it should generate a tuple of a number less than the input integer and its prime factors
@@ -78,3 +91,12 @@ f >=>: g = f >=> \u -> (u :) <$> g u
 isPrimeOr1 :: Int -> Bool
 isPrimeOr1 n | n < 1 = die "impossible"
 isPrimeOr1 n = (n == 1) || isPrime n
+
+timeit :: IO a -> IO (Maybe a, Int, NominalDiffTime)
+timeit action = do
+  numProcs <- getNumProcessors
+  start <- getCurrentTime
+  --value <- action
+  value <- withPool 4 $ \pool -> parallelFirst pool [Just <$> action, Just <$> action, Just <$> action, Just <$> action]
+  end <- getCurrentTime
+  return (value, numProcs, (diffUTCTime end start))

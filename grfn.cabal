@@ -27,6 +27,8 @@ library
                       ,primes
                       ,tuple >= 0.3.0.2
                       ,monad-loops >= 0.4.3
+                      ,time >= 1.12.2
+                      ,parallel-io >= 0.3.5
   default-language:    Haskell2010
   ghc-options:         -Wall
                        -Wcompat
@@ -58,7 +60,7 @@ executable grfn-exe
                        -Wredundant-constraints
                        -threaded
                        -rtsopts
-                       -with-rtsopts=-N
+                       -with-rtsopts=-N4
 
 test-suite grfn-test
   type:                exitcode-stdio-1.0

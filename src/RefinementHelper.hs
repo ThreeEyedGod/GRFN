@@ -1,21 +1,9 @@
-{-- |
--- Module      : Lib
--- Description : Implementing Adam Kalai's easier algo for getting uniform pre-factored integers
--- Copyright   : (c) VN, 2024
--- License     : GPL-3
--- Maintainer  : @live.in
--- Stability   : Experimental
--- Portability : MacOS, Windows, Ubuntu 
---
--- @uses LiquidHaskell, Applicatives@.
--}
-
 {-# LANGUAGE NoMonomorphismRestriction #-}
 
 {-@ LIQUID "--notermination"           @-}
 
 -- | Module for helping out refinements with LH in other modules
-module RefinementHelper (die, filterInvalid) where
+module RefinementHelper (die, filterInvalid, pow2) where
 
 import Protolude hiding (die)
 import Prelude (String, error)
@@ -48,6 +36,12 @@ import Prelude (String, error)
 {-@ type TupleIntList = (Pos, [Pos]) @-}
 {-@ type TupleIntListFactored = {u: TupleIntList | fst u == 1 || (product (snd u)) == (fst u) } @-}
 {-@ type EitherTupleIntListFactors N = Either Text {rght:TupleIntListFactored | fst rght <= N } @-}
+
+{-@ reflect pow2 @-}
+{-@ pow2 :: Nat -> Nat @-}
+pow2 :: Int -> Int
+pow2 0 = 1
+pow2 n = 2 * pow2 (n - 1)
 
 
 -- To assert that code is unreachable

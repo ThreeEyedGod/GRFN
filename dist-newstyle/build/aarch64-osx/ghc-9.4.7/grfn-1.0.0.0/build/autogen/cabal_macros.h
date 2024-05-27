@@ -40,6 +40,16 @@
   (major1) == 0 && (major2) <  4 || \
   (major1) == 0 && (major2) == 4 && (minor) <= 3)
 #endif /* MIN_VERSION_monad_loops */
+/* package parallel-io-0.3.5 */
+#ifndef VERSION_parallel_io
+#define VERSION_parallel_io "0.3.5"
+#endif /* VERSION_parallel_io */
+#ifndef MIN_VERSION_parallel_io
+#define MIN_VERSION_parallel_io(major1,major2,minor) (\
+  (major1) <  0 || \
+  (major1) == 0 && (major2) <  3 || \
+  (major1) == 0 && (major2) == 3 && (minor) <= 5)
+#endif /* MIN_VERSION_parallel_io */
 /* package primes-0.2.1.0 */
 #ifndef VERSION_primes
 #define VERSION_primes "0.2.1.0"
@@ -80,6 +90,16 @@
   (major1) == 2 && (major2) <  0 || \
   (major1) == 2 && (major2) == 0 && (minor) <= 2)
 #endif /* MIN_VERSION_text */
+/* package time-1.12.2 */
+#ifndef VERSION_time
+#define VERSION_time "1.12.2"
+#endif /* VERSION_time */
+#ifndef MIN_VERSION_time
+#define MIN_VERSION_time(major1,major2,minor) (\
+  (major1) <  1 || \
+  (major1) == 1 && (major2) <  12 || \
+  (major1) == 1 && (major2) == 12 && (minor) <= 2)
+#endif /* MIN_VERSION_time */
 /* package tuple-0.3.0.2 */
 #ifndef VERSION_tuple
 #define VERSION_tuple "0.3.0.2"

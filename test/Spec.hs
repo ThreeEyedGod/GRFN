@@ -1,6 +1,6 @@
 import Data.Numbers.Primes (primeFactors, primes)
 import Data.Text (pack)
-import Lib (genARandomPreFactoredNumberLTEn)
+import Lib (genARandomPreFactoredNumberLTEn, preFactoredNumOfBitSize)
 import System.IO.Error (isDoesNotExistError, tryIOError)
 import Test.Hspec (Spec, describe, hspec, it, shouldBe, shouldNotReturn, shouldReturn)
 import Test.Hspec.Core.QuickCheck (modifyMaxSuccess, modifyMaxDiscardRatio)
@@ -31,6 +31,8 @@ libH = describe "All Property Tests" $ do
   libHProperty9
   libHProperty10
   libHProperty11
+  libHProperty12
+  libHProperty13
 
 
 libHProperty8 :: Spec
@@ -60,6 +62,21 @@ libHProperty11 = do
     prop
       "prop_checkAccurateOutput"
       prop_checkAccurateOutput
+
+libHProperty12 :: Spec
+libHProperty12 = do
+  modifyMaxSuccess (const 100) $
+    prop
+      "prop_checkAccurateOutputVal"
+      prop_checkAccurateOutputVal
+
+libHProperty13 :: Spec
+libHProperty13 = do
+  modifyMaxSuccess (const 100) $
+    prop
+      "prop_checkAccurateOutputValBitSize"
+      prop_checkAccurateOutputValBitSize
+
 
 ------------
 prop_checkIfLTEn :: Positive Int -> Property
@@ -94,6 +111,23 @@ prop_checkAccurateOutput (Positive n) = n > 2 && n < 50 ==> classify (n < 30) "n
   case x of
     Left err -> assert (err == pack "Invalid")
     Right y -> assert ((primeFactorsOr1 $ fst y) == snd y)
+
+prop_checkAccurateOutputVal :: Positive Int -> Property
+prop_checkAccurateOutputVal (Positive n) = n > 2 && n < 50 ==> classify (n < 30) "n LT 30" $ collect n $ counterexample "Failed case" $ monadicIO $ do
+  -- if n upper end is set at 100 then it results in an error https://www.cnblogs.com/BlogOfASBOIER/p/13096167.html
+  x <- run $ genARandomPreFactoredNumberLTEn n
+  case x of
+    Left err -> assert (err == pack "Invalid")
+    Right y -> assert (fst y == product (snd y))
+
+prop_checkAccurateOutputValBitSize :: Positive Int -> Property
+prop_checkAccurateOutputValBitSize (Positive n) = n > 2 && n < 50 ==> classify (n < 30) "n LT 30" $ collect n $ counterexample "Failed case" $ monadicIO $ do
+  -- if n upper end is set at 100 then it results in an error https://www.cnblogs.com/BlogOfASBOIER/p/13096167.html
+  x <- run $ preFactoredNumOfBitSize n
+  case x of
+    Left err -> assert (err == pack "Invalid")
+    Right y -> assert (fst y == product (snd y))
+
 
 primeFactorsOr1 :: Int -> [Int]
 primeFactorsOr1 1 = [1]
