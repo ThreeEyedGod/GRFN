@@ -39,12 +39,12 @@ import System.Random.Stateful (globalStdGen, uniformRM)
 preFactoredNumOfBitSizePar :: Int -> IO (Either Text (Int, [Int]))
 preFactoredNumOfBitSizePar n | n <= 0 = pure $ Left $ pack "Invalid"
 preFactoredNumOfBitSizePar 1 = pure $ Right (1, [1])
-preFactoredNumOfBitSizePar n | n > 1 = fromJust <$> (getNumProcessors >>= spinUpNThreads preFactoredNumOfBitSize)
+preFactoredNumOfBitSizePar n | n > 1 = fromJust <$> (getNumProcessors >>= spinUpNThreads (preFactoredNumOfBitSize n))
 preFactoredNumOfBitSizePar _ = pure $ Left $ pack "Invalid"
 
 {-@ ignore spinUpNThreads @-}
-spinUpNThreads :: (Int -> IO a) -> Int -> IO (Maybe a)
-spinUpNThreads f n = withPool n $ \pool -> parallelFirst pool $ replicate n (Just <$> f n)
+spinUpNThreads :: IO a -> Int -> IO (Maybe a)
+spinUpNThreads f t = withPool t $ \pool -> parallelFirst pool $ replicate t (Just <$> f)
 
 {-@ ignore preFactoredNumOfBitSize @-}
 -- {-@ preFactoredNumOfBitSize :: n:Pos -> IO (EitherTupleIntListFactors n) @-}
