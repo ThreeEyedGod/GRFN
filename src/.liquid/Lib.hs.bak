@@ -19,7 +19,7 @@ module Lib
   )
 where
 
-import Control.Concurrent.ParallelIO.Local
+import Control.Concurrent.ParallelIO.Local (withPool, parallelFirst)
 import Control.Monad.Loops (iterateWhile)
 import Data.Ix (inRange)
 import Data.Maybe (fromJust)
