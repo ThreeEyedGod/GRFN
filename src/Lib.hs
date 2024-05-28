@@ -34,16 +34,17 @@ import System.Random.Stateful (globalStdGen, uniformRM)
 {-@ ignore preFactoredNumOfBitSizePar @-}
 -- {-@ preFactoredNumOfBitSizePar :: n:Pos -> IO (EitherTupleIntListFactors n) @-}
 
--- | This is one of three Entry Functions. Takes an Int for Bitsize value.  This function is leverages parallel execution
+-- | This is one of three Entry Functions. Takes an Int for Bitsize value.  This function leverages parallel execution
 -- Provide an integer input and it should generate a tuple of a number in the range [2^y, 2^y+1 -1] and its prime factors
 preFactoredNumOfBitSizePar :: Int -> IO (Either Text (Int, [Int]))
 preFactoredNumOfBitSizePar n | n <= 0 = pure $ Left $ pack "Invalid"
 preFactoredNumOfBitSizePar 1 = pure $ Right (1, [1])
-preFactoredNumOfBitSizePar n | n > 1 = do
-  numProcs <- getNumProcessors 
-  value <- withPool (numProcs-2) $ \pool -> parallelFirst pool $ replicate (numProcs-2) (Just <$> preFactoredNumOfBitSize n)
-  return $ fromJust value
+preFactoredNumOfBitSizePar n | n > 1 = fromJust <$> (getNumProcessors >>= spinUpNThreads preFactoredNumOfBitSize)
 preFactoredNumOfBitSizePar _ = pure $ Left $ pack "Invalid"
+
+{-@ ignore spinUpNThreads @-}
+spinUpNThreads :: (Int -> IO a) -> Int -> IO (Maybe a)
+spinUpNThreads f n = withPool n $ \pool -> parallelFirst pool $ replicate n (Just <$> f n)
 
 {-@ ignore preFactoredNumOfBitSize @-}
 -- {-@ preFactoredNumOfBitSize :: n:Pos -> IO (EitherTupleIntListFactors n) @-}
