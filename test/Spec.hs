@@ -94,7 +94,7 @@ prop_checkIfLTEn (Positive n) = n > 2 && n < 30 ==> monadicIO $ do
 
 prop_checkIffiltersInValidInput :: Negative Int -> Property
 prop_checkIffiltersInValidInput (Negative n) = n > -10 && n < 1 ==> monadicIO $ do
-  -- notice we are constraining n to be within a "bad range"
+  -- Constraining n to be within a "bad range"
   x <- run $ genARandomPreFactoredNumberLTEn n
   case x of
     Left err -> assert (err == pack "Invalid")
