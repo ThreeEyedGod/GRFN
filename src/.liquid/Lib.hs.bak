@@ -43,14 +43,14 @@ spinUpThreads f t = withPool t $ \pool -> parallelFirst pool $ replicate t (Just
 preFactoredNumOfBitSize :: Int -> IO (Either Text (Int, [Int]))
 preFactoredNumOfBitSize n | n <= 0 = pure $ Left $ pack "Invalid"
 preFactoredNumOfBitSize 1 = pure $ Right (1, [1])
-preFactoredNumOfBitSize n | n > 1 = iterateWhile ((2 ^ n) ^|) (genARandomPreFactoredNumberLTEn (2 ^ (n + 1) - 1))
+preFactoredNumOfBitSize n | n > 1 = iterateWhile ((2 ^ n) <|) (genARandomPreFactoredNumberLTEn (2 ^ (n + 1) - 1))
 preFactoredNumOfBitSize _ = pure $ Left $ pack "Invalid"
 
-infix 1 ^|
+infix 1 <|
 
--- | An operator to compare the Right first value of the tuple to another for lesser than truthiness
-(^|) :: Int -> Either Text (Int, [Int]) -> Bool
-bound ^| eOR = case eOR of
+-- | An operator to compare the Right first value of the (Int, [Int]) to an Int for lesser-than predicate
+(<|) :: Int -> Either Text (Int, [Int]) -> Bool
+bound <| eOR = case eOR of
   Left _ -> False
   Right v -> fst v < bound
 

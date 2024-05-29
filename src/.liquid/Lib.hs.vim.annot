@@ -13,7 +13,7 @@
 36:77-36:81::_ :: "{v : (GHC.Maybe.Maybe a) | isJust v}"
 36:86-36:87::f :: "{v : (GHC.Types.IO a) | false}"
 53:1-53:6::bound :: "GHC.Types.Int"
-53:7-53:9::Lib.^| :: "GHC.Types.Int -> (Data.Either.Either Data.Text.Internal.Text (GHC.Types.Int, [GHC.Types.Int])) -> GHC.Types.Bool"
+53:7-53:9::Lib.<| :: "GHC.Types.Int -> (Data.Either.Either Data.Text.Internal.Text (GHC.Types.Int, [GHC.Types.Int])) -> GHC.Types.Bool"
 53:10-53:13::eOR :: "(Data.Either.Either Data.Text.Internal.Text (GHC.Types.Int, [GHC.Types.Int]))"
 53:21-53:24::_ :: "{v : (Data.Either.Either Data.Text.Internal.Text (GHC.Types.Int, [GHC.Types.Int])) | v == eOR##a7Ie}"
 54:13-54:18::GHC.Types.False :: "{v : GHC.Types.Bool | not v\n                      && v == False}"
