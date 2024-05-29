@@ -1,6 +1,6 @@
 import Data.Numbers.Primes (primeFactors, primes)
 import Data.Text (pack)
-import Lib (genARandomPreFactoredNumberLTEn, preFactoredNumOfBitSize, preFactoredNumOfBitSizePar)
+import FactoredRandomNumbers (genARandomPreFactoredNumberLTEn, preFactoredNumOfBitSize, preFactoredNumOfBitSizePar)
 import System.IO.Error (isDoesNotExistError, tryIOError)
 import Test.Hspec (Spec, describe, hspec, it, shouldBe, shouldNotReturn, shouldReturn)
 import Test.Hspec.Core.QuickCheck (modifyMaxDiscardRatio, modifyMaxSuccess)

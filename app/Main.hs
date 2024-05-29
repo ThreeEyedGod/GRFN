@@ -1,6 +1,6 @@
 module Main (main) where
 
-import Lib ()
+import FactoredRandomNumbers ()
 
 main :: IO ()
 main = putStrLn "Hello"
