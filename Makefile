@@ -1,4 +1,4 @@
-all: do_build do_test do_gendoc
+all: do_build do_test do_gendoc do_benchmark
 	
 do_build:
 	@echo "Build"
@@ -12,3 +12,7 @@ do_test:
 do_gendoc:
 	@echo "creating haddock docs"
 	cabal haddock
+
+do_benchmark:
+	@echo "creating benchmarks"
+	cabal bench --benchmark-options '+RTS -T'
