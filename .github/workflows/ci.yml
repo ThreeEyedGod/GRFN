@@ -83,7 +83,4 @@ jobs:
 
     - name: Build Binary
       run: |
-        cabal build
-        cabal test
-        cabal bench --benchmark-options='--timeout 100000000' --benchmark-options="+RTS -T"
-        
+        make        

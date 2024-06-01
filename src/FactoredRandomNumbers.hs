@@ -4,7 +4,7 @@
 module FactoredRandomNumbers
   ( genARandomPreFactoredNumberLTEn,
     preFactoredNumOfBitSize,
-    preFactoredNumOfBitSizePar
+    preFactoredNumOfBitSizePar,
   )
 where
 
@@ -31,7 +31,6 @@ preFactoredNumOfBitSizePar n | n > 1 = fromJust <$> (getNumProcessors >>= spinUp
 preFactoredNumOfBitSizePar _ = pure $ Left $ pack "Invalid"
 
 -- | Spin up t threads of function f in parallel and return what's executed first
-
 spinUpThreads :: IO a -> Int -> IO (Maybe a)
 spinUpThreads f t = withPool t $ \pool -> parallelFirst pool $ replicate t (Just <$> f)
 
@@ -40,7 +39,7 @@ spinUpThreads f t = withPool t $ \pool -> parallelFirst pool $ replicate t (Just
 
 {-@ ignore preFactoredNumOfBitSize @-}
 
--- {-@ preFactoredNumOfBitSize :: n:Pos -> IO (EitherTupleIntListFactors n) @-}
+--{-@ preFactoredNumOfBitSize :: n:Pos -> IO (EitherTupleIntListFactors n) @-}
 preFactoredNumOfBitSize :: Int -> IO (Either Text (Int, [Int]))
 preFactoredNumOfBitSize n | n <= 0 = pure $ Left $ pack "Invalid"
 preFactoredNumOfBitSize 1 = pure $ Right (1, [1])

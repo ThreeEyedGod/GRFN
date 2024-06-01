@@ -11,6 +11,7 @@ import Control.Monad.Loops (iterateWhile)
 
 
 -- for reference type Pos = {v:Int | 0 < v}
+-- Nat is a type alias type Nat = {v:Int | 0 <= v} thats in the LH prelude
 
 {-@ assume iterateWhile :: (Monad m) => (a -> Bool) -> m a -> m a  @-}
 
@@ -42,11 +43,12 @@ import Control.Monad.Loops (iterateWhile)
 {-@ type TupleIntListFactored = {u: TupleIntList | fst u == 1 || (product (snd u)) == (fst u) } @-}
 {-@ type EitherTupleIntListFactors N = Either Text {rght:TupleIntListFactored | fst rght <= N } @-}
 
-{-@ reflect pow2 @-}
+{-@ measure pow2 :: Nat -> Nat @-}
 {-@ pow2 :: Nat -> Nat @-}
 pow2 :: Int -> Int
 pow2 0 = 1
-pow2 n = 2 * pow2 (n - 1)
+pow2 n | n >= 1 = 2 * pow2 (n - 1)
+pow2 _ = die "not possible"
 
 
 -- To assert that code is unreachable
