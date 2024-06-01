@@ -1,5 +1,4 @@
 import Test.Tasty.Bench 
-import Test.Tasty (mkTimeout)
 import FactoredRandomNumbers 
 
 main :: IO ()
@@ -14,6 +13,5 @@ main =
           bench "2^6-parallel " $ whnfIO (preFactoredNumOfBitSizePar 6),
           bench "2^6-Non-Parallel " $ whnfIO (preFactoredNumOfBitSize 6),
           bench "Regular-50 " $ whnfIO (genARandomPreFactoredNumberLTEn 50)
-
         ]
     ]

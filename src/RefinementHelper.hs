@@ -3,7 +3,7 @@
 {-@ LIQUID "--notermination"           @-}
 
 -- | Module for helping out refinements with LH in other modules
-module RefinementHelper (die) where
+module RefinementHelper (die, pow2, pow2Less1) where
 
 import Protolude hiding (die)
 import Prelude (String, error)
@@ -43,12 +43,19 @@ import Control.Monad.Loops (iterateWhile)
 {-@ type TupleIntListFactored = {u: TupleIntList | fst u == 1 || (product (snd u)) == (fst u) } @-}
 {-@ type EitherTupleIntListFactors N = Either Text {rght:TupleIntListFactored | fst rght <= N } @-}
 
-{-@ measure pow2 :: Nat -> Nat @-}
-{-@ pow2 :: Nat -> Nat @-}
+{-@ measure pow2 :: Nat -> Pos @-}
+{-@ pow2 :: Nat -> Pos @-}
 pow2 :: Int -> Int
 pow2 0 = 1
 pow2 n | n >= 1 = 2 * pow2 (n - 1)
 pow2 _ = die "not possible"
+
+{-@ measure pow2Less1 :: Nat -> Nat @-}
+{-@ pow2Less1 :: Nat -> Nat @-}
+pow2Less1 :: Int -> Int
+pow2Less1 0 = 0
+pow2Less1 n | n >= 1 = 2 * pow2 (n - 1) - 1 
+pow2Less1 _ = die "not possible"
 
 
 -- To assert that code is unreachable

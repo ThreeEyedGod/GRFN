@@ -39,11 +39,12 @@ spinUpThreads f t = withPool t $ \pool -> parallelFirst pool $ replicate t (Just
 
 {-@ ignore preFactoredNumOfBitSize @-}
 
---{-@ preFactoredNumOfBitSize :: n:Pos -> IO (EitherTupleIntListFactors n) @-}
+--{-@ preFactoredNumOfBitSize :: n:Nat -> IO (EitherTupleIntListFactors n) @-}
 preFactoredNumOfBitSize :: Int -> IO (Either Text (Int, [Int]))
 preFactoredNumOfBitSize n | n <= 0 = pure $ Left $ pack "Invalid"
 preFactoredNumOfBitSize 1 = pure $ Right (1, [1])
-preFactoredNumOfBitSize n | n > 1 = iterateWhile ((2 ^ n) <|) (genARandomPreFactoredNumberLTEn (2 ^ (n + 1) - 1))
+--preFactoredNumOfBitSize n | n > 1 = iterateWhile ((2 ^ n) <|) (genARandomPreFactoredNumberLTEn (2 ^ (n + 1) - 1))
+preFactoredNumOfBitSize n | n > 1 = iterateWhile ((2 ^ n) <|) (genARandomPreFactoredNumberLTEn (pow2Less1 (n + 1)))
 preFactoredNumOfBitSize _ = pure $ Left $ pack "Invalid"
 
 infix 1 <|
@@ -58,7 +59,7 @@ bound <| eOR = case eOR of
 -- Provide an integer input and it should generate a tuple of a number less than the input integer and its prime factors
 
 {-@ lazy genARandomPreFactoredNumberLTEn @-}
-{-@ genARandomPreFactoredNumberLTEn :: n:Pos -> IO (EitherTupleIntListFactors n) @-}
+{-@ genARandomPreFactoredNumberLTEn :: n:Nat -> IO (EitherTupleIntListFactors n) @-}
 genARandomPreFactoredNumberLTEn :: Int -> IO (Either Text (Int, [Int]))
 genARandomPreFactoredNumberLTEn x | x <= 0 = pure $ Left $ pack "Invalid"
 genARandomPreFactoredNumberLTEn 1 = pure $ Right (1, [1])
