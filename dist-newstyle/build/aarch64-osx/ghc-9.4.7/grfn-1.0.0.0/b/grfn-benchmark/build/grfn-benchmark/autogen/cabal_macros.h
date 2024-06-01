@@ -30,6 +30,16 @@
   (major1) == 1 && (major2) <  0 || \
   (major1) == 1 && (major2) == 0 && (minor) <= 0)
 #endif /* MIN_VERSION_grfn */
+/* package tasty-1.5 */
+#ifndef VERSION_tasty
+#define VERSION_tasty "1.5"
+#endif /* VERSION_tasty */
+#ifndef MIN_VERSION_tasty
+#define MIN_VERSION_tasty(major1,major2,minor) (\
+  (major1) <  1 || \
+  (major1) == 1 && (major2) <  5 || \
+  (major1) == 1 && (major2) == 5 && (minor) <= 0)
+#endif /* MIN_VERSION_tasty */
 /* package tasty-bench-0.3.5 */
 #ifndef VERSION_tasty_bench
 #define VERSION_tasty_bench "0.3.5"

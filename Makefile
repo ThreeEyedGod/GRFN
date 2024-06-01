@@ -15,4 +15,4 @@ do_gendoc:
 
 do_benchmark:
 	@echo "creating benchmarks"
-	cabal bench --benchmark-options '+RTS -T'
+	cabal bench --benchmark-options='--timeout 100000000' --benchmark-options="+RTS -T"

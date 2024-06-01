@@ -39,6 +39,7 @@ spinUpThreads f t = withPool t $ \pool -> parallelFirst pool $ replicate t (Just
 -- Provide an integer input and it should generate a tuple of a number in the range [2^y, 2^y+1 -1] and its prime factors
 
 {-@ ignore preFactoredNumOfBitSize @-}
+
 -- {-@ preFactoredNumOfBitSize :: n:Pos -> IO (EitherTupleIntListFactors n) @-}
 preFactoredNumOfBitSize :: Int -> IO (Either Text (Int, [Int]))
 preFactoredNumOfBitSize n | n <= 0 = pure $ Left $ pack "Invalid"

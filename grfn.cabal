@@ -10,7 +10,7 @@ maintainer:          example@example.com
 copyright:           2024 ThreeEyedGod
 synopsis:            Uniformly-random pre-factored number generation as per Kalai's algorithm
 description:
-    This is a implementation of this paper ["Get pre-factored random numbers easily"](https://twitter.com/michael_nielsen/status/1724854680990486780?s=20). 
+    This is an implementation of this paper ["Get pre-factored random numbers easily"](https://twitter.com/michael_nielsen/status/1724854680990486780?s=20). 
     The full paper may be read [here](https://link.springer.com/content/pdf/10.1007/s00145-003-0051-5.pdf).
     A synopsis is available in a different paper (https://math.dartmouth.edu/~carlp/kalai3.pdf) dealing 
     with getting pre-factored random numbers for Gaussian distributions.
@@ -123,6 +123,7 @@ benchmark grfn-benchmark
   build-depends:       base
                      , tasty-bench
                      , grfn
+                     , tasty >= 1.5
   default-language:    Haskell2010
   ghc-options:   "-with-rtsopts=-A32m"
   if impl(ghc >= 8.6)
