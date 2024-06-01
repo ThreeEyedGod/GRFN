@@ -1,4 +1,5 @@
-all: do_build do_test do_gendoc do_benchmark
+all: do_build do_test do_gendoc
+allplusbench : all do_benchmark
 	
 do_build:
 	@echo "Build"

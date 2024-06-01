@@ -3,12 +3,17 @@
 {-@ LIQUID "--notermination"           @-}
 
 -- | Module for helping out refinements with LH in other modules
-module RefinementHelper (die, filterInvalid, pow2) where
+module RefinementHelper (die) where
 
 import Protolude hiding (die)
 import Prelude (String, error)
+import Control.Monad.Loops (iterateWhile)
+
 
 -- for reference type Pos = {v:Int | 0 < v}
+
+{-@ assume iterateWhile :: (Monad m) => (a -> Bool) -> m a -> m a  @-}
+
 
 -- so that these functions can be used in refinement
 {-@ measure isPrime :: Int-> Bool @-}

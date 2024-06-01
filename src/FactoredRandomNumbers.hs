@@ -4,7 +4,7 @@
 module FactoredRandomNumbers
   ( genARandomPreFactoredNumberLTEn,
     preFactoredNumOfBitSize,
-    preFactoredNumOfBitSizePar,
+    preFactoredNumOfBitSizePar
   )
 where
 

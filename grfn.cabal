@@ -92,7 +92,6 @@ test-suite grfn-test
   build-depends:       base
                      , grfn
                      , QuickCheck >= 2.14.3
-                     , regex-posix
                      , primes
                      , text
                      , hspec >= 2.11.7
@@ -110,7 +109,6 @@ test-suite grfn-test
                        -threaded
                        -rtsopts
                        -with-rtsopts=-N
-                       -XTemplateHaskell
 
 source-repository head
   type:     git
