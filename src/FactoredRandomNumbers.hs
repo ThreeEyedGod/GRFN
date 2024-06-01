@@ -43,8 +43,7 @@ spinUpThreads f t = withPool t $ \pool -> parallelFirst pool $ replicate t (Just
 preFactoredNumOfBitSize :: Int -> IO (Either Text (Int, [Int]))
 preFactoredNumOfBitSize n | n <= 0 = pure $ Left $ pack "Invalid"
 preFactoredNumOfBitSize 1 = pure $ Right (1, [1])
---preFactoredNumOfBitSize n | n > 1 = iterateWhile ((2 ^ n) <|) (genARandomPreFactoredNumberLTEn (2 ^ (n + 1) - 1))
-preFactoredNumOfBitSize n | n > 1 = iterateWhile ((2 ^ n) <|) (genARandomPreFactoredNumberLTEn (pow2Less1 (n + 1)))
+preFactoredNumOfBitSize n | n > 1 = iterateWhile ((2 ^ n) <|) (genARandomPreFactoredNumberLTEn (2 ^ (n + 1) - 1))
 preFactoredNumOfBitSize _ = pure $ Left $ pack "Invalid"
 
 infix 1 <|
@@ -71,7 +70,8 @@ genARandomPreFactoredNumberLTEn n = makeList n >>= haltOrContinue n
       where
         result@(ps, sq) = (product sq, filter isPrimeOr1 solnSet) -- note: product [] = 1
 
--- | Provided an Int, creates a sequence of random integers LTE n decreasing order, possibly with multiples ending at single 1
+-- | Provided an Int, creates a sequence of random integers LTE n in decreasing order, 
+-- possibly with multiples ending at a single 1
 
 {-@ makeList :: n:Pos -> IO [RngPos 1 n] @-}
 {-@ lazy makeList @-}
@@ -93,7 +93,7 @@ infixr 1 >=>:
 (>=>:) :: (Monad m) => (a -> m b) -> (b -> m [b]) -> (a -> m [b])
 f >=>: g = f >=> \u -> (u :) <$> g u
 
--- | True if it is prime or the Int 1
+-- | True if input is prime or 1
 
 {-@ isPrimeOr1 :: Pos -> Bool @-}
 isPrimeOr1 :: Int -> Bool
