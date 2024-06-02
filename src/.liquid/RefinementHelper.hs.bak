@@ -1,4 +1,4 @@
-{-# LANGUAGE NoMonomorphismRestriction #-}
+{-# LANGUAGE NoMonomorphismRestriction #-} -- //FIXME with protolude
 
 {-@ LIQUID "--notermination"           @-}
 
@@ -20,6 +20,7 @@ import Control.Monad.Loops (iterateWhile)
 {-@ measure isPrime :: Int-> Bool @-}
 {-@ measure maximum :: Ord a => [a] -> a @-}
 {-@ measure product :: [Int] -> Int @-}
+{-@ measure minimum :: Ord a => [a] -> a @-}
 
 {-@ predicate Btwn Lo N Hi = Lo <= N && N < Hi @-}
 {-@ predicate BtwnBothIncl Lo N Hi = Lo <= N && N <= Hi @-}
@@ -36,11 +37,17 @@ import Control.Monad.Loops (iterateWhile)
 {-@ type RngPrimes Lo Hi = {v:Pos | (v==1) || (isPrime v) && (BtwnBothIncl Lo v Hi)} @-}
 {-@ type RngPrimeFactors Lo Hi N = {v:[RngPrimes Lo Hi] | ((Lo==1) && (Hi==1)) || (product v == N)} @-}
 
+ {-@ type DecrList a = [a]<{\xi xj -> xi >= xj}> @-}
+
+
 {-@ type LstPosMaxN Lo Hi = v:[RngPos Lo Hi] @-}
 {-@ type TuplePos F S = {v:(Pos, Pos) | fst v == F && snd v == S && (Ge S F)} @-}
 
 {-@ type TupleIntList = (Pos, [Pos]) @-}
-{-@ type TupleIntListFactored = {u: TupleIntList | fst u == 1 || (product (snd u)) == (fst u) } @-}
+{-@ type DecrList a = [a]<{\xi xj -> xi >= xj}> @-}
+{-@ type TupleIntListDecr = (Pos, DecrList Pos) @-}
+
+{-@ type TupleIntListFactored = {u: TupleIntListDecr | fst u == 1 || (product (snd u)) == (fst u) } @-}
 {-@ type EitherTupleIntListFactors N = Either Text {rght:TupleIntListFactored | fst rght <= N } @-}
 
 {-@ measure pow2 :: Nat -> Pos @-}

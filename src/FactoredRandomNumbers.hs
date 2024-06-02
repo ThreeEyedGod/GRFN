@@ -22,6 +22,7 @@ import System.Random.Stateful (globalStdGen, uniformRM)
 -- | Takes an Int for Bitsize value to operate on range [2 ^ y, 2 ^ y + 1 - 1].  This function leverages parallel execution
 -- Provide an integer input and it should generate a tuple of a number in the range [2^y, 2^y+1 -1] and its prime factors
 
+-- // TODO LH to be implemented
 {-@ ignore preFactoredNumOfBitSizePar @-}
 -- {-@ preFactoredNumOfBitSizePar :: n:Pos -> IO (EitherTupleIntListFactors n) @-}
 preFactoredNumOfBitSizePar :: Int -> IO (Either Text (Int, [Int]))
@@ -57,6 +58,8 @@ bound <| eOR = case eOR of
 -- | This is the Entry Function with a Int bound
 -- Provide an integer input and it should generate a tuple of a number less than the input integer and its prime factors
 
+-- // TODO Rename function w/o verb 
+-- // TODO Refactor this function
 {-@ lazy genARandomPreFactoredNumberLTEn @-}
 {-@ genARandomPreFactoredNumberLTEn :: n:Nat -> IO (EitherTupleIntListFactors n) @-}
 genARandomPreFactoredNumberLTEn :: Int -> IO (Either Text (Int, [Int]))
@@ -69,6 +72,16 @@ genARandomPreFactoredNumberLTEn n = makeList n >>= haltOrContinue n
       | otherwise = genARandomPreFactoredNumberLTEn n' -- keep doing till result occurs
       where
         result@(ps, sq) = (product sq, filter isPrimeOr1 solnSet) -- note: product [] = 1
+
+{-@ lazy filterPrimesProduct @-}
+{-@ filterPrimesProduct :: {u:DecrList Pos | minimum u > 1} -> TupleIntListFactored @-}
+filterPrimesProduct :: [Int] -> (Int, [Int])
+filterPrimesProduct xs = result where result@(ps, sq) = (product sq, filter isPrimeOr1 xs) -- note: product [] = 1
+
+{-@ ignore potentialResult @-}
+--{-@ potentialResult :: Pos -> IO TupleIntListFactored @-}
+potentialResult :: Int -> IO (Int, [Int])
+potentialResult n =  makeList n <&> filterPrimesProduct
 
 -- | Provided an Int, creates a sequence of random integers LTE n in decreasing order, 
 -- possibly with multiples ending at a single 1
@@ -100,6 +113,7 @@ isPrimeOr1 :: Int -> Bool
 isPrimeOr1 n | n < 1 = die "impossible"
 isPrimeOr1 n = (n == 1) || isPrime n
 
+-- // TODO move it out ?
 -- | Helper function
 timeit :: IO a -> IO (Maybe a, NominalDiffTime)
 timeit action = do
