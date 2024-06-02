@@ -14,7 +14,31 @@ import Data.Maybe (fromJust)
 import Data.Numbers.Primes (isPrime)
 import Data.Text (pack)
 import GHC.Conc (getNumProcessors)
-import Protolude hiding (die)
+import Protolude
+    ( filter,
+      otherwise,
+      ($),
+      Eq((==)),
+      Monad((>>=)),
+      Num((-), (+)),
+      Ord((>), (<), (<=), max, min),
+      Applicative(pure),
+      Bool(False),
+      Int,
+      Maybe(Just),
+      IO,
+      Either(..),
+      (>=>),
+      (<$>),
+      (.),
+      (||),
+      Text,
+      (&&),
+      (<&>),
+      fst,
+      replicate,
+      (^),
+      product )
 import System.Random.Stateful (globalStdGen, uniformRM)
 import Prelude (error)
 
@@ -87,5 +111,5 @@ f >=>: g = f >=> \u -> (u :) <$> g u
 
 -- | True if input is prime or 1
 isPrimeOr1 :: Int -> Bool
-isPrimeOr1 n | n < 1 = error "No Primes Below 1"
-isPrimeOr1 n = (n == 1) || isPrime n
+isPrimeOr1 n | n > 0 = (n == 1) || isPrime n
+isPrimeOr1 _  = error "Invalid Arg "
