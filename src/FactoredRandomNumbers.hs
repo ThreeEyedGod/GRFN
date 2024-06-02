@@ -10,45 +10,47 @@ where
 
 import Control.Concurrent.ParallelIO.Local (parallelFirst, withPool)
 import Control.Monad.Loops (iterateWhile)
-import Data.Maybe (fromJust)
+import Data.Maybe (fromJust, fromMaybe)
 import Data.Numbers.Primes (isPrime)
 import Data.Text (pack)
 import GHC.Conc (getNumProcessors)
 import Protolude
-    ( filter,
-      otherwise,
-      ($),
-      Eq((==)),
-      Monad((>>=)),
-      Num((-), (+)),
-      Ord((>), (<), (<=), max, min),
-      Applicative(pure),
-      Bool(False),
-      Int,
-      Maybe(Just),
-      IO,
-      Either(..),
-      (>=>),
-      (<$>),
-      (.),
-      (||),
-      Text,
-      (&&),
-      (<&>),
-      fst,
-      replicate,
-      (^),
-      product )
+  ( Applicative (pure),
+    Bool (False),
+    Either (..),
+    Eq ((==)),
+    IO,
+    Int,
+    Maybe (Just),
+    Monad ((>>=)),
+    Num ((+), (-)),
+    Ord (max, min, (<), (<=), (>)),
+    Text,
+    filter,
+    fst,
+    otherwise,
+    product,
+    replicate,
+    ($),
+    (&&),
+    (.),
+    (<$>),
+    (<&>),
+    (<*>),
+    (>=>),
+    (^),
+    (||),
+  )
 import System.Random.Stateful (globalStdGen, uniformRM)
 import Prelude (error)
 
 -- | Takes an Int for Bitsize value to operate on range [2 ^ y, 2 ^ y + 1 - 1].  This function leverages parallel execution
 -- Provide an integer input and it should generate a tuple of a number in the range [2^y, 2^y+1 -1] and its prime factors
+-- In the event that the parallel call fails nd return Nothing, a recovery through a non-parallel call is attempted.
 preFactoredNumOfBitSizePar :: Int -> IO (Either Text (Int, [Int]))
 preFactoredNumOfBitSizePar 1 = pure $ Right (1, [1])
-preFactoredNumOfBitSizePar n | n > 1 = fromJust <$> (getNumProcessors >>= spinUpThreads (preFactoredNumOfBitSize n)) -- exception if Nothing is gotten
+preFactoredNumOfBitSizePar n | n > 1 = fromMaybe <$> preFactoredNumOfBitSize n <*> (getNumProcessors >>= spinUpThreads (preFactoredNumOfBitSize n))
 preFactoredNumOfBitSizePar _ = pure $ Left $ pack "Invalid"
--- //FIXME FRMJUST NEEDS A BETTER RESOLTON 
 
 -- | Spin up t threads of function f in parallel and return what's executed first
 spinUpThreads :: IO a -> Int -> IO (Maybe a)
@@ -72,7 +74,6 @@ bound <| eOR = case eOR of
 
 -- | This is the Entry Function with a Int bound
 -- Provide an integer input and it should generate a tuple of a number less than the input integer and its prime factors
-
 genARandomPreFactoredNumberLTEn :: Int -> IO (Either Text (Int, [Int]))
 genARandomPreFactoredNumberLTEn x | x <= 0 = pure $ Left $ pack "Invalid"
 genARandomPreFactoredNumberLTEn 1 = pure $ Right (1, [1])
@@ -111,4 +112,4 @@ f >=>: g = f >=> \u -> (u :) <$> g u
 -- | True if input is prime or 1
 isPrimeOr1 :: Int -> Bool
 isPrimeOr1 n | n > 0 = (n == 1) || isPrime n
-isPrimeOr1 _  = error "Invalid Arg "
+isPrimeOr1 _ = error "Invalid Arg "
