@@ -1,5 +1,5 @@
-import Test.Tasty.Bench 
-import FactoredRandomNumbers 
+import FactoredRandomNumbers
+import Test.Tasty.Bench
 
 main :: IO ()
 main =

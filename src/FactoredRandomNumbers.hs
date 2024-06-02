@@ -45,10 +45,10 @@ import Prelude (error)
 -- | Takes an Int for Bitsize value to operate on range [2 ^ y, 2 ^ y + 1 - 1].  This function leverages parallel execution
 -- Provide an integer input and it should generate a tuple of a number in the range [2^y, 2^y+1 -1] and its prime factors
 preFactoredNumOfBitSizePar :: Int -> IO (Either Text (Int, [Int]))
-preFactoredNumOfBitSizePar n | n <= 0 = pure $ Left $ pack "Invalid"
 preFactoredNumOfBitSizePar 1 = pure $ Right (1, [1])
-preFactoredNumOfBitSizePar n | n > 1 = fromJust <$> (getNumProcessors >>= spinUpThreads (preFactoredNumOfBitSize n))
+preFactoredNumOfBitSizePar n | n > 1 = fromJust <$> (getNumProcessors >>= spinUpThreads (preFactoredNumOfBitSize n)) -- exception if Nothing is gotten
 preFactoredNumOfBitSizePar _ = pure $ Left $ pack "Invalid"
+-- //FIXME FRMJUST NEEDS A BETTER RESOLTON 
 
 -- | Spin up t threads of function f in parallel and return what's executed first
 spinUpThreads :: IO a -> Int -> IO (Maybe a)
@@ -73,7 +73,6 @@ bound <| eOR = case eOR of
 -- | This is the Entry Function with a Int bound
 -- Provide an integer input and it should generate a tuple of a number less than the input integer and its prime factors
 
--- // TODO Rename function w/o verb
 genARandomPreFactoredNumberLTEn :: Int -> IO (Either Text (Int, [Int]))
 genARandomPreFactoredNumberLTEn x | x <= 0 = pure $ Left $ pack "Invalid"
 genARandomPreFactoredNumberLTEn 1 = pure $ Right (1, [1])
@@ -96,7 +95,7 @@ potentialResult n = makeList n <&> filterPrimesProduct
 makeList :: Int -> IO [Int]
 makeList 1 = pure [] -- pure [] also works
 makeList n | n > 1 = (getRndMInt >=>: makeList) (1, n)
-makeList _ = error "Out of bound input"
+makeList _ = error "Out of bound Arg"
 
 -- | Get a Random Integer with uniform probability in the range [1,n]
 getRndMInt :: (Int, Int) -> IO Int
