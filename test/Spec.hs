@@ -1,5 +1,6 @@
 import Data.Numbers.Primes (primeFactors, primes)
 import Data.Text (pack)
+import Data.Time.Clock
 import FactoredRandomNumbers (genARandomPreFactoredNumberLTEn, preFactoredNumOfBitSize, preFactoredNumOfBitSizePar)
 import System.IO.Error (isDoesNotExistError, tryIOError)
 import Test.Hspec (Spec, describe, hspec, it, shouldBe, shouldNotReturn, shouldReturn)
@@ -108,7 +109,7 @@ prop_checkValidOutput (Positive n) = n > 2 && n < 50 ==> classify (n < 30) "n LT
   x <- run $ genARandomPreFactoredNumberLTEn n
   case x of
     Left err -> assert (err == pack "Invalid")
-    Right y -> assert (fst y >= head  (snd y))
+    Right y -> assert (fst y >= head (snd y))
 
 prop_checkAccurateOutput :: Positive Int -> Property
 prop_checkAccurateOutput (Positive n) = n > 2 && n < 50 ==> classify (n < 30) "n LT 30" $ collect n $ counterexample "Failed case" $ monadicIO $ do
@@ -116,7 +117,7 @@ prop_checkAccurateOutput (Positive n) = n > 2 && n < 50 ==> classify (n < 30) "n
   x <- run $ genARandomPreFactoredNumberLTEn n
   case x of
     Left err -> assert (err == pack "Invalid")
-    Right y -> assert (primeFactorsOr1  (fst y) == snd y)
+    Right y -> assert (primeFactorsOr1 (fst y) == snd y)
 
 prop_checkAccurateOutputVal :: Positive Int -> Property
 prop_checkAccurateOutputVal (Positive n) = n > 2 && n < 50 ==> classify (n < 30) "n LT 30" $ collect n $ counterexample "Failed case" $ monadicIO $ do
@@ -145,3 +146,11 @@ prop_checkAccurateOutputValBitSizePar (Positive n) = n > 2 && n < 50 ==> classif
 primeFactorsOr1 :: Int -> [Int]
 primeFactorsOr1 1 = [1]
 primeFactorsOr1 n = reverse (1 : primeFactors n)
+
+-- | Helper function
+timeit :: IO a -> IO (Maybe a, NominalDiffTime)
+timeit action = do
+  start <- getCurrentTime
+  value <- action
+  end <- getCurrentTime
+  pure (Just value, diffUTCTime end start)

@@ -3,21 +3,7 @@
 # For more information, please see the documentation at:
 #   https://docs.haskellstack.org/en/stable/lock_files
 
-packages:
-- completed:
-    hackage: liquidhaskell-0.9.4.7.0@sha256:31866a28d6f3ef540ba8da75ec0459223b8ab445e0b6873075bd21b4ed76f6df,3559
-    pantry-tree:
-      sha256: 4ce2d1af2f25a60139e772b3492a76c05b2b698a10c150fc8f9df68b042b6990
-      size: 3367
-  original:
-    hackage: liquidhaskell-0.9.4.7.0@sha256:31866a28d6f3ef540ba8da75ec0459223b8ab445e0b6873075bd21b4ed76f6df,3559
-- completed:
-    hackage: liquidhaskell-boot-0.9.4.7.0@sha256:0de0c907e361d491454efc7e824ce72fb066ec8cc6b435766fc5beb9139ef22e,98
-    pantry-tree:
-      sha256: 7f3f00a09178d52e99650b0b0f43fc307de4cd5cb33c0096961c589b451bb16b
-      size: 7768
-  original:
-    hackage: liquidhaskell-boot-0.9.4.7.0@sha256:0de0c907e361d491454efc7e824ce72fb066ec8cc6b435766fc5beb9139ef22e,98
+packages: []
 snapshots:
 - completed:
     sha256: 7d4b649cf368f9076d8aa049aa44efe58950971d105892734e9957b2a26a2186

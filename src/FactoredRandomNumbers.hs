@@ -13,18 +13,13 @@ import Control.Monad.Loops (iterateWhile)
 import Data.Maybe (fromJust)
 import Data.Numbers.Primes (isPrime)
 import Data.Text (pack)
-import Data.Time.Clock
 import GHC.Conc (getNumProcessors)
 import Protolude hiding (die)
-import RefinementHelper
 import System.Random.Stateful (globalStdGen, uniformRM)
+import Prelude (error)
 
 -- | Takes an Int for Bitsize value to operate on range [2 ^ y, 2 ^ y + 1 - 1].  This function leverages parallel execution
 -- Provide an integer input and it should generate a tuple of a number in the range [2^y, 2^y+1 -1] and its prime factors
-
--- // TODO LH to be implemented
-{-@ ignore preFactoredNumOfBitSizePar @-}
--- {-@ preFactoredNumOfBitSizePar :: n:Pos -> IO (EitherTupleIntListFactors n) @-}
 preFactoredNumOfBitSizePar :: Int -> IO (Either Text (Int, [Int]))
 preFactoredNumOfBitSizePar n | n <= 0 = pure $ Left $ pack "Invalid"
 preFactoredNumOfBitSizePar 1 = pure $ Right (1, [1])
@@ -37,10 +32,6 @@ spinUpThreads f t = withPool t $ \pool -> parallelFirst pool $ replicate t (Just
 
 -- | Takes an Int as a Bitsize value to operate on range [2 ^ y, 2 ^ y + 1 - 1]
 -- Provide an integer input and it should generate a tuple of a number in the range [2^y, 2^y+1 -1] and its prime factors
-
-{-@ ignore preFactoredNumOfBitSize @-}
-
---{-@ preFactoredNumOfBitSize :: n:Nat -> IO (EitherTupleIntListFactors n) @-}
 preFactoredNumOfBitSize :: Int -> IO (Either Text (Int, [Int]))
 preFactoredNumOfBitSize n | n <= 0 = pure $ Left $ pack "Invalid"
 preFactoredNumOfBitSize 1 = pure $ Right (1, [1])
@@ -58,47 +49,35 @@ bound <| eOR = case eOR of
 -- | This is the Entry Function with a Int bound
 -- Provide an integer input and it should generate a tuple of a number less than the input integer and its prime factors
 
--- // TODO Rename function w/o verb 
--- // TODO Refactor this function
-{-@ lazy genARandomPreFactoredNumberLTEn @-}
-{-@ genARandomPreFactoredNumberLTEn :: n:Nat -> IO (EitherTupleIntListFactors n) @-}
+-- // TODO Rename function w/o verb
 genARandomPreFactoredNumberLTEn :: Int -> IO (Either Text (Int, [Int]))
 genARandomPreFactoredNumberLTEn x | x <= 0 = pure $ Left $ pack "Invalid"
 genARandomPreFactoredNumberLTEn 1 = pure $ Right (1, [1])
-genARandomPreFactoredNumberLTEn n = makeList n >>= haltOrContinue n
+genARandomPreFactoredNumberLTEn n = potentialResult n >>= go n
   where
-    haltOrContinue n' solnSet
-      | ps <= n' = pure $ Right result
+    go n' candidateTuple
+      | fst candidateTuple <= n' = pure $ Right candidateTuple
       | otherwise = genARandomPreFactoredNumberLTEn n' -- keep doing till result occurs
-      where
-        result@(ps, sq) = (product sq, filter isPrimeOr1 solnSet) -- note: product [] = 1
 
-{-@ lazy filterPrimesProduct @-}
-{-@ filterPrimesProduct :: {u:DecrList Pos | minimum u > 1} -> TupleIntListFactored @-}
+-- | Provided an Int List, throws up a candidate Int and its factors for further assessment
 filterPrimesProduct :: [Int] -> (Int, [Int])
 filterPrimesProduct xs = result where result@(ps, sq) = (product sq, filter isPrimeOr1 xs) -- note: product [] = 1
 
-{-@ ignore potentialResult @-}
---{-@ potentialResult :: Pos -> IO TupleIntListFactored @-}
+-- | Provided an Int, throws up a candidate Int and its factors for further assessment
 potentialResult :: Int -> IO (Int, [Int])
-potentialResult n =  makeList n <&> filterPrimesProduct
+potentialResult n = makeList n <&> filterPrimesProduct
 
--- | Provided an Int, creates a sequence of random integers LTE n in decreasing order, 
+-- | Provided an Int, creates a sequence of random integers LTE n in decreasing order,
 -- possibly with multiples ending at a single 1
-
-{-@ makeList :: n:Pos -> IO [RngPos 1 n] @-}
-{-@ lazy makeList @-}
 makeList :: Int -> IO [Int]
 makeList 1 = pure [] -- pure [] also works
 makeList n | n > 1 = (getRndMInt >=>: makeList) (1, n)
-makeList _ = die "impossible"
+makeList _ = error "Out of bound input"
 
 -- | Get a Random Integer with uniform probability in the range [1,n]
-
-{-@ getRndMInt :: x:{(Pos, Pos) | fst x <= snd x && fst x > 0} -> IO {y:Pos | y >= fst x && y <= snd x} @-}
 getRndMInt :: (Int, Int) -> IO Int
 getRndMInt (l, u) | l <= u && l > 0 = max l . min u <$> uniformRM (l, u) globalStdGen
-getRndMInt _ = die "impossible"
+getRndMInt _ = error "Malformed Range"
 
 infixr 1 >=>:
 
@@ -107,17 +86,6 @@ infixr 1 >=>:
 f >=>: g = f >=> \u -> (u :) <$> g u
 
 -- | True if input is prime or 1
-
-{-@ isPrimeOr1 :: Pos -> Bool @-}
 isPrimeOr1 :: Int -> Bool
-isPrimeOr1 n | n < 1 = die "impossible"
+isPrimeOr1 n | n < 1 = error "No Primes Below 1"
 isPrimeOr1 n = (n == 1) || isPrime n
-
--- // TODO move it out ?
--- | Helper function
-timeit :: IO a -> IO (Maybe a, NominalDiffTime)
-timeit action = do
-  start <- getCurrentTime
-  value <- action
-  end <- getCurrentTime
-  pure (Just value, diffUTCTime end start)

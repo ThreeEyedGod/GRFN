@@ -40,17 +40,14 @@ extra-source-files:  README.md
 
 library
   hs-source-dirs:      src
-  exposed-modules:     FactoredRandomNumbers, RefinementHelper, ShortCircuit
+  exposed-modules:     FactoredRandomNumbers, ShortCircuit
   build-depends:       base                 >= 4.11.1.0 && < 5
                       ,protolude
                       ,text
                       ,random
---                      ,liquidhaskell == 0.9.2.8.0
-                      ,liquidhaskell == 0.9.4.7.0
                       ,primes
                       ,tuple >= 0.3.0.2
                       ,monad-loops >= 0.4.3
-                      ,time >= 1.12.2
                       ,parallel-io >= 0.3.5
   default-language:    Haskell2010
   ghc-options:         -Wall
@@ -62,7 +59,6 @@ library
                        -Wmissing-home-modules
                        -Wpartial-fields
                        -Wredundant-constraints
-                       -fplugin=LiquidHaskell
                        -fwrite-ide-info
                        -hiedir=.hie
                        
@@ -96,6 +92,8 @@ test-suite grfn-test
                      , text
                      , hspec >= 2.11.7
                      , hspec-core >= 2.11.7
+                     , time >= 1.12.2
+
   default-language:    Haskell2010
   ghc-options:         -Wall
                        -Wcompat

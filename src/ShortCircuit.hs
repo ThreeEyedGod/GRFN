@@ -1,6 +1,5 @@
 {-# LANGUAGE NoImplicitPrelude #-}
 
-{-@ LIQUID "--skip-module" @-}
 
 -- | Module for nifty functions leveraging lazy evaluation
 module ShortCircuit

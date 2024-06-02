@@ -20,16 +20,6 @@
   (major1) == 4 && (major2) <  17 || \
   (major1) == 4 && (major2) == 17 && (minor) <= 2)
 #endif /* MIN_VERSION_base */
-/* package liquidhaskell-0.9.4.7.0 */
-#ifndef VERSION_liquidhaskell
-#define VERSION_liquidhaskell "0.9.4.7.0"
-#endif /* VERSION_liquidhaskell */
-#ifndef MIN_VERSION_liquidhaskell
-#define MIN_VERSION_liquidhaskell(major1,major2,minor) (\
-  (major1) <  0 || \
-  (major1) == 0 && (major2) <  9 || \
-  (major1) == 0 && (major2) == 9 && (minor) <= 4)
-#endif /* MIN_VERSION_liquidhaskell */
 /* package monad-loops-0.4.3 */
 #ifndef VERSION_monad_loops
 #define VERSION_monad_loops "0.4.3"
@@ -90,16 +80,6 @@
   (major1) == 2 && (major2) <  0 || \
   (major1) == 2 && (major2) == 0 && (minor) <= 2)
 #endif /* MIN_VERSION_text */
-/* package time-1.12.2 */
-#ifndef VERSION_time
-#define VERSION_time "1.12.2"
-#endif /* VERSION_time */
-#ifndef MIN_VERSION_time
-#define MIN_VERSION_time(major1,major2,minor) (\
-  (major1) <  1 || \
-  (major1) == 1 && (major2) <  12 || \
-  (major1) == 1 && (major2) == 12 && (minor) <= 2)
-#endif /* MIN_VERSION_time */
 /* package tuple-0.3.0.2 */
 #ifndef VERSION_tuple
 #define VERSION_tuple "0.3.0.2"
