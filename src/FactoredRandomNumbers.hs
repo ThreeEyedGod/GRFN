@@ -82,7 +82,6 @@ spinUpThreads f t = withPool t $ \pool -> parallelFirst pool $ replicate t (Just
 -- | Takes an Int as a Bitsize value to operate on range [2 ^ y, 2 ^ y + 1 - 1]
 -- Provide an integer input and it should generate a tuple of a number in the range [2^y, 2^y+1 -1] and its prime factors
 preFactoredNumOfBitSize :: Int -> IO (Either Text (Int, [Int]))
-preFactoredNumOfBitSize n | n <= 0 = pure $ Left $ pack "Invalid"
 preFactoredNumOfBitSize 1 = pure $ Right (1, [1])
 preFactoredNumOfBitSize n | n > 1 = iterateWhile ((2 ^ n) <|) (genARandomPreFactoredNumberLTEn (2 ^ (n + 1) - 1))
 preFactoredNumOfBitSize _ = pure $ Left $ pack "Invalid"
@@ -117,7 +116,7 @@ potentialResult n = makeList n <&> filterPrimesProduct
 -- | Provided an Int, creates a sequence of random integers LTE n in decreasing order,
 -- possibly with multiples ending at a single 1
 makeList :: Int -> IO [Int]
-makeList 1 = pure [] -- pure [] also works
+makeList 1 = pure [] 
 makeList n | n > 1 = (getRndMInt >=>: makeList) (1, n)
 makeList _ = error "Out of bound Arg"
 
