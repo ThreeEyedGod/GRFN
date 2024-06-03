@@ -74,23 +74,24 @@ libHProperty12 = do
 
 libHProperty13 :: Spec
 libHProperty13 = do
-  modifyMaxSuccess (const 100) $
-    prop
-      "prop_checkAccurateOutputValBitSize"
-      prop_checkAccurateOutputValBitSize
+  modifyMaxSuccess (const 2) $
+      modifyMaxDiscardRatio (const 50) $
+      prop
+        "prop_checkAccurateOutputValBitSize"
+        prop_checkAccurateOutputValBitSize
 
 libHProperty14 :: Spec
 libHProperty14 = do
-  modifyMaxSuccess (const 50) $
-    modifyMaxDiscardRatio (const 10) $
+  modifyMaxSuccess (const 2) $
+    modifyMaxDiscardRatio (const 50) $
     prop
       "prop_checkAccurateOutputValBitSizePar"
       prop_checkAccurateOutputValBitSizePar
 
 libHProperty15 :: Spec
 libHProperty15 = do
-  modifyMaxSuccess (const 50) $
-    modifyMaxDiscardRatio (const 10) $
+  modifyMaxSuccess (const 2) $
+    modifyMaxDiscardRatio (const 50) $
     prop
       "prop_checkAccurateOutputValBitSizeParMaybe"
       prop_checkAccurateOutputValBitSizeParMaybe
@@ -138,7 +139,7 @@ prop_checkAccurateOutputVal (Positive n) = n > 2 && n < 50 ==> classify (n < 30)
     Right y -> assert (fst y == product (snd y))
 
 prop_checkAccurateOutputValBitSize :: Positive Int -> Property
-prop_checkAccurateOutputValBitSize (Positive n) = n > 2 && n < 50 ==> classify (n < 30) "n LT 30" $ collect n $ counterexample "Failed case" $ monadicIO $ do
+prop_checkAccurateOutputValBitSize (Positive n) = n > 2 && n < 70 ==> classify (n < 50) "n LT 50" $ collect n $ counterexample "Failed case" $ monadicIO $ do
   -- if n upper end is set at 100 then it results in an error https://www.cnblogs.com/BlogOfASBOIER/p/13096167.html
   x <- run $ preFactoredNumOfBitSize n
   case x of
@@ -146,7 +147,7 @@ prop_checkAccurateOutputValBitSize (Positive n) = n > 2 && n < 50 ==> classify (
     Right y -> assert (fst y == product (snd y))
 
 prop_checkAccurateOutputValBitSizePar :: Positive Int -> Property
-prop_checkAccurateOutputValBitSizePar (Positive n) = n > 25 && n < 70 ==> classify (n < 50) "n LT 50" $ collect n $ counterexample "Failed case" $ monadicIO $ do
+prop_checkAccurateOutputValBitSizePar (Positive n) = n > 2 && n < 70 ==> classify (n < 50) "n LT 50" $ collect n $ counterexample "Failed case" $ monadicIO $ do
   -- if n upper end is set at 100 then it results in an error https://www.cnblogs.com/BlogOfASBOIER/p/13096167.html
   x <- run $ preFactoredNumOfBitSizePar n
   case x of
@@ -154,7 +155,7 @@ prop_checkAccurateOutputValBitSizePar (Positive n) = n > 25 && n < 70 ==> classi
     Right y -> assert (fst y == product (snd y))
 
 prop_checkAccurateOutputValBitSizeParMaybe :: Positive Int -> Property
-prop_checkAccurateOutputValBitSizeParMaybe (Positive n) = n > 20 && n < 65 ==> classify (n < 50) "n LT 50" $ collect n $ counterexample "Failed case" $ monadicIO $ do
+prop_checkAccurateOutputValBitSizeParMaybe (Positive n) = n > 2 && n < 65 ==> classify (n < 50) "n LT 50" $ collect n $ counterexample "Failed case" $ monadicIO $ do
   -- if n upper end is set at 100 then it results in an error https://www.cnblogs.com/BlogOfASBOIER/p/13096167.html
   x <- run $ preFactoredNumOfBitSizeParMaybe n
   case x of

@@ -81,6 +81,6 @@ jobs:
         ghcup set ghc 9.4.7
         ghc --version
 
-    - name: Build Binary
+    - name: Build Binary, Test and Benchmark
       run: |
         make        
