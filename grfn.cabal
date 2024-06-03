@@ -124,3 +124,5 @@ benchmark grfn-benchmark
   ghc-options:   "-with-rtsopts=-A32m"
   if impl(ghc >= 8.6)
     ghc-options: -fproc-alignment=64
+
+-- // TODO HPC FOR CODE COVERAGE

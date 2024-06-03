@@ -5,6 +5,7 @@ module FactoredRandomNumbers
   ( genARandomPreFactoredNumberLTEn,
     preFactoredNumOfBitSize,
     preFactoredNumOfBitSizePar,
+    preFactoredNumOfBitSizeParMaybe
   )
 where
 
@@ -49,8 +50,17 @@ import Prelude (error)
 -- In the event that the parallel call fails nd return Nothing, a recovery through a non-parallel call is attempted.
 preFactoredNumOfBitSizePar :: Int -> IO (Either Text (Int, [Int]))
 preFactoredNumOfBitSizePar 1 = pure $ Right (1, [1])
-preFactoredNumOfBitSizePar n | n > 1 = fromMaybe <$> preFactoredNumOfBitSize n <*> (getNumProcessors >>= spinUpThreads (preFactoredNumOfBitSize n))
+preFactoredNumOfBitSizePar n | n > 1 = fromMaybe <$> preFactoredNumOfBitSize n <*> preFactoredNumOfBitSizeParMaybe n
 preFactoredNumOfBitSizePar _ = pure $ Left $ pack "Invalid"
+
+
+-- | Failable Parallel preFactored Number given BitSize 
+-- Provide an integer input and it should generate a tuple of a number in the range [2^y, 2^y+1 -1] and its prime factors
+preFactoredNumOfBitSizeParMaybe :: Int -> IO (Maybe (Either Text (Int, [Int])))
+preFactoredNumOfBitSizeParMaybe 1 = pure $ Just $ Right (1, [1])
+preFactoredNumOfBitSizeParMaybe n | n > 1 = getNumProcessors >>= spinUpThreads (preFactoredNumOfBitSize n)
+preFactoredNumOfBitSizeParMaybe _ = pure $ Just $ Left $ pack "Invalid"
+
 
 -- | Spin up t threads of function f in parallel and return what's executed first
 spinUpThreads :: IO a -> Int -> IO (Maybe a)
@@ -82,6 +92,7 @@ genARandomPreFactoredNumberLTEn n = potentialResult n >>= go n
     go n' candidateTuple
       | fst candidateTuple <= n' = pure $ Right candidateTuple
       | otherwise = genARandomPreFactoredNumberLTEn n' -- keep doing till result occurs
+-- // TODO maybe a case can be used above to make it more concise or shortcircuit
 
 -- | Provided an Int List, throws up a candidate Int and its factors for further assessment
 filterPrimesProduct :: [Int] -> (Int, [Int])
