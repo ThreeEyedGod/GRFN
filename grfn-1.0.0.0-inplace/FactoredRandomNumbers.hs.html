@@ -1,0 +1,161 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<style type="text/css">
+span.lineno { color: white; background: #aaaaaa; border-right: solid white 12px }
+span.nottickedoff { background: yellow}
+span.istickedoff { background: white }
+span.tickonlyfalse { margin: -1px; border: 1px solid #f20913; background: #f20913 }
+span.tickonlytrue  { margin: -1px; border: 1px solid #60de51; background: #60de51 }
+span.funcount { font-size: small; color: orange; z-index: 2; position: absolute; right: 20 }
+span.decl { font-weight: bold }
+span.spaces    { background: white }
+</style>
+</head>
+<body>
+<pre>
+<span class="decl"><span class="nottickedoff">never executed</span> <span class="tickonlytrue">always true</span> <span class="tickonlyfalse">always false</span></span>
+</pre>
+<pre>
+<span class="lineno">    1 </span>{-- 
+<span class="lineno">    2 </span>   The Adam Kalai Algorithm implmemented in this module
+<span class="lineno">    3 </span>              Input: Integer n &gt; 0.
+<span class="lineno">    4 </span>
+<span class="lineno">    5 </span>              Output: A uniformly random number 1 ≤ r ≤ n.
+<span class="lineno">    6 </span>
+<span class="lineno">    7 </span>                  1. Generate a sequence n ≥ s1 ≥ s2 ≥ ··· ≥ sl = 1 by choosing
+<span class="lineno">    8 </span>                  s1 ∈ {1, 2,..., n} and si+1 ∈ {1, 2,...,si}, until reaching 1.
+<span class="lineno">    9 </span>                  2. Let r be the product of the prime si’s.
+<span class="lineno">   10 </span>                  3. If r ≤ n, output r with probability r/n.
+<span class="lineno">   11 </span>                  4. Otherwise, RESTART.
+<span class="lineno">   12 </span>--}
+<span class="lineno">   13 </span>
+<span class="lineno">   14 </span>{-# LANGUAGE NoImplicitPrelude #-}
+<span class="lineno">   15 </span>
+<span class="lineno">   16 </span>-- | Module for accessing functions based on Kalai's Algorithm
+<span class="lineno">   17 </span>module FactoredRandomNumbers
+<span class="lineno">   18 </span>  ( genARandomPreFactoredNumberLTEn,
+<span class="lineno">   19 </span>    preFactoredNumOfBitSize,
+<span class="lineno">   20 </span>    preFactoredNumOfBitSizePar,
+<span class="lineno">   21 </span>    preFactoredNumOfBitSizeParMaybe
+<span class="lineno">   22 </span>  )
+<span class="lineno">   23 </span>where
+<span class="lineno">   24 </span>
+<span class="lineno">   25 </span>import Control.Concurrent.ParallelIO.Local (parallelFirst, withPool)
+<span class="lineno">   26 </span>import Control.Monad.Loops (iterateWhile)
+<span class="lineno">   27 </span>import Data.Maybe (fromJust, fromMaybe)
+<span class="lineno">   28 </span>import Data.Numbers.Primes (isPrime)
+<span class="lineno">   29 </span>import Data.Text (pack)
+<span class="lineno">   30 </span>import GHC.Conc (getNumProcessors)
+<span class="lineno">   31 </span>import Protolude
+<span class="lineno">   32 </span>  ( Applicative (pure),
+<span class="lineno">   33 </span>    Bool (False),
+<span class="lineno">   34 </span>    Either (..),
+<span class="lineno">   35 </span>    Eq ((==)),
+<span class="lineno">   36 </span>    IO,
+<span class="lineno">   37 </span>    Int,
+<span class="lineno">   38 </span>    Maybe (Just),
+<span class="lineno">   39 </span>    Monad ((&gt;&gt;=)),
+<span class="lineno">   40 </span>    Num ((+), (-)),
+<span class="lineno">   41 </span>    Ord (max, min, (&lt;), (&lt;=), (&gt;)),
+<span class="lineno">   42 </span>    Text,
+<span class="lineno">   43 </span>    filter,
+<span class="lineno">   44 </span>    fst,
+<span class="lineno">   45 </span>    otherwise,
+<span class="lineno">   46 </span>    product,
+<span class="lineno">   47 </span>    replicate,
+<span class="lineno">   48 </span>    ($),
+<span class="lineno">   49 </span>    (&amp;&amp;),
+<span class="lineno">   50 </span>    (.),
+<span class="lineno">   51 </span>    (&lt;$&gt;),
+<span class="lineno">   52 </span>    (&lt;&amp;&gt;),
+<span class="lineno">   53 </span>    (&lt;*&gt;),
+<span class="lineno">   54 </span>    (&gt;=&gt;),
+<span class="lineno">   55 </span>    (^),
+<span class="lineno">   56 </span>    (||),
+<span class="lineno">   57 </span>  )
+<span class="lineno">   58 </span>import System.Random.Stateful (globalStdGen, uniformRM)
+<span class="lineno">   59 </span>import Prelude (error)
+<span class="lineno">   60 </span>
+<span class="lineno">   61 </span>-- | Takes an Int for Bitsize value to operate on range [2 ^ y, 2 ^ y + 1 - 1].  This function leverages parallel execution
+<span class="lineno">   62 </span>-- Provide an integer input and it should generate a tuple of a number in the range [2^y, 2^y+1 -1] and its prime factors
+<span class="lineno">   63 </span>-- In the event that the parallel call fails and return Nothing, a recovery through a non-parallel call is attempted.
+<span class="lineno">   64 </span>preFactoredNumOfBitSizePar :: Int -&gt; IO (Either Text (Int, [Int]))
+<span class="lineno">   65 </span><span class="decl"><span class="istickedoff">preFactoredNumOfBitSizePar 1 = <span class="nottickedoff">pure $ Right (1, [1])</span></span>
+<span class="lineno">   66 </span><span class="spaces"></span><span class="istickedoff">preFactoredNumOfBitSizePar n | <span class="tickonlytrue">n &gt; 1</span> = fromMaybe &lt;$&gt; preFactoredNumOfBitSize n &lt;*&gt; preFactoredNumOfBitSizeParMaybe n</span>
+<span class="lineno">   67 </span><span class="spaces"></span><span class="istickedoff">preFactoredNumOfBitSizePar _ = <span class="nottickedoff">pure $ Left $ pack &quot;Invalid&quot;</span></span></span>
+<span class="lineno">   68 </span>
+<span class="lineno">   69 </span>
+<span class="lineno">   70 </span>-- | Failable Parallel preFactored Number given BitSize 
+<span class="lineno">   71 </span>-- Provide an integer input and it should generate a tuple of a number in the range [2^y, 2^y+1 -1] and its prime factors
+<span class="lineno">   72 </span>preFactoredNumOfBitSizeParMaybe :: Int -&gt; IO (Maybe (Either Text (Int, [Int])))
+<span class="lineno">   73 </span><span class="decl"><span class="istickedoff">preFactoredNumOfBitSizeParMaybe 1 = <span class="nottickedoff">pure $ Just $ Right (1, [1])</span></span>
+<span class="lineno">   74 </span><span class="spaces"></span><span class="istickedoff">preFactoredNumOfBitSizeParMaybe n | <span class="tickonlytrue">n &gt; 1</span> = getNumProcessors &gt;&gt;= spinUpThreads (preFactoredNumOfBitSize n)</span>
+<span class="lineno">   75 </span><span class="spaces"></span><span class="istickedoff">preFactoredNumOfBitSizeParMaybe _ = <span class="nottickedoff">pure $ Just $ Left $ pack &quot;Invalid&quot;</span></span></span>
+<span class="lineno">   76 </span>
+<span class="lineno">   77 </span>
+<span class="lineno">   78 </span>-- | Spin up t threads of function f in parallel and return what's executed first
+<span class="lineno">   79 </span>spinUpThreads :: IO a -&gt; Int -&gt; IO (Maybe a)
+<span class="lineno">   80 </span><span class="decl"><span class="istickedoff">spinUpThreads f t = withPool t $ \pool -&gt; parallelFirst pool $ replicate t (Just &lt;$&gt; f)</span></span>
+<span class="lineno">   81 </span>
+<span class="lineno">   82 </span>-- | Takes an Int as a Bitsize value to operate on range [2 ^ y, 2 ^ y + 1 - 1]
+<span class="lineno">   83 </span>-- Provide an integer input and it should generate a tuple of a number in the range [2^y, 2^y+1 -1] and its prime factors
+<span class="lineno">   84 </span>preFactoredNumOfBitSize :: Int -&gt; IO (Either Text (Int, [Int]))
+<span class="lineno">   85 </span><span class="decl"><span class="istickedoff">preFactoredNumOfBitSize n | <span class="tickonlyfalse">n &lt;= 0</span> = <span class="nottickedoff">pure $ Left $ pack &quot;Invalid&quot;</span></span>
+<span class="lineno">   86 </span><span class="spaces"></span><span class="istickedoff">preFactoredNumOfBitSize 1 = <span class="nottickedoff">pure $ Right (1, [1])</span></span>
+<span class="lineno">   87 </span><span class="spaces"></span><span class="istickedoff">preFactoredNumOfBitSize n | <span class="tickonlytrue">n &gt; 1</span> = iterateWhile ((2 ^ n) &lt;|) (genARandomPreFactoredNumberLTEn (2 ^ (n + 1) - 1))</span>
+<span class="lineno">   88 </span><span class="spaces"></span><span class="istickedoff">preFactoredNumOfBitSize _ = <span class="nottickedoff">pure $ Left $ pack &quot;Invalid&quot;</span></span></span>
+<span class="lineno">   89 </span>
+<span class="lineno">   90 </span>infix 1 &lt;|
+<span class="lineno">   91 </span>
+<span class="lineno">   92 </span>-- | An operator to compare the Right first value of the (Int, [Int]) to an Int for lesser-than predicate
+<span class="lineno">   93 </span>(&lt;|) :: Int -&gt; Either Text (Int, [Int]) -&gt; Bool
+<span class="lineno">   94 </span><span class="decl"><span class="istickedoff">bound &lt;| eOR = case eOR of</span>
+<span class="lineno">   95 </span><span class="spaces">  </span><span class="istickedoff">Left _ -&gt; <span class="nottickedoff">False</span></span>
+<span class="lineno">   96 </span><span class="spaces">  </span><span class="istickedoff">Right v -&gt; fst v &lt; bound</span></span>
+<span class="lineno">   97 </span>
+<span class="lineno">   98 </span>-- | This is the Entry Function with a Int bound
+<span class="lineno">   99 </span>-- Provide an integer input and it should generate a tuple of a number less than the input integer and its prime factors
+<span class="lineno">  100 </span>genARandomPreFactoredNumberLTEn :: Int -&gt; IO (Either Text (Int, [Int]))
+<span class="lineno">  101 </span><span class="decl"><span class="istickedoff">genARandomPreFactoredNumberLTEn x | x &lt;= 0 = pure $ Left $ pack &quot;Invalid&quot;</span>
+<span class="lineno">  102 </span><span class="spaces"></span><span class="istickedoff">genARandomPreFactoredNumberLTEn 1 = <span class="nottickedoff">pure $ Right (1, [1])</span></span>
+<span class="lineno">  103 </span><span class="spaces"></span><span class="istickedoff">genARandomPreFactoredNumberLTEn n = potentialResult n &gt;&gt;= go n</span>
+<span class="lineno">  104 </span><span class="spaces">  </span><span class="istickedoff">where</span>
+<span class="lineno">  105 </span><span class="spaces">    </span><span class="istickedoff">go n' candidateTuple</span>
+<span class="lineno">  106 </span><span class="spaces">      </span><span class="istickedoff">| fst candidateTuple &lt;= n' = pure $ Right candidateTuple</span>
+<span class="lineno">  107 </span><span class="spaces">      </span><span class="istickedoff">| <span class="tickonlytrue">otherwise</span> = genARandomPreFactoredNumberLTEn n'</span></span> -- keep doing till result occurs
+<span class="lineno">  108 </span>
+<span class="lineno">  109 </span>-- | Provided an Int List, throws up a candidate Int and its factors for further assessment
+<span class="lineno">  110 </span>filterPrimesProduct :: [Int] -&gt; (Int, [Int])
+<span class="lineno">  111 </span><span class="decl"><span class="istickedoff">filterPrimesProduct xs = result where result@(ps, sq) = (product sq, filter isPrimeOr1 xs)</span></span> -- note: product [] = 1
+<span class="lineno">  112 </span>
+<span class="lineno">  113 </span>-- | Provided an Int, throws up a candidate Int and its factors for further assessment
+<span class="lineno">  114 </span>potentialResult :: Int -&gt; IO (Int, [Int])
+<span class="lineno">  115 </span><span class="decl"><span class="istickedoff">potentialResult n = makeList n &lt;&amp;&gt; filterPrimesProduct</span></span>
+<span class="lineno">  116 </span>
+<span class="lineno">  117 </span>-- | Provided an Int, creates a sequence of random integers LTE n in decreasing order,
+<span class="lineno">  118 </span>-- possibly with multiples ending at a single 1
+<span class="lineno">  119 </span>makeList :: Int -&gt; IO [Int]
+<span class="lineno">  120 </span><span class="decl"><span class="istickedoff">makeList 1 = pure [] -- pure [] also works</span>
+<span class="lineno">  121 </span><span class="spaces"></span><span class="istickedoff">makeList n | <span class="tickonlytrue">n &gt; 1</span> = (getRndMInt &gt;=&gt;: makeList) (1, n)</span>
+<span class="lineno">  122 </span><span class="spaces"></span><span class="istickedoff">makeList _ = <span class="nottickedoff">error &quot;Out of bound Arg&quot;</span></span></span>
+<span class="lineno">  123 </span>
+<span class="lineno">  124 </span>-- | Get a Random Integer with uniform probability in the range [1,n]
+<span class="lineno">  125 </span>getRndMInt :: (Int, Int) -&gt; IO Int
+<span class="lineno">  126 </span><span class="decl"><span class="istickedoff">getRndMInt (l, u) | <span class="tickonlytrue">l &lt;= u &amp;&amp; l &gt; 0</span> = max l . min u &lt;$&gt; uniformRM (l, u) globalStdGen</span>
+<span class="lineno">  127 </span><span class="spaces"></span><span class="istickedoff">getRndMInt _ = <span class="nottickedoff">error &quot;Malformed Range&quot;</span></span></span>
+<span class="lineno">  128 </span>
+<span class="lineno">  129 </span>infixr 1 &gt;=&gt;:
+<span class="lineno">  130 </span>
+<span class="lineno">  131 </span>-- | Left-to-right Kleisli composition of monads plus prepend elem to List using standard operators
+<span class="lineno">  132 </span>(&gt;=&gt;:) :: (Monad m) =&gt; (a -&gt; m b) -&gt; (b -&gt; m [b]) -&gt; (a -&gt; m [b])
+<span class="lineno">  133 </span><span class="decl"><span class="istickedoff">f &gt;=&gt;: g = f &gt;=&gt; \u -&gt; (u :) &lt;$&gt; g u</span></span>
+<span class="lineno">  134 </span>
+<span class="lineno">  135 </span>-- | True if input is prime or 1
+<span class="lineno">  136 </span>isPrimeOr1 :: Int -&gt; Bool
+<span class="lineno">  137 </span><span class="decl"><span class="istickedoff">isPrimeOr1 n | <span class="tickonlytrue">n &gt; 0</span> = (n == 1) || isPrime n</span>
+<span class="lineno">  138 </span><span class="spaces"></span><span class="istickedoff">isPrimeOr1 _ = <span class="nottickedoff">error &quot;Invalid Arg &quot;</span></span></span>
+
+</pre>
+</body>
+</html>

@@ -61,6 +61,7 @@ library
                        -Wredundant-constraints
                        -fwrite-ide-info
                        -hiedir=.hie
+                       -fhpc
                        
 executable grfn-exe
   hs-source-dirs:      app
@@ -80,6 +81,7 @@ executable grfn-exe
                        -threaded
                        -rtsopts
                        -with-rtsopts=-N4
+                       -fhpc
 
 test-suite grfn-test
   type:                exitcode-stdio-1.0
@@ -125,4 +127,3 @@ benchmark grfn-benchmark
   if impl(ghc >= 8.6)
     ghc-options: -fproc-alignment=64
 
--- // TODO HPC FOR CODE COVERAGE
