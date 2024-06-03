@@ -124,7 +124,7 @@ span.spaces    { background: white }
 <span class="lineno">  105 </span><span class="spaces">      </span><span class="istickedoff">| fst candidateTuple &lt;= n' = pure $ Right candidateTuple</span>
 <span class="lineno">  106 </span><span class="spaces">      </span><span class="istickedoff">| <span class="tickonlytrue">otherwise</span> = genARandomPreFactoredNumberLTEn n'</span></span> -- keep doing till result occurs
 <span class="lineno">  107 </span>
-<span class="lineno">  108 </span>-- | Provided an Int List, throws up a candidate Int and its factors for further assessment
+<span class="lineno">  108 </span>-- | Provided an Int List, throws up a candidate Int and its prime factors for further assessment
 <span class="lineno">  109 </span>filterPrimesProduct :: [Int] -&gt; (Int, [Int])
 <span class="lineno">  110 </span><span class="decl"><span class="istickedoff">filterPrimesProduct xs = result where result@(ps, sq) = (product sq, filter isPrimeOr1 xs)</span></span> -- note: product [] = 1
 <span class="lineno">  111 </span>
