@@ -105,7 +105,6 @@ genARandomPreFactoredNumberLTEn n = potentialResult n >>= go n
     go n' candidateTuple
       | fst candidateTuple <= n' = pure $ Right candidateTuple
       | otherwise = genARandomPreFactoredNumberLTEn n' -- keep doing till result occurs
--- // TODO maybe a case can be used above to make it more concise or shortcircuit
 
 -- | Provided an Int List, throws up a candidate Int and its factors for further assessment
 filterPrimesProduct :: [Int] -> (Int, [Int])
