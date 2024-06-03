@@ -1,3 +1,16 @@
+{-- 
+   The Adam Kalai Algorithm implmemented in this module
+              Input: Integer n > 0.
+
+              Output: A uniformly random number 1 ≤ r ≤ n.
+
+                  1. Generate a sequence n ≥ s1 ≥ s2 ≥ ··· ≥ sl = 1 by choosing
+                  s1 ∈ {1, 2,..., n} and si+1 ∈ {1, 2,...,si}, until reaching 1.
+                  2. Let r be the product of the prime si’s.
+                  3. If r ≤ n, output r with probability r/n.
+                  4. Otherwise, RESTART.
+--}
+
 {-# LANGUAGE NoImplicitPrelude #-}
 
 -- | Module for accessing functions based on Kalai's Algorithm
@@ -47,7 +60,7 @@ import Prelude (error)
 
 -- | Takes an Int for Bitsize value to operate on range [2 ^ y, 2 ^ y + 1 - 1].  This function leverages parallel execution
 -- Provide an integer input and it should generate a tuple of a number in the range [2^y, 2^y+1 -1] and its prime factors
--- In the event that the parallel call fails nd return Nothing, a recovery through a non-parallel call is attempted.
+-- In the event that the parallel call fails and return Nothing, a recovery through a non-parallel call is attempted.
 preFactoredNumOfBitSizePar :: Int -> IO (Either Text (Int, [Int]))
 preFactoredNumOfBitSizePar 1 = pure $ Right (1, [1])
 preFactoredNumOfBitSizePar n | n > 1 = fromMaybe <$> preFactoredNumOfBitSize n <*> preFactoredNumOfBitSizeParMaybe n
