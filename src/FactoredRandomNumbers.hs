@@ -24,7 +24,7 @@ where
 
 import Control.Concurrent.ParallelIO.Local (parallelFirst, withPool)
 import Control.Monad.Loops (iterateWhile)
-import Data.Maybe (fromJust, fromMaybe)
+import Data.Maybe (fromMaybe)
 import Data.Numbers.Primes (isPrime)
 import Data.Text (pack)
 import GHC.Conc (getNumProcessors)
