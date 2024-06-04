@@ -1,6 +1,6 @@
 {-# LANGUAGE UnicodeSyntax #-}
 {--
-   The Adam Kalai Algorithm implmemented in this module
+   The Adam Kalai Algorithm implmemented in this module (see Readme for more details)
               Input: Integer n > 0.
 
               Output: A uniformly random number 1 ≤ r ≤ n.

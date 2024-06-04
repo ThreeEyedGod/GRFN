@@ -16,3 +16,8 @@ cradle:
       config:
         cradle:
           stack:
+          cradle:
+    - path: "./"
+      config:
+        cradle:
+          stack:

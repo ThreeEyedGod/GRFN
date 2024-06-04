@@ -1,12 +1,11 @@
-cabal-version:       3.0
-
+cabal-version:       3.6
 name:                grfn
 version:             1.0.0.0
 homepage:            https://github.com/threeeyedgod/grfn#readme
 license:             BSD-3-Clause
 license-file:        LICENSE
 author:              VN
-maintainer:          example@example.com
+maintainer:          venkatesh.narayanan@live.in
 copyright:           2024 ThreeEyedGod
 synopsis:            Uniformly-random pre-factored number generation as per Kalai's algorithm
 description:

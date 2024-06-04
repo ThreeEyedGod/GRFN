@@ -161,7 +161,7 @@ prop_checkAccurateOutputValBitSizeParMaybe (Positive n) = n > 2 && n < 65 ==> cl
   case x of
     Nothing -> assert True
     Just _ -> assert True
-
+-- // FIXME CHECK IF THS ABOVE HOLDS
 
 primeFactorsOr1 :: Int -> [Int]
 primeFactorsOr1 1 = [1]
