@@ -1,4 +1,5 @@
-{-- 
+{-# LANGUAGE UnicodeSyntax #-}
+{--
    The Adam Kalai Algorithm implmemented in this module
               Input: Integer n > 0.
 
@@ -10,7 +11,6 @@
                   3. If r ≤ n, output r with probability r/n.
                   4. Otherwise, RESTART.
 --}
-
 {-# LANGUAGE NoImplicitPrelude #-}
 
 -- | Module for accessing functions based on Kalai's Algorithm
@@ -18,7 +18,7 @@ module FactoredRandomNumbers
   ( genARandomPreFactoredNumberLTEn,
     preFactoredNumOfBitSize,
     preFactoredNumOfBitSizePar,
-    preFactoredNumOfBitSizeParMaybe
+    preFactoredNumOfBitSizeParMaybe,
   )
 where
 
@@ -41,8 +41,8 @@ import Protolude
     Ord (max, min, (<), (<=), (>)),
     Text,
     filter,
+    flip,
     fst,
-    otherwise,
     product,
     replicate,
     ($),
@@ -55,6 +55,7 @@ import Protolude
     (^),
     (||),
   )
+import ShortCircuit (if')
 import System.Random.Stateful (globalStdGen, uniformRM)
 import Prelude (error)
 
@@ -66,14 +67,12 @@ preFactoredNumOfBitSizePar 1 = pure $ Right (1, [1])
 preFactoredNumOfBitSizePar n | n > 1 = fromMaybe <$> preFactoredNumOfBitSize n <*> preFactoredNumOfBitSizeParMaybe n
 preFactoredNumOfBitSizePar _ = pure $ Left $ pack "Invalid"
 
-
--- | Failable Parallel preFactored Number given BitSize 
+-- | Failable Parallel preFactored Number given BitSize
 -- Provide an integer input and it should generate a tuple of a number in the range [2^y, 2^y+1 -1] and its prime factors
 preFactoredNumOfBitSizeParMaybe :: Int -> IO (Maybe (Either Text (Int, [Int])))
 preFactoredNumOfBitSizeParMaybe 1 = pure $ Just $ Right (1, [1])
 preFactoredNumOfBitSizeParMaybe n | n > 1 = getNumProcessors >>= spinUpThreads (preFactoredNumOfBitSize n)
 preFactoredNumOfBitSizeParMaybe _ = pure $ Just $ Left $ pack "Invalid"
-
 
 -- | Spin up t threads of function f in parallel and return what's executed first
 spinUpThreads :: IO a -> Int -> IO (Maybe a)
@@ -99,11 +98,9 @@ bound <| eOR = case eOR of
 genARandomPreFactoredNumberLTEn :: Int -> IO (Either Text (Int, [Int]))
 genARandomPreFactoredNumberLTEn x | x <= 0 = pure $ Left $ pack "Invalid"
 genARandomPreFactoredNumberLTEn 1 = pure $ Right (1, [1])
-genARandomPreFactoredNumberLTEn n = potentialResult n >>= go n
-  where
-    go n' candidateTuple
-      | fst candidateTuple <= n' = pure $ Right candidateTuple
-      | otherwise = genARandomPreFactoredNumberLTEn n' -- keep doing till result occurs
+genARandomPreFactoredNumberLTEn n = do
+  candidateTuple <- potentialResult n
+  if' ((fst `is` (< n)) candidateTuple) (pure $ Right candidateTuple) (genARandomPreFactoredNumberLTEn n) -- keep doing till success
 
 -- | Provided an Int List, throws up a candidate Int and its prime factors for further assessment
 filterPrimesProduct :: [Int] -> (Int, [Int])
@@ -116,7 +113,7 @@ potentialResult n = makeList n <&> filterPrimesProduct
 -- | Provided an Int, creates a sequence of random integers LTE n in decreasing order,
 -- possibly with multiples ending at a single 1
 makeList :: Int -> IO [Int]
-makeList 1 = pure [] 
+makeList 1 = pure []
 makeList n | n > 1 = (getRndMInt >=>: makeList) (1, n)
 makeList _ = error "Out of bound Arg"
 
@@ -135,3 +132,7 @@ f >=>: g = f >=> \u -> (u :) <$> g u
 isPrimeOr1 :: Int -> Bool
 isPrimeOr1 n | n > 0 = (n == 1) || isPrime n
 isPrimeOr1 _ = error "Invalid Arg "
+
+-- | from Data.Function.predicate
+is :: (a -> b) -> (b -> Bool) -> (a -> Bool)
+is = flip (.)
