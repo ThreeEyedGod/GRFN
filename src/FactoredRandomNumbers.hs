@@ -100,7 +100,7 @@ genARandomPreFactoredNumberLTEn x | x <= 0 = pure $ Left $ pack "Invalid"
 genARandomPreFactoredNumberLTEn 1 = pure $ Right (1, [1])
 genARandomPreFactoredNumberLTEn n = do
   candidateTuple <- potentialResult n
-  if' ((fst `is` (< n)) candidateTuple) (pure $ Right candidateTuple) (genARandomPreFactoredNumberLTEn n) -- keep doing till success
+  if' ((fst `is` (< n)) candidateTuple) (pure $ Right candidateTuple) (genARandomPreFactoredNumberLTEn n) -- else keep doing till success
 
 -- | Provided an Int List, throws up a candidate Int and its prime factors for further assessment
 filterPrimesProduct :: [Int] -> (Int, [Int])
