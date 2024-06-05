@@ -1,7 +1,7 @@
 import Data.Numbers.Primes (primeFactors, primes)
 import Data.Text (pack)
 import Data.Time.Clock
-import FactoredRandomNumbers (genARandomPreFactoredNumberLTEn, preFactoredNumOfBitSize, preFactoredNumOfBitSizePar, preFactoredNumOfBitSizeParMaybe)
+import FactoredRandomNumbers (genARandomPreFactoredNumberLTEn, preFactoredNumOfBitSize, preFactoredNumOfBitSizePar)
 import System.IO.Error (isDoesNotExistError, tryIOError)
 import Test.Hspec (Spec, describe, hspec, it, shouldBe, shouldNotReturn, shouldReturn)
 import Test.Hspec.Core.QuickCheck (modifyMaxDiscardRatio, modifyMaxSuccess)
@@ -34,7 +34,6 @@ libH = describe "All Property Tests" $ do
   libHProperty12
   libHProperty13
   libHProperty14
-  libHProperty15
 
 libHProperty8 :: Spec
 libHProperty8 = do
@@ -88,13 +87,6 @@ libHProperty14 = do
       "prop_checkAccurateOutputValBitSizePar"
       prop_checkAccurateOutputValBitSizePar
 
-libHProperty15 :: Spec
-libHProperty15 = do
-  modifyMaxSuccess (const 2) $
-    modifyMaxDiscardRatio (const 50) $
-    prop
-      "prop_checkAccurateOutputValBitSizeParMaybe"
-      prop_checkAccurateOutputValBitSizeParMaybe
 
 ------------
 prop_checkIfLTEn :: Positive Int -> Property
@@ -154,14 +146,6 @@ prop_checkAccurateOutputValBitSizePar (Positive n) = n > 2 && n < 70 ==> classif
     Left err -> assert (err == pack "Invalid")
     Right y -> assert (fst y == product (snd y))
 
-prop_checkAccurateOutputValBitSizeParMaybe :: Positive Int -> Property
-prop_checkAccurateOutputValBitSizeParMaybe (Positive n) = n > 2 && n < 65 ==> classify (n < 50) "n LT 50" $ collect n $ counterexample "Failed case" $ monadicIO $ do
-  -- if n upper end is set at 100 then it results in an error https://www.cnblogs.com/BlogOfASBOIER/p/13096167.html
-  x <- run $ preFactoredNumOfBitSizeParMaybe n
-  case x of
-    Nothing -> assert True
-    Just _ -> assert True
--- // FIXME CHECK IF THS ABOVE HOLDS
 
 primeFactorsOr1 :: Int -> [Int]
 primeFactorsOr1 1 = [1]

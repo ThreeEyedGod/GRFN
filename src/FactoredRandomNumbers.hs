@@ -17,9 +17,7 @@
 module FactoredRandomNumbers
   ( genARandomPreFactoredNumberLTEn,
     preFactoredNumOfBitSize,
-    preFactoredNumOfBitSizePar,
-    preFactoredNumOfBitSizeParMaybe,
-  )
+    preFactoredNumOfBitSizePar  )
 where
 
 import Control.Concurrent.ParallelIO.Local (parallelFirst, withPool)
@@ -54,8 +52,8 @@ import Protolude
     (>=>),
     (^),
     (||),
+    otherwise
   )
-import ShortCircuit (if')
 import System.Random.Stateful (globalStdGen, uniformRM)
 import Prelude (error)
 
@@ -136,3 +134,9 @@ isPrimeOr1 _ = error "Invalid Arg "
 -- | from Data.Function.predicate
 is :: (a -> b) -> (b -> Bool) -> (a -> Bool)
 is = flip (.)
+
+-- | @if then else@ made simpler
+if' :: Bool -> b -> b -> b
+if' p u v
+  | p = u
+  | otherwise = v
