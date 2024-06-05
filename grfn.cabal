@@ -79,7 +79,7 @@ executable grfn-exe
                        -Wredundant-constraints
                        -threaded
                        -rtsopts
-                       -with-rtsopts=-N4
+                       -with-rtsopts=-maxN8 
                        -fhpc
 
 test-suite grfn-test
