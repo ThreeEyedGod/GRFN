@@ -8,3 +8,6 @@ aeson/* linguist-generated=true
 *.md linguist-documentation=true
 *.lock linguist-generated
 *cabal linguist-generated
+*.html linguist-generated
+.hpc/** linguist-generated=true
+*.tix linguist-generated
