@@ -17,7 +17,8 @@
 module FactoredRandomNumbers
   ( genARandomPreFactoredNumberLTEn,
     preFactoredNumOfBitSize,
-    preFactoredNumOfBitSizePar  )
+    preFactoredNumOfBitSizePar,
+  )
 where
 
 import Control.Concurrent.ParallelIO.Local (parallelFirst, withPool)
@@ -33,6 +34,7 @@ import Protolude
     Eq ((==)),
     IO,
     Int,
+    Integer,
     Maybe (Just),
     Monad ((>>=)),
     Num ((+), (-)),
@@ -41,6 +43,7 @@ import Protolude
     filter,
     flip,
     fst,
+    otherwise,
     product,
     replicate,
     ($),
@@ -52,22 +55,21 @@ import Protolude
     (>=>),
     (^),
     (||),
-    otherwise
   )
 import System.Random.Stateful (globalStdGen, uniformRM)
 import Prelude (error)
 
--- | Takes an Int for Bitsize value to operate on range [2 ^ y, 2 ^ y + 1 - 1].  This function leverages parallel execution
+-- | Takes an Integer for Bitsize value to operate on range [2 ^ y, 2 ^ y + 1 - 1].  This function leverages parallel execution
 -- Provide an integer input and it should generate a tuple of a number in the range [2^y, 2^y+1 -1] and its prime factors
 -- In the event that the parallel call fails and return Nothing, a recovery through a non-parallel call is attempted.
-preFactoredNumOfBitSizePar :: Int -> IO (Either Text (Int, [Int]))
+preFactoredNumOfBitSizePar :: Integer -> IO (Either Text (Integer, [Integer]))
 preFactoredNumOfBitSizePar 1 = pure $ Right (1, [1])
 preFactoredNumOfBitSizePar n | n > 1 = fromMaybe <$> preFactoredNumOfBitSize n <*> preFactoredNumOfBitSizeParMaybe n
 preFactoredNumOfBitSizePar _ = pure $ Left $ pack "Invalid"
 
 -- | Failable Parallel preFactored Number given BitSize
 -- Provide an integer input and it should generate a tuple of a number in the range [2^y, 2^y+1 -1] and its prime factors
-preFactoredNumOfBitSizeParMaybe :: Int -> IO (Maybe (Either Text (Int, [Int])))
+preFactoredNumOfBitSizeParMaybe :: Integer -> IO (Maybe (Either Text (Integer, [Integer])))
 preFactoredNumOfBitSizeParMaybe 1 = pure $ Just $ Right (1, [1])
 preFactoredNumOfBitSizeParMaybe n | n > 1 = getNumProcessors >>= spinUpThreads (preFactoredNumOfBitSize n)
 preFactoredNumOfBitSizeParMaybe _ = pure $ Just $ Left $ pack "Invalid"
@@ -76,9 +78,9 @@ preFactoredNumOfBitSizeParMaybe _ = pure $ Just $ Left $ pack "Invalid"
 spinUpThreads :: IO a -> Int -> IO (Maybe a)
 spinUpThreads f t = withPool t $ \pool -> parallelFirst pool $ replicate t (Just <$> f)
 
--- | Takes an Int as a Bitsize value to operate on range [2 ^ y, 2 ^ y + 1 - 1]
+-- | Takes an Integer as a Bitsize value to operate on range [2 ^ y, 2 ^ y + 1 - 1]
 -- Provide an integer input and it should generate a tuple of a number in the range [2^y, 2^y+1 -1] and its prime factors
-preFactoredNumOfBitSize :: Int -> IO (Either Text (Int, [Int]))
+preFactoredNumOfBitSize :: Integer -> IO (Either Text (Integer, [Integer]))
 preFactoredNumOfBitSize 1 = pure $ Right (1, [1])
 preFactoredNumOfBitSize n | n > 1 = iterateWhile ((2 ^ n) <|) (genARandomPreFactoredNumberLTEn (2 ^ (n + 1) - 1))
 preFactoredNumOfBitSize _ = pure $ Left $ pack "Invalid"
@@ -86,37 +88,37 @@ preFactoredNumOfBitSize _ = pure $ Left $ pack "Invalid"
 infix 1 <|
 
 -- | An operator to compare the Right first value of the (Int, [Int]) to an Int for lesser-than predicate
-(<|) :: Int -> Either Text (Int, [Int]) -> Bool
+(<|) :: Integer -> Either Text (Integer, [Integer]) -> Bool
 bound <| eOR = case eOR of
   Left _ -> False
   Right v -> fst v < bound
 
--- | This is the Entry Function with a Int bound
+-- | This is the Entry Function with a Integer bound
 -- Provide an integer input and it should generate a tuple of a number less than the input integer and its prime factors
-genARandomPreFactoredNumberLTEn :: Int -> IO (Either Text (Int, [Int]))
+genARandomPreFactoredNumberLTEn :: Integer -> IO (Either Text (Integer, [Integer]))
 genARandomPreFactoredNumberLTEn x | x <= 0 = pure $ Left $ pack "Invalid"
 genARandomPreFactoredNumberLTEn 1 = pure $ Right (1, [1])
 genARandomPreFactoredNumberLTEn n = do
   candidateTuple <- potentialResult n
   if' ((fst `is` (< n)) candidateTuple) (pure $ Right candidateTuple) (genARandomPreFactoredNumberLTEn n) -- else keep doing till success
 
--- | Provided an Int List, throws up a candidate Int and its prime factors for further assessment
-filterPrimesProduct :: [Int] -> (Int, [Int])
+-- | Provided an Integer List, throws up a candidate Int and its prime factors for further assessment
+filterPrimesProduct :: [Integer] -> (Integer, [Integer])
 filterPrimesProduct xs = result where result@(ps, sq) = (product sq, filter isPrimeOr1 xs) -- note: product [] = 1
 
--- | Provided an Int, throws up a candidate Int and its factors for further assessment
-potentialResult :: Int -> IO (Int, [Int])
+-- | Provided an Integer, throws up a candidate Int and its factors for further assessment
+potentialResult :: Integer -> IO (Integer, [Integer])
 potentialResult n = makeList n <&> filterPrimesProduct
 
--- | Provided an Int, creates a sequence of random integers LTE n in decreasing order,
+-- | Provided an Integer, creates a sequence of random integers LTE n in decreasing order,
 -- possibly with multiples ending at a single 1
-makeList :: Int -> IO [Int]
+makeList :: Integer -> IO [Integer]
 makeList 1 = pure []
 makeList n | n > 1 = (getRndMInt >=>: makeList) (1, n)
 makeList _ = error "Out of bound Arg"
 
 -- | Get a Random Integer with uniform probability in the range [1,n]
-getRndMInt :: (Int, Int) -> IO Int
+getRndMInt :: (Integer, Integer) -> IO Integer
 getRndMInt (l, u) | l <= u && l > 0 = max l . min u <$> uniformRM (l, u) globalStdGen
 getRndMInt _ = error "Malformed Range"
 
@@ -127,7 +129,7 @@ infixr 1 >=>:
 f >=>: g = f >=> \u -> (u :) <$> g u
 
 -- | True if input is prime or 1
-isPrimeOr1 :: Int -> Bool
+isPrimeOr1 :: Integer -> Bool
 isPrimeOr1 n | n > 0 = (n == 1) || isPrime n
 isPrimeOr1 _ = error "Invalid Arg "
 

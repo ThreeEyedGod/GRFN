@@ -74,7 +74,7 @@ libHProperty12 = do
 libHProperty13 :: Spec
 libHProperty13 = do
   modifyMaxSuccess (const 2) $
-      modifyMaxDiscardRatio (const 50) $
+    modifyMaxDiscardRatio (const 50) $
       prop
         "prop_checkAccurateOutputValBitSize"
         prop_checkAccurateOutputValBitSize
@@ -83,21 +83,20 @@ libHProperty14 :: Spec
 libHProperty14 = do
   modifyMaxSuccess (const 2) $
     modifyMaxDiscardRatio (const 50) $
-    prop
-      "prop_checkAccurateOutputValBitSizePar"
-      prop_checkAccurateOutputValBitSizePar
-
+      prop
+        "prop_checkAccurateOutputValBitSizePar"
+        prop_checkAccurateOutputValBitSizePar
 
 ------------
-prop_checkIfLTEn :: Positive Int -> Property
+prop_checkIfLTEn :: Positive Integer -> Property
 prop_checkIfLTEn (Positive n) = n > 2 && n < 30 ==> monadicIO $ do
   x <- run $ genARandomPreFactoredNumberLTEn n
   case x of
     Left _ -> assert False
     Right y -> assert (fst y <= n)
 
-prop_checkIffiltersInValidInput :: Negative Int -> Property
-prop_checkIffiltersInValidInput (Negative n) = n > -10 && n < 1 ==> monadicIO $ do
+prop_checkIffiltersInValidInput :: Negative Integer -> Property
+prop_checkIffiltersInValidInput (Negative n) = n > -10000 && n < 1 ==> monadicIO $ do
   -- Constraining n to be within a "bad range"
   x <- run $ genARandomPreFactoredNumberLTEn n
   case x of
@@ -106,7 +105,7 @@ prop_checkIffiltersInValidInput (Negative n) = n > -10 && n < 1 ==> monadicIO $ 
 
 -- input should be GTE to the head value of a valid pre-factored list
 -- (6, [3,2]) ==> 6 >= 3 (5, [5, 1]) ==> 5 >= 5
-prop_checkValidOutput :: Positive Int -> Property
+prop_checkValidOutput :: Positive Integer -> Property
 prop_checkValidOutput (Positive n) = n > 2 && n < 50 ==> classify (n < 30) "n LT 30" $ collect n $ monadicIO $ do
   -- if n upper end is set at 100 then it results in an error https://www.cnblogs.com/BlogOfASBOIER/p/13096167.html
   x <- run $ genARandomPreFactoredNumberLTEn n
@@ -114,7 +113,7 @@ prop_checkValidOutput (Positive n) = n > 2 && n < 50 ==> classify (n < 30) "n LT
     Left err -> assert (err == pack "Invalid")
     Right y -> assert (fst y >= head (snd y))
 
-prop_checkAccurateOutput :: Positive Int -> Property
+prop_checkAccurateOutput :: Positive Integer -> Property
 prop_checkAccurateOutput (Positive n) = n > 2 && n < 50 ==> classify (n < 30) "n LT 30" $ collect n $ counterexample "Failed case" $ monadicIO $ do
   -- if n upper end is set at 100 then it results in an error https://www.cnblogs.com/BlogOfASBOIER/p/13096167.html
   x <- run $ genARandomPreFactoredNumberLTEn n
@@ -122,7 +121,7 @@ prop_checkAccurateOutput (Positive n) = n > 2 && n < 50 ==> classify (n < 30) "n
     Left err -> assert (err == pack "Invalid")
     Right y -> assert (primeFactorsOr1 (fst y) == snd y)
 
-prop_checkAccurateOutputVal :: Positive Int -> Property
+prop_checkAccurateOutputVal :: Positive Integer -> Property
 prop_checkAccurateOutputVal (Positive n) = n > 2 && n < 50 ==> classify (n < 30) "n LT 30" $ collect n $ counterexample "Failed case" $ monadicIO $ do
   -- if n upper end is set at 100 then it results in an error https://www.cnblogs.com/BlogOfASBOIER/p/13096167.html
   x <- run $ genARandomPreFactoredNumberLTEn n
@@ -130,7 +129,7 @@ prop_checkAccurateOutputVal (Positive n) = n > 2 && n < 50 ==> classify (n < 30)
     Left err -> assert (err == pack "Invalid")
     Right y -> assert (fst y == product (snd y))
 
-prop_checkAccurateOutputValBitSize :: Positive Int -> Property
+prop_checkAccurateOutputValBitSize :: Positive Integer -> Property
 prop_checkAccurateOutputValBitSize (Positive n) = n > 2 && n < 70 ==> classify (n < 50) "n LT 50" $ collect n $ counterexample "Failed case" $ monadicIO $ do
   -- if n upper end is set at 100 then it results in an error https://www.cnblogs.com/BlogOfASBOIER/p/13096167.html
   x <- run $ preFactoredNumOfBitSize n
@@ -138,7 +137,7 @@ prop_checkAccurateOutputValBitSize (Positive n) = n > 2 && n < 70 ==> classify (
     Left err -> assert (err == pack "Invalid")
     Right y -> assert (fst y == product (snd y))
 
-prop_checkAccurateOutputValBitSizePar :: Positive Int -> Property
+prop_checkAccurateOutputValBitSizePar :: Positive Integer -> Property
 prop_checkAccurateOutputValBitSizePar (Positive n) = n > 2 && n < 70 ==> classify (n < 50) "n LT 50" $ collect n $ counterexample "Failed case" $ monadicIO $ do
   -- if n upper end is set at 100 then it results in an error https://www.cnblogs.com/BlogOfASBOIER/p/13096167.html
   x <- run $ preFactoredNumOfBitSizePar n
@@ -146,8 +145,7 @@ prop_checkAccurateOutputValBitSizePar (Positive n) = n > 2 && n < 70 ==> classif
     Left err -> assert (err == pack "Invalid")
     Right y -> assert (fst y == product (snd y))
 
-
-primeFactorsOr1 :: Int -> [Int]
+primeFactorsOr1 :: Integer -> [Integer]
 primeFactorsOr1 1 = [1]
 primeFactorsOr1 n = reverse (1 : primeFactors n)
 
