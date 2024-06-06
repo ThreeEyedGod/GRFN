@@ -24,9 +24,9 @@ where
 import Control.Concurrent.ParallelIO.Local (parallelFirst, withPool)
 import Control.Monad.Loops (iterateWhile)
 import Data.Maybe (fromMaybe)
-import Data.Numbers.Primes (isPrime)
 import Data.Text (pack)
 import GHC.Conc (getNumProcessors)
+import Math.NumberTheory.Primes.Testing
 import Protolude
   ( Applicative (pure),
     Bool (False),
@@ -104,7 +104,7 @@ genARandomPreFactoredNumberLTEn n = do
 
 -- | Provided an Integer List, throws up a candidate Int and its prime factors for further assessment
 filterPrimesProduct :: [Integer] -> (Integer, [Integer])
-filterPrimesProduct xs = result where result@(ps, sq) = (product sq, filter isPrimeOr1 xs) -- note: product [] = 1
+filterPrimesProduct xs = result where result@(_, sq) = (product sq, filter isPrimeOr1 xs) -- note: product [] = 1
 
 -- | Provided an Integer, throws up a candidate Int and its factors for further assessment
 potentialResult :: Integer -> IO (Integer, [Integer])
@@ -129,6 +129,7 @@ infixr 1 >=>:
 f >=>: g = f >=> \u -> (u :) <$> g u
 
 -- | True if input is prime or 1
+-- Primality testing is one key to peformance of this algo
 isPrimeOr1 :: Integer -> Bool
 isPrimeOr1 n | n > 0 = (n == 1) || isPrime n
 isPrimeOr1 _ = error "Invalid Arg "

@@ -43,9 +43,9 @@ span.spaces    { background: white }
 <span class="lineno">   24 </span>import Control.Concurrent.ParallelIO.Local (parallelFirst, withPool)
 <span class="lineno">   25 </span>import Control.Monad.Loops (iterateWhile)
 <span class="lineno">   26 </span>import Data.Maybe (fromMaybe)
-<span class="lineno">   27 </span>import Data.Numbers.Primes (isPrime)
-<span class="lineno">   28 </span>import Data.Text (pack)
-<span class="lineno">   29 </span>import GHC.Conc (getNumProcessors)
+<span class="lineno">   27 </span>import Data.Text (pack)
+<span class="lineno">   28 </span>import GHC.Conc (getNumProcessors)
+<span class="lineno">   29 </span>import Math.NumberTheory.Primes.Testing
 <span class="lineno">   30 </span>import Protolude
 <span class="lineno">   31 </span>  ( Applicative (pure),
 <span class="lineno">   32 </span>    Bool (False),
@@ -123,7 +123,7 @@ span.spaces    { background: white }
 <span class="lineno">  104 </span>
 <span class="lineno">  105 </span>-- | Provided an Integer List, throws up a candidate Int and its prime factors for further assessment
 <span class="lineno">  106 </span>filterPrimesProduct :: [Integer] -&gt; (Integer, [Integer])
-<span class="lineno">  107 </span><span class="decl"><span class="istickedoff">filterPrimesProduct xs = result where result@(ps, sq) = (product sq, filter isPrimeOr1 xs)</span></span> -- note: product [] = 1
+<span class="lineno">  107 </span><span class="decl"><span class="istickedoff">filterPrimesProduct xs = result where result@(_, sq) = (product sq, filter isPrimeOr1 xs)</span></span> -- note: product [] = 1
 <span class="lineno">  108 </span>
 <span class="lineno">  109 </span>-- | Provided an Integer, throws up a candidate Int and its factors for further assessment
 <span class="lineno">  110 </span>potentialResult :: Integer -&gt; IO (Integer, [Integer])
@@ -148,19 +148,20 @@ span.spaces    { background: white }
 <span class="lineno">  129 </span><span class="decl"><span class="istickedoff">f &gt;=&gt;: g = f &gt;=&gt; \u -&gt; (u :) &lt;$&gt; g u</span></span>
 <span class="lineno">  130 </span>
 <span class="lineno">  131 </span>-- | True if input is prime or 1
-<span class="lineno">  132 </span>isPrimeOr1 :: Integer -&gt; Bool
-<span class="lineno">  133 </span><span class="decl"><span class="istickedoff">isPrimeOr1 n | <span class="tickonlytrue">n &gt; 0</span> = (n == 1) || isPrime n</span>
-<span class="lineno">  134 </span><span class="spaces"></span><span class="istickedoff">isPrimeOr1 _ = <span class="nottickedoff">error &quot;Invalid Arg &quot;</span></span></span>
-<span class="lineno">  135 </span>
-<span class="lineno">  136 </span>-- | from Data.Function.predicate
-<span class="lineno">  137 </span>is :: (a -&gt; b) -&gt; (b -&gt; Bool) -&gt; (a -&gt; Bool)
-<span class="lineno">  138 </span><span class="decl"><span class="istickedoff">is = flip (.)</span></span>
-<span class="lineno">  139 </span>
-<span class="lineno">  140 </span>-- | @if then else@ made simpler
-<span class="lineno">  141 </span>if' :: Bool -&gt; b -&gt; b -&gt; b
-<span class="lineno">  142 </span><span class="decl"><span class="istickedoff">if' p u v</span>
-<span class="lineno">  143 </span><span class="spaces">  </span><span class="istickedoff">| p = u</span>
-<span class="lineno">  144 </span><span class="spaces">  </span><span class="istickedoff">| <span class="tickonlytrue">otherwise</span> = v</span></span>
+<span class="lineno">  132 </span>-- Primality testing is one key to peformance of this algo
+<span class="lineno">  133 </span>isPrimeOr1 :: Integer -&gt; Bool
+<span class="lineno">  134 </span><span class="decl"><span class="istickedoff">isPrimeOr1 n | <span class="tickonlytrue">n &gt; 0</span> = (n == 1) || isPrime n</span>
+<span class="lineno">  135 </span><span class="spaces"></span><span class="istickedoff">isPrimeOr1 _ = <span class="nottickedoff">error &quot;Invalid Arg &quot;</span></span></span>
+<span class="lineno">  136 </span>
+<span class="lineno">  137 </span>-- | from Data.Function.predicate
+<span class="lineno">  138 </span>is :: (a -&gt; b) -&gt; (b -&gt; Bool) -&gt; (a -&gt; Bool)
+<span class="lineno">  139 </span><span class="decl"><span class="istickedoff">is = flip (.)</span></span>
+<span class="lineno">  140 </span>
+<span class="lineno">  141 </span>-- | @if then else@ made simpler
+<span class="lineno">  142 </span>if' :: Bool -&gt; b -&gt; b -&gt; b
+<span class="lineno">  143 </span><span class="decl"><span class="istickedoff">if' p u v</span>
+<span class="lineno">  144 </span><span class="spaces">  </span><span class="istickedoff">| p = u</span>
+<span class="lineno">  145 </span><span class="spaces">  </span><span class="istickedoff">| <span class="tickonlytrue">otherwise</span> = v</span></span>
 
 </pre>
 </body>

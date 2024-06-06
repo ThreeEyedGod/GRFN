@@ -10,6 +10,16 @@
   (major1) == 1 && (major2) <  0 || \
   (major1) == 1 && (major2) == 0 && (minor) <= 0)
 #endif /* MIN_VERSION_grfn */
+/* package arithmoi-0.13.0.0 */
+#ifndef VERSION_arithmoi
+#define VERSION_arithmoi "0.13.0.0"
+#endif /* VERSION_arithmoi */
+#ifndef MIN_VERSION_arithmoi
+#define MIN_VERSION_arithmoi(major1,major2,minor) (\
+  (major1) <  0 || \
+  (major1) == 0 && (major2) <  13 || \
+  (major1) == 0 && (major2) == 13 && (minor) <= 0)
+#endif /* MIN_VERSION_arithmoi */
 /* package base-4.18.2.1 */
 #ifndef VERSION_base
 #define VERSION_base "4.18.2.1"
