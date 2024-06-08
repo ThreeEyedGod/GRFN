@@ -25,6 +25,6 @@ do_benchmark:
 db_profile:
 	@echo "creating profile"
 	rm -rf *.tix
-	stack build --profile --verbose
+	stack build --profile
 	stack exec -- /Users/mandeburung/Documents/GRFN/.stack-work/install/aarch64-osx/83b8e52cf51e0636cb104a94336fdd5c4077f15748a21c6b60971868afacbdc5/9.6.5/bin/grfn-exe  100000 +RTS -p -RTS
 	

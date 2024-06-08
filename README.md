@@ -29,3 +29,7 @@ Issues
 
 ### Documentation
   ~/grfn/dist-newstyle/build/aarch64-osx/ghc-9.4.7/grfn-0.1.0.0/doc/html/grfn/index.html
+
+### Performance
+This code was developed on a M1. Hence Ghc settings and within code usable cores set to 4. 
+![Number of Cores](image.png)

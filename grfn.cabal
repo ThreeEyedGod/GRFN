@@ -63,6 +63,8 @@ library
                        -fwrite-ide-info
                        -hiedir=.hie
                        -fhpc
+                       -with-rtsopts=-maxN4
+                       -O2
                        
 executable grfn-exe
   hs-source-dirs:      app
@@ -81,8 +83,9 @@ executable grfn-exe
                        -Wredundant-constraints
                        -threaded
                        -rtsopts
-                       -with-rtsopts=-maxN8 
+                       -with-rtsopts=-maxN4
                        -fhpc
+                       -O2
 
 test-suite grfn-test
   type:                exitcode-stdio-1.0
@@ -109,7 +112,7 @@ test-suite grfn-test
                        -Wredundant-constraints
                        -threaded
                        -rtsopts
-                       -with-rtsopts=-N
+                       -with-rtsopts=-N4
 
 source-repository head
   type:     git

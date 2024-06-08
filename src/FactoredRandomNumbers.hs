@@ -18,6 +18,7 @@ module FactoredRandomNumbers
   ( genARandomPreFactoredNumberLTEn,
     preFactoredNumOfBitSize,
     preFactoredNumOfBitSizePar,
+    coresToUse
   )
 where
 
@@ -25,8 +26,8 @@ import Control.Concurrent.ParallelIO.Local (parallelFirst, withPool)
 import Control.Monad.Loops (iterateWhile)
 import Data.Maybe (fromMaybe)
 import Data.Text (pack)
-import GHC.Conc (getNumProcessors)
-import Math.NumberTheory.Primes.Testing ( isPrime )
+import GHC.Conc (getNumCapabilities, getNumProcessors, numCapabilities, setNumCapabilities)
+import Math.NumberTheory.Primes.Testing (isPrime)
 import Protolude
   ( Applicative (pure),
     Bool (False),
@@ -55,10 +56,10 @@ import Protolude
     (>=>),
     (^),
     (||),
+    snd
   )
 import System.Random.Stateful (globalStdGen, uniformRM)
 import Prelude (error)
-
 
 -- | Takes an Integer for Bitsize value to operate on range [2 ^ y, 2 ^ y + 1 - 1].  This function leverages parallel execution
 -- Provide an integer input and it should generate a tuple of a number in the range [2^y, 2^y+1 -1] and its prime factors
@@ -72,13 +73,24 @@ preFactoredNumOfBitSizePar _ = pure $ Left $ pack "Invalid"
 -- Provide an integer input and it should generate a tuple of a number in the range [2^y, 2^y+1 -1] and its prime factors
 preFactoredNumOfBitSizeParMaybe :: Integer -> IO (Maybe (Either Text (Integer, [Integer])))
 preFactoredNumOfBitSizeParMaybe 1 = pure $ Just $ Right (1, [1])
-preFactoredNumOfBitSizeParMaybe n | n > 1 = getNumProcessors >>= spinUpThreads (preFactoredNumOfBitSize n)
+preFactoredNumOfBitSizeParMaybe n | n > 1 = (snd <$> coresToUse) >>= spinUpThreads (preFactoredNumOfBitSize n)
 preFactoredNumOfBitSizeParMaybe _ = pure $ Just $ Left $ pack "Invalid"
 
 -- | Spin up t threads of function f in parallel and return what's executed first
 spinUpThreads :: IO a -> Int -> IO (Maybe a)
 spinUpThreads f t = withPool t $ \pool -> parallelFirst pool $ replicate t (Just <$> f)
 
+-- | Compute cores to actually use when called. 
+coresToUse :: IO (Int,Int)
+coresToUse = do
+  nCores <- getNumProcessors
+  nNumCapabilities <- getNumCapabilities
+  let nEfficiencyCores = 4
+  setNumCapabilities $ max (nCores-nEfficiencyCores) nNumCapabilities
+  nNumCapabilitiesSet <- getNumCapabilities
+  pure (nCores, nNumCapabilitiesSet)
+
+  
 -- | Takes an Integer as a Bitsize value to operate on range [2 ^ y, 2 ^ y + 1 - 1]
 -- Provide an integer input and it should generate a tuple of a number in the range [2^y, 2^y+1 -1] and its prime factors
 preFactoredNumOfBitSize :: Integer -> IO (Either Text (Integer, [Integer]))
