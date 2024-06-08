@@ -18,7 +18,7 @@ Synopsis
 **Refactored to use Kleisli + applicative**; **Parallelised version available** Property Testing (QuickCheck), [Stan](https://hackage.haskell.org/package/stan) for Static analysis
 
 ### Standard
-hlint; github actions, IDE:Cursor+hoogle-vscode+ormolu ; Haddock ; makefile; Benchmark (tasty) Used Formal Verification using Refinement Types (LiquidHaskell) during development ; HPC code coverage enabled
+hlint; github actions, IDE:Cursor+hoogle-vscode+ormolu ; Haddock ; makefile; Benchmark (tasty) Used Formal Verification using Refinement Types (LiquidHaskell) during development ; HPC code coverage enabled; stack profiling (.prof)
 
 Issues
 -------

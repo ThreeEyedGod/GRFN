@@ -26,7 +26,7 @@ import Control.Monad.Loops (iterateWhile)
 import Data.Maybe (fromMaybe)
 import Data.Text (pack)
 import GHC.Conc (getNumProcessors)
-import Math.NumberTheory.Primes.Testing
+import Math.NumberTheory.Primes.Testing ( isPrime )
 import Protolude
   ( Applicative (pure),
     Bool (False),
@@ -58,6 +58,7 @@ import Protolude
   )
 import System.Random.Stateful (globalStdGen, uniformRM)
 import Prelude (error)
+
 
 -- | Takes an Integer for Bitsize value to operate on range [2 ^ y, 2 ^ y + 1 - 1].  This function leverages parallel execution
 -- Provide an integer input and it should generate a tuple of a number in the range [2^y, 2^y+1 -1] and its prime factors
