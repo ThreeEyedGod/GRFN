@@ -17,8 +17,7 @@
 module FactoredRandomNumbers
   ( genARandomPreFactoredNumberLTEn,
     preFactoredNumOfBitSize,
-    preFactoredNumOfBitSizePar,
-    coresToUse
+    preFactoredNumOfBitSizePar
   )
 where
 
@@ -26,8 +25,8 @@ import Control.Concurrent.ParallelIO.Local (parallelFirst, withPool)
 import Control.Monad.Loops (iterateWhile)
 import Data.Maybe (fromMaybe)
 import Data.Text (pack)
-import GHC.Conc (getNumCapabilities, getNumProcessors, numCapabilities, setNumCapabilities)
-import Math.NumberTheory.Primes.Testing (isPrime, bailliePSW)
+import GHC.Conc (getNumCapabilities, getNumProcessors, setNumCapabilities)
+import Math.NumberTheory.Primes.Testing (isPrime, bailliePSW) --isPrime is slower
 import Protolude
   ( Applicative (pure),
     Bool (False),
@@ -63,6 +62,7 @@ import Protolude
   )
 import System.Random.Stateful (globalStdGen, uniformRM)
 import Prelude (error)
+import Control.Concurrent.Async (race)
 
 -- | Takes an Integer for Bitsize value to operate on range [2 ^ y, 2 ^ y + 1 - 1].  This function leverages parallel execution
 -- Provide an integer input and it should generate a tuple of a number in the range [2^y, 2^y+1 -1] and its prime factors
@@ -76,12 +76,26 @@ preFactoredNumOfBitSizePar _ = pure $ Left $ pack "Invalid"
 -- Provide an integer input and it should generate a tuple of a number in the range [2^y, 2^y+1 -1] and its prime factors
 preFactoredNumOfBitSizeParMaybe :: Integer -> IO (Maybe (Either Text (Integer, [Integer])))
 preFactoredNumOfBitSizeParMaybe 1 = pure $ Just $ Right (1, [1])
-preFactoredNumOfBitSizeParMaybe n | n > 1 = (snd <$> coresToUse) >>= spinUpThreads (preFactoredNumOfBitSize n)
+--preFactoredNumOfBitSizeParMaybe n | n > 1 = (snd <$> coresToUse) >>= spinUpThreads (preFactoredNumOfBitSize n)
+preFactoredNumOfBitSizeParMaybe n | n > 1 = (snd <$> coresToUse) >>= spinUpActions (preFactoredNumOfBitSize n)
 preFactoredNumOfBitSizeParMaybe _ = pure $ Just $ Left $ pack "Invalid"
 
 -- | Spin up t threads of function f in parallel and return what's executed first
 spinUpThreads :: IO a -> Int -> IO (Maybe a)
 spinUpThreads f t = withPool t $ \pool -> parallelFirst pool $ replicate t (Just <$> f)
+
+-- | Spin up t actions of function f in parallel and return what's executed first
+-- for now ignore t
+spinUpActions :: IO a -> Int -> IO (Maybe a)
+spinUpActions f _ = raceJust f
+
+-- | Convert async.race from Either-Or to Maybe
+raceJust :: IO a -> IO (Maybe a)
+raceJust a =  do 
+          r <- race a a
+          case r of 
+              Left u -> pure $ Just u 
+              Right v -> pure $ Just v
 
 -- | Compute cores to actually use when called. 
 coresToUse :: IO (Int,Int)
