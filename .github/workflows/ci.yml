@@ -84,4 +84,4 @@ jobs:
 
     - name: Build Binary, Test and Benchmark
       run: |
-        do_build do_test do_gendoc do_benchmark    
+        make do_build do_test do_gendoc do_benchmark    
