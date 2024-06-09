@@ -50,6 +50,16 @@
   (major1) == 0 && (major2) <  4 || \
   (major1) == 0 && (major2) == 4 && (minor) <= 3)
 #endif /* MIN_VERSION_monad_loops */
+/* package parallel-3.2.2.0 */
+#ifndef VERSION_parallel
+#define VERSION_parallel "3.2.2.0"
+#endif /* VERSION_parallel */
+#ifndef MIN_VERSION_parallel
+#define MIN_VERSION_parallel(major1,major2,minor) (\
+  (major1) <  3 || \
+  (major1) == 3 && (major2) <  2 || \
+  (major1) == 3 && (major2) == 2 && (minor) <= 2)
+#endif /* MIN_VERSION_parallel */
 /* package parallel-io-0.3.5 */
 #ifndef VERSION_parallel_io
 #define VERSION_parallel_io "0.3.5"
@@ -110,6 +120,16 @@
   (major1) == 0 && (major2) <  3 || \
   (major1) == 0 && (major2) == 3 && (minor) <= 0)
 #endif /* MIN_VERSION_tuple */
+/* package unamb-0.2.7 */
+#ifndef VERSION_unamb
+#define VERSION_unamb "0.2.7"
+#endif /* VERSION_unamb */
+#ifndef MIN_VERSION_unamb
+#define MIN_VERSION_unamb(major1,major2,minor) (\
+  (major1) <  0 || \
+  (major1) == 0 && (major2) <  2 || \
+  (major1) == 0 && (major2) == 2 && (minor) <= 7)
+#endif /* MIN_VERSION_unamb */
 
 /* tool gcc-15.0.0 */
 #ifndef TOOL_VERSION_gcc

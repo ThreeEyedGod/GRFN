@@ -10,6 +10,16 @@
   (major1) == 1 && (major2) <  0 || \
   (major1) == 1 && (major2) == 0 && (minor) <= 0)
 #endif /* MIN_VERSION_grfn */
+/* package abstract-par-0.3.3 */
+#ifndef VERSION_abstract_par
+#define VERSION_abstract_par "0.3.3"
+#endif /* VERSION_abstract_par */
+#ifndef MIN_VERSION_abstract_par
+#define MIN_VERSION_abstract_par(major1,major2,minor) (\
+  (major1) <  0 || \
+  (major1) == 0 && (major2) <  3 || \
+  (major1) == 0 && (major2) == 3 && (minor) <= 3)
+#endif /* MIN_VERSION_abstract_par */
 /* package base-4.18.2.1 */
 #ifndef VERSION_base
 #define VERSION_base "4.18.2.1"
@@ -30,6 +40,36 @@
   (major1) == 1 && (major2) <  0 || \
   (major1) == 1 && (major2) == 0 && (minor) <= 0)
 #endif /* MIN_VERSION_grfn */
+/* package monad-par-0.3.6 */
+#ifndef VERSION_monad_par
+#define VERSION_monad_par "0.3.6"
+#endif /* VERSION_monad_par */
+#ifndef MIN_VERSION_monad_par
+#define MIN_VERSION_monad_par(major1,major2,minor) (\
+  (major1) <  0 || \
+  (major1) == 0 && (major2) <  3 || \
+  (major1) == 0 && (major2) == 3 && (minor) <= 6)
+#endif /* MIN_VERSION_monad_par */
+/* package mtl-2.3.1 */
+#ifndef VERSION_mtl
+#define VERSION_mtl "2.3.1"
+#endif /* VERSION_mtl */
+#ifndef MIN_VERSION_mtl
+#define MIN_VERSION_mtl(major1,major2,minor) (\
+  (major1) <  2 || \
+  (major1) == 2 && (major2) <  3 || \
+  (major1) == 2 && (major2) == 3 && (minor) <= 1)
+#endif /* MIN_VERSION_mtl */
+/* package transformers-base-0.4.6 */
+#ifndef VERSION_transformers_base
+#define VERSION_transformers_base "0.4.6"
+#endif /* VERSION_transformers_base */
+#ifndef MIN_VERSION_transformers_base
+#define MIN_VERSION_transformers_base(major1,major2,minor) (\
+  (major1) <  0 || \
+  (major1) == 0 && (major2) <  4 || \
+  (major1) == 0 && (major2) == 4 && (minor) <= 6)
+#endif /* MIN_VERSION_transformers_base */
 
 /* tool gcc-15.0.0 */
 #ifndef TOOL_VERSION_gcc

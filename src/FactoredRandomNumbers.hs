@@ -63,6 +63,7 @@ import Protolude
 import System.Random.Stateful (globalStdGen, uniformRM)
 import Prelude (error)
 import Control.Concurrent.Async (race)
+import qualified Data.Unamb (unamb, race)
 
 -- | Takes an Integer for Bitsize value to operate on range [2 ^ y, 2 ^ y + 1 - 1].  This function leverages parallel execution
 -- Provide an integer input and it should generate a tuple of a number in the range [2^y, 2^y+1 -1] and its prime factors
@@ -76,8 +77,9 @@ preFactoredNumOfBitSizePar _ = pure $ Left $ pack "Invalid"
 -- Provide an integer input and it should generate a tuple of a number in the range [2^y, 2^y+1 -1] and its prime factors
 preFactoredNumOfBitSizeParMaybe :: Integer -> IO (Maybe (Either Text (Integer, [Integer])))
 preFactoredNumOfBitSizeParMaybe 1 = pure $ Just $ Right (1, [1])
---preFactoredNumOfBitSizeParMaybe n | n > 1 = (snd <$> coresToUse) >>= spinUpThreads (preFactoredNumOfBitSize n)
-preFactoredNumOfBitSizeParMaybe n | n > 1 = (snd <$> coresToUse) >>= spinUpActions (preFactoredNumOfBitSize n)
+preFactoredNumOfBitSizeParMaybe n | n > 1 = (snd <$> coresToUse) >>= spinUpThreads (preFactoredNumOfBitSize n)
+--preFactoredNumOfBitSizeParMaybe n | n > 1 = (snd <$> coresToUse) >>= spinUpActions (preFactoredNumOfBitSize n)
+--preFactoredNumOfBitSizeParMaybe n | n > 1 = (snd <$> coresToUse) >>= spinUpProcesses (preFactoredNumOfBitSize n)
 preFactoredNumOfBitSizeParMaybe _ = pure $ Just $ Left $ pack "Invalid"
 
 -- | Spin up t threads of function f in parallel and return what's executed first
@@ -89,6 +91,9 @@ spinUpThreads f t = withPool t $ \pool -> parallelFirst pool $ replicate t (Just
 spinUpActions :: IO a -> Int -> IO (Maybe a)
 spinUpActions f _ = raceJust f
 
+spinUpProcesses :: IO a -> Int -> IO (Maybe a)
+spinUpProcesses f _ = raceJustU f
+
 -- | Convert async.race from Either-Or to Maybe
 raceJust :: IO a -> IO (Maybe a)
 raceJust a =  do 
@@ -97,6 +102,10 @@ raceJust a =  do
               Left u -> pure $ Just u 
               Right v -> pure $ Just v
 
+-- | Convert Data.Unamb.race to Maybe
+raceJustU :: IO a -> IO (Maybe a)
+raceJustU a = Just <$> Data.Unamb.race a a
+  
 -- | Compute cores to actually use when called. 
 coresToUse :: IO (Int,Int)
 coresToUse = do
