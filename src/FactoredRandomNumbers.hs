@@ -152,13 +152,13 @@ filterPrimesProduct :: [Integer] -> (Integer, [Integer])
 filterPrimesProduct xs = result where result@(_, sq) = (product sq, onlyPrimesFrom xs) -- note: product [] = 1
 
 parFilter :: (NFData a) => Int -> (a -> Bool) -> [a] -> [a]
---parFilter stratParm p = S.withStrategy (S.parListChunk stratParm S.rpar) . filter p
---parFilter stratParm p = S.withStrategy (S.parBuffer stratParm S.rdeepseq S.rdeepseq) . filter p
-parFilter stratParm p = S.withStrategy (S.parListSplitAt stratParm S.rpar S.rpar) . filter p
+parFilter stratParm p = S.withStrategy (S.parListChunk stratParm S.rpar) . filter p
+--34.5 parFilter stratParm p = S.withStrategy (S.parBuffer stratParm S.rdeepseq) . filter p
+--36.8 parFilter stratParm p = S.withStrategy (S.parListSplitAt stratParm S.rpar S.rpar) . filter p
 
 -- | parallel reduction of a composite list of integers into primefactors 
 onlyPrimesFrom :: [Integer] -> [Integer]
-onlyPrimesFrom xs = parFilter (length xs `div` 4) isPrimeOr1 xs
+onlyPrimesFrom xs = parFilter (length xs `div` 3) isPrimeOr1 xs
 --onlyPrimesFrom = filter isPrimeOr1
 
 -- | Provided an Integer, throws up a candidate Int and its factors for further assessment
