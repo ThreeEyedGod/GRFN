@@ -10,6 +10,7 @@ import Control.Monad.Par.Class (fork, get, new, put, spawn)
 import Control.Monad.Par.IO (IVar, ParIO, runParIO)
 import GHC.Conc (getNumCapabilities)
 
+
 -- main :: IO ()
 -- main = do 
 --     putStrLn "Hello"
@@ -40,3 +41,5 @@ parMain = do
     -- r <- new
     -- fork (p >>= put r)
     -- return r
+
+  ------------

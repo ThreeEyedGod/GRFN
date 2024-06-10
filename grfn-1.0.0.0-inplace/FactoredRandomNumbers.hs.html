@@ -87,140 +87,151 @@ span.spaces    { background: white }
 <span class="lineno">   68 </span>import qualified Data.Unamb (unamb, race)
 <span class="lineno">   69 </span>import Control.Parallel.Strategies (NFData, ($||))
 <span class="lineno">   70 </span>import qualified Control.Parallel.Strategies as S
-<span class="lineno">   71 </span>
+<span class="lineno">   71 </span>import Data.Time.Clock
 <span class="lineno">   72 </span>
-<span class="lineno">   73 </span>-- | Takes an Integer for Bitsize value to operate on range [2 ^ y, 2 ^ y + 1 - 1].  This function leverages parallel execution
-<span class="lineno">   74 </span>-- Provide an integer input and it should generate a tuple of a number in the range [2^y, 2^y+1 -1] and its prime factors
-<span class="lineno">   75 </span>-- In the event that the parallel call fails and return Nothing, a recovery through a non-parallel call is attempted.
-<span class="lineno">   76 </span>preFactoredNumOfBitSizePar :: Integer -&gt; IO (Either Text (Integer, [Integer]))
-<span class="lineno">   77 </span><span class="decl"><span class="istickedoff">preFactoredNumOfBitSizePar 1 = <span class="nottickedoff">pure $ Right (1, [1])</span></span>
-<span class="lineno">   78 </span><span class="spaces"></span><span class="istickedoff">preFactoredNumOfBitSizePar n | <span class="tickonlytrue">n &gt; 1</span> = fromMaybe &lt;$&gt; preFactoredNumOfBitSize n &lt;*&gt; preFactoredNumOfBitSizeParMaybe n</span>
-<span class="lineno">   79 </span><span class="spaces"></span><span class="istickedoff">preFactoredNumOfBitSizePar _ = <span class="nottickedoff">pure $ Left $ pack &quot;Invalid&quot;</span></span></span>
-<span class="lineno">   80 </span>
-<span class="lineno">   81 </span>-- | Failable Parallel preFactored Number given BitSize
-<span class="lineno">   82 </span>-- Provide an integer input and it should generate a tuple of a number in the range [2^y, 2^y+1 -1] and its prime factors
-<span class="lineno">   83 </span>preFactoredNumOfBitSizeParMaybe :: Integer -&gt; IO (Maybe (Either Text (Integer, [Integer])))
-<span class="lineno">   84 </span><span class="decl"><span class="istickedoff">preFactoredNumOfBitSizeParMaybe 1 = <span class="nottickedoff">pure $ Just $ Right (1, [1])</span></span>
-<span class="lineno">   85 </span><span class="spaces"></span><span class="istickedoff">preFactoredNumOfBitSizeParMaybe n | <span class="tickonlytrue">n &gt; 1</span> = (snd &lt;$&gt; coresToUse) &gt;&gt;= spinUpThreads (preFactoredNumOfBitSize n)</span>
-<span class="lineno">   86 </span><span class="spaces"></span><span class="istickedoff">--preFactoredNumOfBitSizeParMaybe n | n &gt; 1 = (snd &lt;$&gt; coresToUse) &gt;&gt;= spinUpActions (preFactoredNumOfBitSize n)</span>
-<span class="lineno">   87 </span><span class="spaces"></span><span class="istickedoff">--preFactoredNumOfBitSizeParMaybe n | n &gt; 1 = (snd &lt;$&gt; coresToUse) &gt;&gt;= spinUpProcesses (preFactoredNumOfBitSize n)</span>
-<span class="lineno">   88 </span><span class="spaces"></span><span class="istickedoff">preFactoredNumOfBitSizeParMaybe _ = <span class="nottickedoff">pure $ Just $ Left $ pack &quot;Invalid&quot;</span></span></span>
-<span class="lineno">   89 </span>
-<span class="lineno">   90 </span>-- | Spin up t threads of function f in parallel and return what's executed first
-<span class="lineno">   91 </span>spinUpThreads :: IO a -&gt; Int -&gt; IO (Maybe a)
-<span class="lineno">   92 </span><span class="decl"><span class="istickedoff">spinUpThreads f t = withPool t $ \pool -&gt; parallelFirst pool $ replicate t (Just &lt;$&gt; f)</span></span>
-<span class="lineno">   93 </span>
-<span class="lineno">   94 </span>-- | Spin up t actions of function f in parallel and return what's executed first
-<span class="lineno">   95 </span>-- for now ignore t
-<span class="lineno">   96 </span>spinUpActions :: IO a -&gt; Int -&gt; IO (Maybe a)
-<span class="lineno">   97 </span><span class="decl"><span class="nottickedoff">spinUpActions f _ = raceJust f</span></span>
-<span class="lineno">   98 </span>
-<span class="lineno">   99 </span>spinUpProcesses :: IO a -&gt; Int -&gt; IO (Maybe a)
-<span class="lineno">  100 </span><span class="decl"><span class="nottickedoff">spinUpProcesses f _ = raceJustU f</span></span>
-<span class="lineno">  101 </span>
-<span class="lineno">  102 </span>-- | Convert async.race from Either-Or to Maybe
-<span class="lineno">  103 </span>raceJust :: IO a -&gt; IO (Maybe a)
-<span class="lineno">  104 </span><span class="decl"><span class="nottickedoff">raceJust a =  do </span>
-<span class="lineno">  105 </span><span class="spaces">          </span><span class="nottickedoff">r &lt;- race a a</span>
-<span class="lineno">  106 </span><span class="spaces">          </span><span class="nottickedoff">case r of </span>
-<span class="lineno">  107 </span><span class="spaces">              </span><span class="nottickedoff">Left u -&gt; pure $ Just u </span>
-<span class="lineno">  108 </span><span class="spaces">              </span><span class="nottickedoff">Right v -&gt; pure $ Just v</span></span>
-<span class="lineno">  109 </span>
-<span class="lineno">  110 </span>-- | Convert Data.Unamb.race to Maybe
-<span class="lineno">  111 </span>raceJustU :: IO a -&gt; IO (Maybe a)
-<span class="lineno">  112 </span><span class="decl"><span class="nottickedoff">raceJustU a = Just &lt;$&gt; Data.Unamb.race a a</span></span>
-<span class="lineno">  113 </span>  
-<span class="lineno">  114 </span>-- | Compute cores to actually use when called. 
-<span class="lineno">  115 </span>coresToUse :: IO (Int,Int)
-<span class="lineno">  116 </span><span class="decl"><span class="istickedoff">coresToUse = do</span>
-<span class="lineno">  117 </span><span class="spaces">  </span><span class="istickedoff">nCores &lt;- getNumProcessors</span>
-<span class="lineno">  118 </span><span class="spaces">  </span><span class="istickedoff">nNumCapabilities &lt;- getNumCapabilities</span>
-<span class="lineno">  119 </span><span class="spaces">  </span><span class="istickedoff">let nEfficiencyCores = 4</span>
-<span class="lineno">  120 </span><span class="spaces">  </span><span class="istickedoff">setNumCapabilities $ max ((nCores-nEfficiencyCores) * 4) nNumCapabilities</span>
-<span class="lineno">  121 </span><span class="spaces">  </span><span class="istickedoff">nNumCapabilitiesSet &lt;- getNumCapabilities</span>
-<span class="lineno">  122 </span><span class="spaces">  </span><span class="istickedoff">pure (<span class="nottickedoff">nCores</span>, nNumCapabilitiesSet)</span></span>
-<span class="lineno">  123 </span>
-<span class="lineno">  124 </span>  
-<span class="lineno">  125 </span>-- | Takes an Integer as a Bitsize value to operate on range [2 ^ y, 2 ^ y + 1 - 1]
-<span class="lineno">  126 </span>-- Provide an integer input and it should generate a tuple of a number in the range [2^y, 2^y+1 -1] and its prime factors
-<span class="lineno">  127 </span>preFactoredNumOfBitSize :: Integer -&gt; IO (Either Text (Integer, [Integer]))
-<span class="lineno">  128 </span><span class="decl"><span class="istickedoff">preFactoredNumOfBitSize 1 = <span class="nottickedoff">pure $ Right (1, [1])</span></span>
-<span class="lineno">  129 </span><span class="spaces"></span><span class="istickedoff">preFactoredNumOfBitSize n | <span class="tickonlytrue">n &gt; 1</span> = iterateWhile ((2 ^ n) &lt;|) (genARandomPreFactoredNumberLTEn (2 ^ (n + 1) - 1))</span>
-<span class="lineno">  130 </span><span class="spaces"></span><span class="istickedoff">preFactoredNumOfBitSize _ = <span class="nottickedoff">pure $ Left $ pack &quot;Invalid&quot;</span></span></span>
-<span class="lineno">  131 </span>
-<span class="lineno">  132 </span>infix 1 &lt;|
-<span class="lineno">  133 </span>
-<span class="lineno">  134 </span>-- | An operator to compare the Right first value of the (Int, [Int]) to an Int for lesser-than predicate
-<span class="lineno">  135 </span>(&lt;|) :: Integer -&gt; Either Text (Integer, [Integer]) -&gt; Bool
-<span class="lineno">  136 </span><span class="decl"><span class="istickedoff">bound &lt;| eOR = case eOR of</span>
-<span class="lineno">  137 </span><span class="spaces">  </span><span class="istickedoff">Left _ -&gt; <span class="nottickedoff">False</span></span>
-<span class="lineno">  138 </span><span class="spaces">  </span><span class="istickedoff">Right v -&gt; fst v &lt; bound</span></span>
-<span class="lineno">  139 </span>
-<span class="lineno">  140 </span>-- | This is the Entry Function with a Integer bound
-<span class="lineno">  141 </span>-- Provide an integer input and it should generate a tuple of a number less than the input integer and its prime factors
-<span class="lineno">  142 </span>genARandomPreFactoredNumberLTEn :: Integer -&gt; IO (Either Text (Integer, [Integer]))
-<span class="lineno">  143 </span><span class="decl"><span class="istickedoff">genARandomPreFactoredNumberLTEn x | x &lt;= 0 = pure $ Left $ pack &quot;Invalid&quot;</span>
-<span class="lineno">  144 </span><span class="spaces"></span><span class="istickedoff">genARandomPreFactoredNumberLTEn 1 = <span class="nottickedoff">pure $ Right (1, [1])</span></span>
-<span class="lineno">  145 </span><span class="spaces"></span><span class="istickedoff">genARandomPreFactoredNumberLTEn n = do</span>
-<span class="lineno">  146 </span><span class="spaces">  </span><span class="istickedoff">candidateTuple &lt;- potentialResult n</span>
-<span class="lineno">  147 </span><span class="spaces">  </span><span class="istickedoff">if' ((fst `is` (&lt; n)) candidateTuple) (pure $ Right candidateTuple) (genARandomPreFactoredNumberLTEn n)</span></span> -- else keep doing till success
-<span class="lineno">  148 </span>
-<span class="lineno">  149 </span>-- | Provided an Integer List, throws up a candidate Int and its prime factors for further assessment
-<span class="lineno">  150 </span>filterPrimesProduct :: [Integer] -&gt; (Integer, [Integer])
-<span class="lineno">  151 </span>--filterPrimesProduct xs = result where result@(_, sq) = (product sq, filter isPrimeOr1 xs) -- note: product [] = 1
-<span class="lineno">  152 </span><span class="decl"><span class="istickedoff">filterPrimesProduct xs = result where result@(_, sq) = (product sq, onlyPrimes xs)</span></span> -- note: product [] = 1
+<span class="lineno">   73 </span>
+<span class="lineno">   74 </span>-- | Takes an Integer for Bitsize value to operate on range [2 ^ y, 2 ^ y + 1 - 1].  This function leverages parallel execution
+<span class="lineno">   75 </span>-- Provide an integer input and it should generate a tuple of a number in the range [2^y, 2^y+1 -1] and its prime factors
+<span class="lineno">   76 </span>-- In the event that the parallel call fails and return Nothing, a recovery through a non-parallel call is attempted.
+<span class="lineno">   77 </span>preFactoredNumOfBitSizePar :: Integer -&gt; IO (Either Text (Integer, [Integer]))
+<span class="lineno">   78 </span><span class="decl"><span class="istickedoff">preFactoredNumOfBitSizePar 1 = <span class="nottickedoff">pure $ Right (1, [1])</span></span>
+<span class="lineno">   79 </span><span class="spaces"></span><span class="istickedoff">preFactoredNumOfBitSizePar n | <span class="tickonlytrue">n &gt; 1</span> = fromMaybe &lt;$&gt; preFactoredNumOfBitSize n &lt;*&gt; preFactoredNumOfBitSizeParMaybe n</span>
+<span class="lineno">   80 </span><span class="spaces"></span><span class="istickedoff">preFactoredNumOfBitSizePar _ = <span class="nottickedoff">pure $ Left $ pack &quot;Invalid&quot;</span></span></span>
+<span class="lineno">   81 </span>
+<span class="lineno">   82 </span>-- | Failable Parallel preFactored Number given BitSize
+<span class="lineno">   83 </span>-- Provide an integer input and it should generate a tuple of a number in the range [2^y, 2^y+1 -1] and its prime factors
+<span class="lineno">   84 </span>preFactoredNumOfBitSizeParMaybe :: Integer -&gt; IO (Maybe (Either Text (Integer, [Integer])))
+<span class="lineno">   85 </span><span class="decl"><span class="istickedoff">preFactoredNumOfBitSizeParMaybe 1 = <span class="nottickedoff">pure $ Just $ Right (1, [1])</span></span>
+<span class="lineno">   86 </span><span class="spaces"></span><span class="istickedoff">preFactoredNumOfBitSizeParMaybe n | <span class="tickonlytrue">n &gt; 1</span> = (snd &lt;$&gt; coresToUse) &gt;&gt;= spinUpThreads (preFactoredNumOfBitSize n)</span>
+<span class="lineno">   87 </span><span class="spaces"></span><span class="istickedoff">--preFactoredNumOfBitSizeParMaybe n | n &gt; 1 = (snd &lt;$&gt; coresToUse) &gt;&gt;= spinUpActions (preFactoredNumOfBitSize n)</span>
+<span class="lineno">   88 </span><span class="spaces"></span><span class="istickedoff">--preFactoredNumOfBitSizeParMaybe n | n &gt; 1 = (snd &lt;$&gt; coresToUse) &gt;&gt;= spinUpProcesses (preFactoredNumOfBitSize n)</span>
+<span class="lineno">   89 </span><span class="spaces"></span><span class="istickedoff">preFactoredNumOfBitSizeParMaybe _ = <span class="nottickedoff">pure $ Just $ Left $ pack &quot;Invalid&quot;</span></span></span>
+<span class="lineno">   90 </span>
+<span class="lineno">   91 </span>-- | Spin up t threads of function f in parallel and return what's executed first
+<span class="lineno">   92 </span>spinUpThreads :: IO a -&gt; Int -&gt; IO (Maybe a)
+<span class="lineno">   93 </span><span class="decl"><span class="istickedoff">spinUpThreads f t = withPool t $ \pool -&gt; parallelFirst pool $ replicate t (Just &lt;$&gt; f)</span></span>
+<span class="lineno">   94 </span>
+<span class="lineno">   95 </span>-- | Spin up t actions of function f in parallel and return what's executed first
+<span class="lineno">   96 </span>-- for now ignore t
+<span class="lineno">   97 </span>spinUpActions :: IO a -&gt; Int -&gt; IO (Maybe a)
+<span class="lineno">   98 </span><span class="decl"><span class="nottickedoff">spinUpActions f _ = raceJust f</span></span>
+<span class="lineno">   99 </span>
+<span class="lineno">  100 </span>spinUpProcesses :: IO a -&gt; Int -&gt; IO (Maybe a)
+<span class="lineno">  101 </span><span class="decl"><span class="nottickedoff">spinUpProcesses f _ = raceJustU f</span></span>
+<span class="lineno">  102 </span>
+<span class="lineno">  103 </span>-- | Convert async.race from Either-Or to Maybe
+<span class="lineno">  104 </span>raceJust :: IO a -&gt; IO (Maybe a)
+<span class="lineno">  105 </span><span class="decl"><span class="nottickedoff">raceJust a =  do </span>
+<span class="lineno">  106 </span><span class="spaces">          </span><span class="nottickedoff">r &lt;- race a a</span>
+<span class="lineno">  107 </span><span class="spaces">          </span><span class="nottickedoff">case r of </span>
+<span class="lineno">  108 </span><span class="spaces">              </span><span class="nottickedoff">Left u -&gt; pure $ Just u </span>
+<span class="lineno">  109 </span><span class="spaces">              </span><span class="nottickedoff">Right v -&gt; pure $ Just v</span></span>
+<span class="lineno">  110 </span>
+<span class="lineno">  111 </span>-- | Convert Data.Unamb.race to Maybe
+<span class="lineno">  112 </span>raceJustU :: IO a -&gt; IO (Maybe a)
+<span class="lineno">  113 </span><span class="decl"><span class="nottickedoff">raceJustU a = Just &lt;$&gt; Data.Unamb.race a a</span></span>
+<span class="lineno">  114 </span>  
+<span class="lineno">  115 </span>-- | Compute cores to actually use when called. 
+<span class="lineno">  116 </span>coresToUse :: IO (Int,Int)
+<span class="lineno">  117 </span><span class="decl"><span class="istickedoff">coresToUse = do</span>
+<span class="lineno">  118 </span><span class="spaces">  </span><span class="istickedoff">nCores &lt;- getNumProcessors</span>
+<span class="lineno">  119 </span><span class="spaces">  </span><span class="istickedoff">nNumCapabilities &lt;- getNumCapabilities</span>
+<span class="lineno">  120 </span><span class="spaces">  </span><span class="istickedoff">let nEfficiencyCores = 4</span>
+<span class="lineno">  121 </span><span class="spaces">  </span><span class="istickedoff">setNumCapabilities $ max ((nCores-nEfficiencyCores) * 4) nNumCapabilities</span>
+<span class="lineno">  122 </span><span class="spaces">  </span><span class="istickedoff">nNumCapabilitiesSet &lt;- getNumCapabilities</span>
+<span class="lineno">  123 </span><span class="spaces">  </span><span class="istickedoff">pure (<span class="nottickedoff">nCores</span>, nNumCapabilitiesSet)</span></span>
+<span class="lineno">  124 </span>
+<span class="lineno">  125 </span>  
+<span class="lineno">  126 </span>-- | Takes an Integer as a Bitsize value to operate on range [2 ^ y, 2 ^ y + 1 - 1]
+<span class="lineno">  127 </span>-- Provide an integer input and it should generate a tuple of a number in the range [2^y, 2^y+1 -1] and its prime factors
+<span class="lineno">  128 </span>preFactoredNumOfBitSize :: Integer -&gt; IO (Either Text (Integer, [Integer]))
+<span class="lineno">  129 </span><span class="decl"><span class="istickedoff">preFactoredNumOfBitSize 1 = <span class="nottickedoff">pure $ Right (1, [1])</span></span>
+<span class="lineno">  130 </span><span class="spaces"></span><span class="istickedoff">preFactoredNumOfBitSize n | <span class="tickonlytrue">n &gt; 1</span> = iterateWhile ((2 ^ n) &lt;|) (genARandomPreFactoredNumberLTEn (2 ^ (n + 1) - 1))</span>
+<span class="lineno">  131 </span><span class="spaces"></span><span class="istickedoff">preFactoredNumOfBitSize _ = <span class="nottickedoff">pure $ Left $ pack &quot;Invalid&quot;</span></span></span>
+<span class="lineno">  132 </span>
+<span class="lineno">  133 </span>infix 1 &lt;|
+<span class="lineno">  134 </span>
+<span class="lineno">  135 </span>-- | An operator to compare the Right first value of the (Int, [Int]) to an Int for lesser-than predicate
+<span class="lineno">  136 </span>(&lt;|) :: Integer -&gt; Either Text (Integer, [Integer]) -&gt; Bool
+<span class="lineno">  137 </span><span class="decl"><span class="istickedoff">bound &lt;| eOR = case eOR of</span>
+<span class="lineno">  138 </span><span class="spaces">  </span><span class="istickedoff">Left _ -&gt; <span class="nottickedoff">False</span></span>
+<span class="lineno">  139 </span><span class="spaces">  </span><span class="istickedoff">Right v -&gt; fst v &lt; bound</span></span>
+<span class="lineno">  140 </span>
+<span class="lineno">  141 </span>-- | This is the Entry Function with a Integer bound
+<span class="lineno">  142 </span>-- Provide an integer input and it should generate a tuple of a number less than the input integer and its prime factors
+<span class="lineno">  143 </span>genARandomPreFactoredNumberLTEn :: Integer -&gt; IO (Either Text (Integer, [Integer]))
+<span class="lineno">  144 </span><span class="decl"><span class="istickedoff">genARandomPreFactoredNumberLTEn x | x &lt;= 0 = pure $ Left $ pack &quot;Invalid&quot;</span>
+<span class="lineno">  145 </span><span class="spaces"></span><span class="istickedoff">genARandomPreFactoredNumberLTEn 1 = <span class="nottickedoff">pure $ Right (1, [1])</span></span>
+<span class="lineno">  146 </span><span class="spaces"></span><span class="istickedoff">genARandomPreFactoredNumberLTEn n = do</span>
+<span class="lineno">  147 </span><span class="spaces">  </span><span class="istickedoff">candidateTuple &lt;- potentialResult n</span>
+<span class="lineno">  148 </span><span class="spaces">  </span><span class="istickedoff">if' ((fst `is` (&lt; n)) candidateTuple) (pure $ Right candidateTuple) (genARandomPreFactoredNumberLTEn n)</span></span> -- else keep doing till success
+<span class="lineno">  149 </span>
+<span class="lineno">  150 </span>-- | Provided an Integer List, throws up a candidate Int and its prime factors for further assessment
+<span class="lineno">  151 </span>filterPrimesProduct :: [Integer] -&gt; (Integer, [Integer])
+<span class="lineno">  152 </span><span class="decl"><span class="istickedoff">filterPrimesProduct xs = result where result@(_, sq) = (product sq, onlyPrimesFrom xs)</span></span> -- note: product [] = 1
 <span class="lineno">  153 </span>
 <span class="lineno">  154 </span>parFilter :: (NFData a) =&gt; Int -&gt; (a -&gt; Bool) -&gt; [a] -&gt; [a]
-<span class="lineno">  155 </span><span class="decl"><span class="istickedoff">parFilter stratParm p = S.withStrategy (S.parListSplitAt stratParm S.rpar S.rpar) . filter p</span></span>
-<span class="lineno">  156 </span>
-<span class="lineno">  157 </span>-- | parallel reduction of a composite list of integers into primefactors 
-<span class="lineno">  158 </span>onlyPrimes :: [Integer] -&gt; [Integer]
-<span class="lineno">  159 </span><span class="decl"><span class="istickedoff">onlyPrimes xs = parFilter (length xs `div` 2) isPrimeOr1 xs</span></span>
-<span class="lineno">  160 </span>
-<span class="lineno">  161 </span>-- | Provided an Integer, throws up a candidate Int and its factors for further assessment
-<span class="lineno">  162 </span>potentialResult :: Integer -&gt; IO (Integer, [Integer])
-<span class="lineno">  163 </span><span class="decl"><span class="istickedoff">potentialResult n = makeList n &lt;&amp;&gt; filterPrimesProduct</span></span>
-<span class="lineno">  164 </span>
-<span class="lineno">  165 </span>-- | Provided an Integer, creates a sequence of random integers LTE n in decreasing order,
-<span class="lineno">  166 </span>-- possibly with multiples ending at a single 1
-<span class="lineno">  167 </span>makeList :: Integer -&gt; IO [Integer]
-<span class="lineno">  168 </span><span class="decl"><span class="istickedoff">makeList 1 = pure []</span>
-<span class="lineno">  169 </span><span class="spaces"></span><span class="istickedoff">makeList n | <span class="tickonlytrue">n &gt; 1</span> = (getRndMInt &gt;=&gt;: makeList) (1, n)</span>
-<span class="lineno">  170 </span><span class="spaces"></span><span class="istickedoff">makeList _ = <span class="nottickedoff">error &quot;Out of bound Arg&quot;</span></span></span>
-<span class="lineno">  171 </span>
-<span class="lineno">  172 </span>-- | Get a Random Integer with uniform probability in the range [1,n]
-<span class="lineno">  173 </span>getRndMInt :: (Integer, Integer) -&gt; IO Integer
-<span class="lineno">  174 </span><span class="decl"><span class="istickedoff">getRndMInt (l, u) | <span class="tickonlytrue">l &lt;= u &amp;&amp; l &gt; 0</span> = max l . min u &lt;$&gt; uniformRM (l, u) globalStdGen</span>
-<span class="lineno">  175 </span><span class="spaces"></span><span class="istickedoff">getRndMInt _ = <span class="nottickedoff">error &quot;Malformed Range&quot;</span></span></span>
-<span class="lineno">  176 </span>
-<span class="lineno">  177 </span>infixr 1 &gt;=&gt;:
-<span class="lineno">  178 </span>
-<span class="lineno">  179 </span>-- | Left-to-right Kleisli composition of monads plus prepend elem to List using standard operators
-<span class="lineno">  180 </span>(&gt;=&gt;:) :: (Monad m) =&gt; (a -&gt; m b) -&gt; (b -&gt; m [b]) -&gt; (a -&gt; m [b])
-<span class="lineno">  181 </span><span class="decl"><span class="istickedoff">f &gt;=&gt;: g = f &gt;=&gt; \u -&gt; (u :) &lt;$&gt; g u</span></span>
-<span class="lineno">  182 </span>
-<span class="lineno">  183 </span>-- | True if input is prime or 1
-<span class="lineno">  184 </span>-- Primality testing is one key to peformance of this algo
-<span class="lineno">  185 </span>-- the isOdd and greater than 3 is for the use of bailliePSW primality 
-<span class="lineno">  186 </span>-- using bailliePSW in place of the standard isPrime leads to 75% reduction in time !!!
-<span class="lineno">  187 </span>isPrimeOr1 :: Integer -&gt; Bool
-<span class="lineno">  188 </span><span class="decl"><span class="istickedoff">isPrimeOr1 n | <span class="tickonlytrue">n &gt; 0</span> = (n == 1 || n == 3) || (n &gt; 3 &amp;&amp; isOdd n &amp;&amp; bailliePSW n) --bailliePSW requires that n &gt; 3 and that input is Odd</span>
-<span class="lineno">  189 </span><span class="spaces"></span><span class="istickedoff">isPrimeOr1 _ = <span class="nottickedoff">error &quot;Invalid Arg &quot;</span></span></span>
-<span class="lineno">  190 </span>
-<span class="lineno">  191 </span>-- | from Data.Function.predicate
-<span class="lineno">  192 </span>is :: (a -&gt; b) -&gt; (b -&gt; Bool) -&gt; (a -&gt; Bool)
-<span class="lineno">  193 </span><span class="decl"><span class="istickedoff">is = flip (.)</span></span>
-<span class="lineno">  194 </span>
-<span class="lineno">  195 </span>-- | @if then else@ made simpler
-<span class="lineno">  196 </span>if' :: Bool -&gt; b -&gt; b -&gt; b
-<span class="lineno">  197 </span><span class="decl"><span class="istickedoff">if' p u v</span>
-<span class="lineno">  198 </span><span class="spaces">  </span><span class="istickedoff">| p = u</span>
-<span class="lineno">  199 </span><span class="spaces">  </span><span class="istickedoff">| <span class="tickonlytrue">otherwise</span> = v</span></span>
-<span class="lineno">  200 </span>
-<span class="lineno">  201 </span>  -- | @isOdd an integer?
-<span class="lineno">  202 </span>isOdd :: Integer -&gt; Bool
-<span class="lineno">  203 </span><span class="decl"><span class="istickedoff">isOdd 0 = <span class="nottickedoff">error &quot;Not valid&quot;</span></span>
-<span class="lineno">  204 </span><span class="spaces"></span><span class="istickedoff">isOdd n = not (n `mod` 2 == 0)</span></span>
+<span class="lineno">  155 </span>--parFilter stratParm p = S.withStrategy (S.parListChunk stratParm S.rpar) . filter p
+<span class="lineno">  156 </span>--parFilter stratParm p = S.withStrategy (S.parBuffer stratParm S.rdeepseq S.rdeepseq) . filter p
+<span class="lineno">  157 </span><span class="decl"><span class="istickedoff">parFilter stratParm p = S.withStrategy (S.parListSplitAt stratParm S.rpar S.rpar) . filter p</span></span>
+<span class="lineno">  158 </span>
+<span class="lineno">  159 </span>-- | parallel reduction of a composite list of integers into primefactors 
+<span class="lineno">  160 </span>onlyPrimesFrom :: [Integer] -&gt; [Integer]
+<span class="lineno">  161 </span><span class="decl"><span class="istickedoff">onlyPrimesFrom xs = parFilter (length xs `div` 4) isPrimeOr1 xs</span></span>
+<span class="lineno">  162 </span>--onlyPrimesFrom = filter isPrimeOr1
+<span class="lineno">  163 </span>
+<span class="lineno">  164 </span>-- | Provided an Integer, throws up a candidate Int and its factors for further assessment
+<span class="lineno">  165 </span>potentialResult :: Integer -&gt; IO (Integer, [Integer])
+<span class="lineno">  166 </span><span class="decl"><span class="istickedoff">potentialResult n = makeList n &lt;&amp;&gt; filterPrimesProduct</span></span>
+<span class="lineno">  167 </span>
+<span class="lineno">  168 </span>-- | Provided an Integer, creates a sequence of random integers LTE n in decreasing order,
+<span class="lineno">  169 </span>-- possibly with multiples ending at a single 1
+<span class="lineno">  170 </span>makeList :: Integer -&gt; IO [Integer]
+<span class="lineno">  171 </span><span class="decl"><span class="istickedoff">makeList 1 = pure []</span>
+<span class="lineno">  172 </span><span class="spaces"></span><span class="istickedoff">makeList n | <span class="tickonlytrue">n &gt; 1</span> = (getRndMInt &gt;=&gt;: makeList) (1, n)</span>
+<span class="lineno">  173 </span><span class="spaces"></span><span class="istickedoff">makeList _ = <span class="nottickedoff">error &quot;Out of bound Arg&quot;</span></span></span>
+<span class="lineno">  174 </span>
+<span class="lineno">  175 </span>-- | Get a Random Integer with uniform probability in the range [1,n]
+<span class="lineno">  176 </span>getRndMInt :: (Integer, Integer) -&gt; IO Integer
+<span class="lineno">  177 </span><span class="decl"><span class="istickedoff">getRndMInt (l, u) | <span class="tickonlytrue">l &lt;= u &amp;&amp; l &gt; 0</span> = max l . min u &lt;$&gt; uniformRM (l, u) globalStdGen</span>
+<span class="lineno">  178 </span><span class="spaces"></span><span class="istickedoff">getRndMInt _ = <span class="nottickedoff">error &quot;Malformed Range&quot;</span></span></span>
+<span class="lineno">  179 </span>
+<span class="lineno">  180 </span>infixr 1 &gt;=&gt;:
+<span class="lineno">  181 </span>
+<span class="lineno">  182 </span>-- | Left-to-right Kleisli composition of monads plus prepend elem to List using standard operators
+<span class="lineno">  183 </span>(&gt;=&gt;:) :: (Monad m) =&gt; (a -&gt; m b) -&gt; (b -&gt; m [b]) -&gt; (a -&gt; m [b])
+<span class="lineno">  184 </span><span class="decl"><span class="istickedoff">f &gt;=&gt;: g = f &gt;=&gt; \u -&gt; (u :) &lt;$&gt; g u</span></span>
+<span class="lineno">  185 </span>
+<span class="lineno">  186 </span>-- | True if input is prime or 1
+<span class="lineno">  187 </span>-- Primality testing is one key to peformance of this algo
+<span class="lineno">  188 </span>-- the isOdd and greater than 3 is for the use of bailliePSW primality 
+<span class="lineno">  189 </span>-- using bailliePSW in place of the standard isPrime leads to 75% reduction in time !!!
+<span class="lineno">  190 </span>isPrimeOr1 :: Integer -&gt; Bool
+<span class="lineno">  191 </span><span class="decl"><span class="istickedoff">isPrimeOr1 n | <span class="tickonlytrue">n &gt; 0</span> = (n == 1 || n == 3) || (n &gt; 3 &amp;&amp; isOdd n &amp;&amp; bailliePSW n) --bailliePSW requires that n &gt; 3 and that input is Odd</span>
+<span class="lineno">  192 </span><span class="spaces"></span><span class="istickedoff">isPrimeOr1 _ = <span class="nottickedoff">error &quot;Invalid Arg &quot;</span></span></span>
+<span class="lineno">  193 </span>
+<span class="lineno">  194 </span>-- | from Data.Function.predicate
+<span class="lineno">  195 </span>is :: (a -&gt; b) -&gt; (b -&gt; Bool) -&gt; (a -&gt; Bool)
+<span class="lineno">  196 </span><span class="decl"><span class="istickedoff">is = flip (.)</span></span>
+<span class="lineno">  197 </span>
+<span class="lineno">  198 </span>-- | @if then else@ made simpler
+<span class="lineno">  199 </span>if' :: Bool -&gt; b -&gt; b -&gt; b
+<span class="lineno">  200 </span><span class="decl"><span class="istickedoff">if' p u v</span>
+<span class="lineno">  201 </span><span class="spaces">  </span><span class="istickedoff">| p = u</span>
+<span class="lineno">  202 </span><span class="spaces">  </span><span class="istickedoff">| <span class="tickonlytrue">otherwise</span> = v</span></span>
+<span class="lineno">  203 </span>
+<span class="lineno">  204 </span>  -- | @isOdd an integer?
+<span class="lineno">  205 </span>isOdd :: Integer -&gt; Bool
+<span class="lineno">  206 </span><span class="decl"><span class="istickedoff">isOdd 0 = <span class="nottickedoff">error &quot;Not valid&quot;</span></span>
+<span class="lineno">  207 </span><span class="spaces"></span><span class="istickedoff">isOdd n = not (n `mod` 2 == 0)</span></span>
+<span class="lineno">  208 </span>
+<span class="lineno">  209 </span>-- | Helper function
+<span class="lineno">  210 </span>timeit :: IO a -&gt; IO (Maybe a, NominalDiffTime)
+<span class="lineno">  211 </span><span class="decl"><span class="nottickedoff">timeit action = do</span>
+<span class="lineno">  212 </span><span class="spaces">  </span><span class="nottickedoff">start &lt;- getCurrentTime</span>
+<span class="lineno">  213 </span><span class="spaces">  </span><span class="nottickedoff">value &lt;- action</span>
+<span class="lineno">  214 </span><span class="spaces">  </span><span class="nottickedoff">end &lt;- getCurrentTime</span>
+<span class="lineno">  215 </span><span class="spaces">  </span><span class="nottickedoff">pure (Just value, diffUTCTime end start)</span></span>
 
 </pre>
 </body>

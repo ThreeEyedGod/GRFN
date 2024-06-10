@@ -1,6 +1,5 @@
 import Data.Numbers.Primes (primeFactors, primes)
 import Data.Text (pack)
-import Data.Time.Clock
 import FactoredRandomNumbers (genARandomPreFactoredNumberLTEn, preFactoredNumOfBitSize, preFactoredNumOfBitSizePar)
 import System.IO.Error (isDoesNotExistError, tryIOError)
 import Test.Hspec (Spec, describe, hspec, it, shouldBe, shouldNotReturn, shouldReturn)
@@ -149,10 +148,4 @@ primeFactorsOr1 :: Integer -> [Integer]
 primeFactorsOr1 1 = [1]
 primeFactorsOr1 n = reverse (1 : primeFactors n)
 
--- | Helper function
-timeit :: IO a -> IO (Maybe a, NominalDiffTime)
-timeit action = do
-  start <- getCurrentTime
-  value <- action
-  end <- getCurrentTime
-  pure (Just value, diffUTCTime end start)
+

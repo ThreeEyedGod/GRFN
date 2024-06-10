@@ -68,6 +68,7 @@ import Control.Concurrent.Async (race)
 import qualified Data.Unamb (unamb, race)
 import Control.Parallel.Strategies (NFData, ($||))
 import qualified Control.Parallel.Strategies as S
+import Data.Time.Clock
 
 
 -- | Takes an Integer for Bitsize value to operate on range [2 ^ y, 2 ^ y + 1 - 1].  This function leverages parallel execution
@@ -148,15 +149,17 @@ genARandomPreFactoredNumberLTEn n = do
 
 -- | Provided an Integer List, throws up a candidate Int and its prime factors for further assessment
 filterPrimesProduct :: [Integer] -> (Integer, [Integer])
---filterPrimesProduct xs = result where result@(_, sq) = (product sq, filter isPrimeOr1 xs) -- note: product [] = 1
-filterPrimesProduct xs = result where result@(_, sq) = (product sq, onlyPrimes xs) -- note: product [] = 1
+filterPrimesProduct xs = result where result@(_, sq) = (product sq, onlyPrimesFrom xs) -- note: product [] = 1
 
 parFilter :: (NFData a) => Int -> (a -> Bool) -> [a] -> [a]
+--parFilter stratParm p = S.withStrategy (S.parListChunk stratParm S.rpar) . filter p
+--parFilter stratParm p = S.withStrategy (S.parBuffer stratParm S.rdeepseq S.rdeepseq) . filter p
 parFilter stratParm p = S.withStrategy (S.parListSplitAt stratParm S.rpar S.rpar) . filter p
 
 -- | parallel reduction of a composite list of integers into primefactors 
-onlyPrimes :: [Integer] -> [Integer]
-onlyPrimes xs = parFilter (length xs `div` 2) isPrimeOr1 xs
+onlyPrimesFrom :: [Integer] -> [Integer]
+onlyPrimesFrom xs = parFilter (length xs `div` 4) isPrimeOr1 xs
+--onlyPrimesFrom = filter isPrimeOr1
 
 -- | Provided an Integer, throws up a candidate Int and its factors for further assessment
 potentialResult :: Integer -> IO (Integer, [Integer])
@@ -202,3 +205,11 @@ if' p u v
 isOdd :: Integer -> Bool
 isOdd 0 = error "Not valid"
 isOdd n = not (n `mod` 2 == 0)
+
+-- | Helper function
+timeit :: IO a -> IO (Maybe a, NominalDiffTime)
+timeit action = do
+  start <- getCurrentTime
+  value <- action
+  end <- getCurrentTime
+  pure (Just value, diffUTCTime end start)
