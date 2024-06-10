@@ -58,12 +58,17 @@ import Protolude
     snd,
     (*),
     mod,
-    not
+    not,
+    length,
+    div,
   )
 import System.Random.Stateful (globalStdGen, uniformRM)
 import Prelude (error)
 import Control.Concurrent.Async (race)
 import qualified Data.Unamb (unamb, race)
+import Control.Parallel.Strategies (NFData, ($||))
+import qualified Control.Parallel.Strategies as S
+
 
 -- | Takes an Integer for Bitsize value to operate on range [2 ^ y, 2 ^ y + 1 - 1].  This function leverages parallel execution
 -- Provide an integer input and it should generate a tuple of a number in the range [2^y, 2^y+1 -1] and its prime factors
@@ -143,7 +148,15 @@ genARandomPreFactoredNumberLTEn n = do
 
 -- | Provided an Integer List, throws up a candidate Int and its prime factors for further assessment
 filterPrimesProduct :: [Integer] -> (Integer, [Integer])
-filterPrimesProduct xs = result where result@(_, sq) = (product sq, filter isPrimeOr1 xs) -- note: product [] = 1
+--filterPrimesProduct xs = result where result@(_, sq) = (product sq, filter isPrimeOr1 xs) -- note: product [] = 1
+filterPrimesProduct xs = result where result@(_, sq) = (product sq, onlyPrimes xs) -- note: product [] = 1
+
+parFilter :: (NFData a) => Int -> (a -> Bool) -> [a] -> [a]
+parFilter stratParm p = S.withStrategy (S.parListSplitAt stratParm S.rpar S.rpar) . filter p
+
+-- | parallel reduction of a composite list of integers into primefactors 
+onlyPrimes :: [Integer] -> [Integer]
+onlyPrimes xs = parFilter (length xs `div` 2) isPrimeOr1 xs
 
 -- | Provided an Integer, throws up a candidate Int and its factors for further assessment
 potentialResult :: Integer -> IO (Integer, [Integer])
