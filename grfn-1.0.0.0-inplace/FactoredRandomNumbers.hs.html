@@ -171,25 +171,25 @@ span.spaces    { background: white }
 <span class="lineno">  152 </span><span class="decl"><span class="istickedoff">filterPrimesProduct xs = result where result@(_, sq) = (product sq, onlyPrimesFrom xs)</span></span> -- note: product [] = 1
 <span class="lineno">  153 </span>
 <span class="lineno">  154 </span>parFilter :: (NFData a) =&gt; Int -&gt; (a -&gt; Bool) -&gt; [a] -&gt; [a]
-<span class="lineno">  155 </span><span class="decl"><span class="istickedoff">parFilter stratParm p = S.withStrategy (S.parListChunk stratParm S.rpar) . filter p</span></span>
+<span class="lineno">  155 </span><span class="decl"><span class="nottickedoff">parFilter stratParm p = S.withStrategy (S.parListChunk stratParm S.rdeepseq) . filter p</span></span>
 <span class="lineno">  156 </span>--34.5 parFilter stratParm p = S.withStrategy (S.parBuffer stratParm S.rdeepseq) . filter p
 <span class="lineno">  157 </span>--36.8 parFilter stratParm p = S.withStrategy (S.parListSplitAt stratParm S.rpar S.rpar) . filter p
 <span class="lineno">  158 </span>
 <span class="lineno">  159 </span>-- | parallel reduction of a composite list of integers into primefactors 
 <span class="lineno">  160 </span>onlyPrimesFrom :: [Integer] -&gt; [Integer]
-<span class="lineno">  161 </span><span class="decl"><span class="istickedoff">onlyPrimesFrom xs = parFilter (length xs `div` 3) isPrimeOr1 xs</span></span>
-<span class="lineno">  162 </span>--onlyPrimesFrom = filter isPrimeOr1
+<span class="lineno">  161 </span>--onlyPrimesFrom xs = parFilter (length xs `div` 3) isPrimeOr1 xs
+<span class="lineno">  162 </span><span class="decl"><span class="istickedoff">onlyPrimesFrom xs = filter isPrimeOr1 xs `S.using` S.parList S.rpar</span></span>
 <span class="lineno">  163 </span>
 <span class="lineno">  164 </span>-- | Provided an Integer, throws up a candidate Int and its factors for further assessment
 <span class="lineno">  165 </span>potentialResult :: Integer -&gt; IO (Integer, [Integer])
-<span class="lineno">  166 </span><span class="decl"><span class="istickedoff">potentialResult n = makeList n &lt;&amp;&gt; filterPrimesProduct</span></span>
+<span class="lineno">  166 </span><span class="decl"><span class="istickedoff">potentialResult n = mkList n &lt;&amp;&gt; filterPrimesProduct</span></span>
 <span class="lineno">  167 </span>
 <span class="lineno">  168 </span>-- | Provided an Integer, creates a sequence of random integers LTE n in decreasing order,
 <span class="lineno">  169 </span>-- possibly with multiples ending at a single 1
-<span class="lineno">  170 </span>makeList :: Integer -&gt; IO [Integer]
-<span class="lineno">  171 </span><span class="decl"><span class="istickedoff">makeList 1 = pure []</span>
-<span class="lineno">  172 </span><span class="spaces"></span><span class="istickedoff">makeList n | <span class="tickonlytrue">n &gt; 1</span> = (getRndMInt &gt;=&gt;: makeList) (1, n)</span>
-<span class="lineno">  173 </span><span class="spaces"></span><span class="istickedoff">makeList _ = <span class="nottickedoff">error &quot;Out of bound Arg&quot;</span></span></span>
+<span class="lineno">  170 </span>mkList :: Integer -&gt; IO [Integer]
+<span class="lineno">  171 </span><span class="decl"><span class="istickedoff">mkList 1 = pure []</span>
+<span class="lineno">  172 </span><span class="spaces"></span><span class="istickedoff">mkList n | <span class="tickonlytrue">n &gt; 1</span> = (getRndMInt &gt;=&gt;: mkList) (1, n)</span>
+<span class="lineno">  173 </span><span class="spaces"></span><span class="istickedoff">mkList _ = <span class="nottickedoff">error &quot;Out of bound Arg&quot;</span></span></span>
 <span class="lineno">  174 </span>
 <span class="lineno">  175 </span>-- | Get a Random Integer with uniform probability in the range [1,n]
 <span class="lineno">  176 </span>getRndMInt :: (Integer, Integer) -&gt; IO Integer

@@ -152,25 +152,25 @@ filterPrimesProduct :: [Integer] -> (Integer, [Integer])
 filterPrimesProduct xs = result where result@(_, sq) = (product sq, onlyPrimesFrom xs) -- note: product [] = 1
 
 parFilter :: (NFData a) => Int -> (a -> Bool) -> [a] -> [a]
-parFilter stratParm p = S.withStrategy (S.parListChunk stratParm S.rpar) . filter p
+parFilter stratParm p = S.withStrategy (S.parListChunk stratParm S.rdeepseq) . filter p
 --34.5 parFilter stratParm p = S.withStrategy (S.parBuffer stratParm S.rdeepseq) . filter p
 --36.8 parFilter stratParm p = S.withStrategy (S.parListSplitAt stratParm S.rpar S.rpar) . filter p
 
 -- | parallel reduction of a composite list of integers into primefactors 
 onlyPrimesFrom :: [Integer] -> [Integer]
-onlyPrimesFrom xs = parFilter (length xs `div` 3) isPrimeOr1 xs
---onlyPrimesFrom = filter isPrimeOr1
+--onlyPrimesFrom xs = parFilter (length xs `div` 3) isPrimeOr1 xs
+onlyPrimesFrom xs = filter isPrimeOr1 xs `S.using` S.parList S.rpar
 
 -- | Provided an Integer, throws up a candidate Int and its factors for further assessment
 potentialResult :: Integer -> IO (Integer, [Integer])
-potentialResult n = makeList n <&> filterPrimesProduct
+potentialResult n = mkList n <&> filterPrimesProduct
 
 -- | Provided an Integer, creates a sequence of random integers LTE n in decreasing order,
 -- possibly with multiples ending at a single 1
-makeList :: Integer -> IO [Integer]
-makeList 1 = pure []
-makeList n | n > 1 = (getRndMInt >=>: makeList) (1, n)
-makeList _ = error "Out of bound Arg"
+mkList :: Integer -> IO [Integer]
+mkList 1 = pure []
+mkList n | n > 1 = (getRndMInt >=>: mkList) (1, n)
+mkList _ = error "Out of bound Arg"
 
 -- | Get a Random Integer with uniform probability in the range [1,n]
 getRndMInt :: (Integer, Integer) -> IO Integer
