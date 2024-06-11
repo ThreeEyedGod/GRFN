@@ -17,16 +17,23 @@
 module FactoredRandomNumbers
   ( genARandomPreFactoredNumberLTEn,
     preFactoredNumOfBitSize,
-    preFactoredNumOfBitSizePar
+    preFactoredNumOfBitSizePar,
   )
 where
 
+-- isPrime is slower
+
+import Control.Concurrent.Async (race)
 import Control.Concurrent.ParallelIO.Local (parallelFirst, withPool)
 import Control.Monad.Loops (iterateWhile)
+import Control.Parallel.Strategies (NFData, ($||))
+import qualified Control.Parallel.Strategies as S
 import Data.Maybe (fromMaybe)
 import Data.Text (pack)
+import Data.Time.Clock
+import qualified Data.Unamb (race, unamb)
 import GHC.Conc (getNumCapabilities, getNumProcessors, setNumCapabilities)
-import Math.NumberTheory.Primes.Testing (isPrime, bailliePSW) --isPrime is slower
+import Math.NumberTheory.Primes.Testing (bailliePSW, isPrime)
 import Protolude
   ( Applicative (pure),
     Bool (False),
@@ -39,15 +46,22 @@ import Protolude
     Monad ((>>=)),
     Num ((+), (-)),
     Ord (max, min, (<), (<=), (>)),
+    Show,
     Text,
+    div,
     filter,
     flip,
     fst,
+    length,
+    mod,
+    not,
     otherwise,
     product,
     replicate,
+    snd,
     ($),
     (&&),
+    (*),
     (.),
     (<$>),
     (<&>),
@@ -55,21 +69,17 @@ import Protolude
     (>=>),
     (^),
     (||),
-    snd,
-    (*),
-    mod,
-    not,
-    length,
-    div,
+    maximum
   )
 import System.Random.Stateful (globalStdGen, uniformRM)
-import Prelude (error)
-import Control.Concurrent.Async (race)
-import qualified Data.Unamb (unamb, race)
-import Control.Parallel.Strategies (NFData, ($||))
-import qualified Control.Parallel.Strategies as S
-import Data.Time.Clock
+import Prelude (error, head)
 
+-- deriving Eq because in SpecHelper tests we are testing for equality
+data Strats
+  = Chunk
+  | Buffer
+  | Split
+  deriving (Eq, Show)
 
 -- | Takes an Integer for Bitsize value to operate on range [2 ^ y, 2 ^ y + 1 - 1].  This function leverages parallel execution
 -- Provide an integer input and it should generate a tuple of a number in the range [2^y, 2^y+1 -1] and its prime factors
@@ -84,8 +94,8 @@ preFactoredNumOfBitSizePar _ = pure $ Left $ pack "Invalid"
 preFactoredNumOfBitSizeParMaybe :: Integer -> IO (Maybe (Either Text (Integer, [Integer])))
 preFactoredNumOfBitSizeParMaybe 1 = pure $ Just $ Right (1, [1])
 preFactoredNumOfBitSizeParMaybe n | n > 1 = (snd <$> coresToUse) >>= spinUpThreads (preFactoredNumOfBitSize n)
---preFactoredNumOfBitSizeParMaybe n | n > 1 = (snd <$> coresToUse) >>= spinUpActions (preFactoredNumOfBitSize n)
---preFactoredNumOfBitSizeParMaybe n | n > 1 = (snd <$> coresToUse) >>= spinUpProcesses (preFactoredNumOfBitSize n)
+-- preFactoredNumOfBitSizeParMaybe n | n > 1 = (snd <$> coresToUse) >>= spinUpActions (preFactoredNumOfBitSize n)
+-- preFactoredNumOfBitSizeParMaybe n | n > 1 = (snd <$> coresToUse) >>= spinUpProcesses (preFactoredNumOfBitSize n)
 preFactoredNumOfBitSizeParMaybe _ = pure $ Just $ Left $ pack "Invalid"
 
 -- | Spin up t threads of function f in parallel and return what's executed first
@@ -102,27 +112,26 @@ spinUpProcesses f _ = raceJustU f
 
 -- | Convert async.race from Either-Or to Maybe
 raceJust :: IO a -> IO (Maybe a)
-raceJust a =  do 
-          r <- race a a
-          case r of 
-              Left u -> pure $ Just u 
-              Right v -> pure $ Just v
+raceJust a = do
+  r <- race a a
+  case r of
+    Left u -> pure $ Just u
+    Right v -> pure $ Just v
 
 -- | Convert Data.Unamb.race to Maybe
 raceJustU :: IO a -> IO (Maybe a)
 raceJustU a = Just <$> Data.Unamb.race a a
-  
--- | Compute cores to actually use when called. 
-coresToUse :: IO (Int,Int)
+
+-- | Compute cores to actually use when called.
+coresToUse :: IO (Int, Int)
 coresToUse = do
   nCores <- getNumProcessors
   nNumCapabilities <- getNumCapabilities
   let nEfficiencyCores = 4
-  setNumCapabilities $ max ((nCores-nEfficiencyCores) * 4) nNumCapabilities
+  setNumCapabilities $ max ((nCores - nEfficiencyCores) * 4) nNumCapabilities
   nNumCapabilitiesSet <- getNumCapabilities
   pure (nCores, nNumCapabilitiesSet)
 
-  
 -- | Takes an Integer as a Bitsize value to operate on range [2 ^ y, 2 ^ y + 1 - 1]
 -- Provide an integer input and it should generate a tuple of a number in the range [2^y, 2^y+1 -1] and its prime factors
 preFactoredNumOfBitSize :: Integer -> IO (Either Text (Integer, [Integer]))
@@ -151,15 +160,22 @@ genARandomPreFactoredNumberLTEn n = do
 filterPrimesProduct :: [Integer] -> (Integer, [Integer])
 filterPrimesProduct xs = result where result@(_, sq) = (product sq, onlyPrimesFrom xs) -- note: product [] = 1
 
-parFilter :: (NFData a) => Int -> (a -> Bool) -> [a] -> [a]
-parFilter stratParm p = S.withStrategy (S.parListChunk stratParm S.rdeepseq) . filter p
---34.5 parFilter stratParm p = S.withStrategy (S.parBuffer stratParm S.rdeepseq) . filter p
---36.8 parFilter stratParm p = S.withStrategy (S.parListSplitAt stratParm S.rpar S.rpar) . filter p
+parFilter :: (NFData a) => Strats -> Int -> (a -> Bool) -> [a] -> [a]
+parFilter strat stratParm p = case strat of 
+    Chunk -> S.withStrategy (S.parListChunk stratParm S.rdeepseq) . filter p
+    Buffer -> S.withStrategy (S.parBuffer stratParm S.rdeepseq) . filter p
+    Split -> S.withStrategy (S.parListSplitAt stratParm S.rpar S.rpar) . filter p
 
--- | parallel reduction of a composite list of integers into primefactors 
+-- | parallel reduction of a composite list of integers into primefactors
 onlyPrimesFrom :: [Integer] -> [Integer]
---onlyPrimesFrom xs = parFilter (length xs `div` 3) isPrimeOr1 xs
-onlyPrimesFrom xs = filter isPrimeOr1 xs `S.using` S.parList S.rpar
+onlyPrimesFrom xs
+  | head xs < 10^9 = filter isPrimeOr1 xs 
+  | head xs < 2^32 = parFilter Buffer (length xs `div` 3) isPrimeOr1 xs
+  | head xs < 2^62 = parFilter Chunk (length xs `div` 3) isPrimeOr1 xs
+  | otherwise = parFilter Split (length xs `div` 3) isPrimeOr1 xs
+
+-- onlyPrimesFrom xs = filter isPrimeOr1 xs
+-- onlyPrimesFrom xs = filter isPrimeOr1 xs `S.using` S.parList S.rpar
 
 -- | Provided an Integer, throws up a candidate Int and its factors for further assessment
 potentialResult :: Integer -> IO (Integer, [Integer])
@@ -185,10 +201,10 @@ f >=>: g = f >=> \u -> (u :) <$> g u
 
 -- | True if input is prime or 1
 -- Primality testing is one key to peformance of this algo
--- the isOdd and greater than 3 is for the use of bailliePSW primality 
+-- the isOdd and greater than 3 is for the use of bailliePSW primality
 -- using bailliePSW in place of the standard isPrime leads to 75% reduction in time !!!
 isPrimeOr1 :: Integer -> Bool
-isPrimeOr1 n | n > 0 = (n == 1 || n == 3) || (n > 3 && isOdd n && bailliePSW n) --bailliePSW requires that n > 3 and that input is Odd
+isPrimeOr1 n | n > 0 = (n == 1 || n == 3) || (n > 3 && isOdd n && bailliePSW n) -- bailliePSW requires that n > 3 and that input is Odd
 isPrimeOr1 _ = error "Invalid Arg "
 
 -- | from Data.Function.predicate
@@ -201,7 +217,7 @@ if' p u v
   | p = u
   | otherwise = v
 
-  -- | @isOdd an integer?
+-- \| @isOdd an integer?
 isOdd :: Integer -> Bool
 isOdd 0 = error "Not valid"
 isOdd n = not (n `mod` 2 == 0)

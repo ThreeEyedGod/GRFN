@@ -18,7 +18,7 @@ do_gendoc:
 
 do_benchmark:
 	@echo "creating benchmarks"
-	cabal bench --benchmark-options='--timeout 10000000' --benchmark-options="+RTS -T"
+	cabal bench --benchmark-options='--timeout 10000000' --benchmark-options='+RTS -I0 -A16m -N3 -H24m'
 	hpc report grfn-test 
 	hpc markup grfn-test
 

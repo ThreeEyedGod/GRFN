@@ -3,7 +3,7 @@ import Test.Tasty.Bench
 
 main :: IO ()
 main =
-  defaultMain
+  Test.Tasty.Bench.defaultMain
     [ 
       bgroup
         "PreFactored Uniform Random Numbers -Integers"

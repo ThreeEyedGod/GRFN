@@ -139,4 +139,4 @@ benchmark grfn-benchmark
                        -fproc-alignment=64 
                        -rtsopts
                        -threaded
-                       -with-rtsopts=-N2
+                       -with-rtsopts=-N4
