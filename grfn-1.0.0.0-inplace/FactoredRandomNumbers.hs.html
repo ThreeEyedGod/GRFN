@@ -64,59 +64,59 @@ span.spaces    { background: white }
 <span class="lineno">   45 </span>    Monad ((&gt;&gt;=)),
 <span class="lineno">   46 </span>    Num ((+), (-)),
 <span class="lineno">   47 </span>    Ord (max, min, (&lt;), (&lt;=), (&gt;)),
-<span class="lineno">   48 </span>    Show,
-<span class="lineno">   49 </span>    Text,
-<span class="lineno">   50 </span>    div,
-<span class="lineno">   51 </span>    filter,
-<span class="lineno">   52 </span>    flip,
-<span class="lineno">   53 </span>    fst,
-<span class="lineno">   54 </span>    length,
-<span class="lineno">   55 </span>    mod,
-<span class="lineno">   56 </span>    not,
-<span class="lineno">   57 </span>    otherwise,
-<span class="lineno">   58 </span>    product,
-<span class="lineno">   59 </span>    replicate,
-<span class="lineno">   60 </span>    snd,
-<span class="lineno">   61 </span>    ($),
-<span class="lineno">   62 </span>    (&amp;&amp;),
-<span class="lineno">   63 </span>    (*),
-<span class="lineno">   64 </span>    (.),
-<span class="lineno">   65 </span>    (&lt;$&gt;),
-<span class="lineno">   66 </span>    (&lt;&amp;&gt;),
-<span class="lineno">   67 </span>    (&lt;*&gt;),
-<span class="lineno">   68 </span>    (&gt;=&gt;),
-<span class="lineno">   69 </span>    (^),
-<span class="lineno">   70 </span>    (||),
-<span class="lineno">   71 </span>  )
-<span class="lineno">   72 </span>import System.Random.Stateful (globalStdGen, uniformRM)
-<span class="lineno">   73 </span>import Prelude (error, head)
-<span class="lineno">   74 </span>
-<span class="lineno">   75 </span>data Strats
-<span class="lineno">   76 </span>  = Chunk
-<span class="lineno">   77 </span>  | Buffer
-<span class="lineno">   78 </span>  | Split
-<span class="lineno">   79 </span>  deriving (<span class="decl"><span class="nottickedoff"><span class="decl"><span class="nottickedoff">Eq</span></span></span></span>)
-<span class="lineno">   80 </span>
-<span class="lineno">   81 </span>-- | Takes an Integer for Bitsize value to operate on range [2 ^ y, 2 ^ y + 1 - 1].  This function leverages parallel execution
-<span class="lineno">   82 </span>-- Provide an integer input and it should generate a tuple of a number in the range [2^y, 2^y+1 -1] and its prime factors
-<span class="lineno">   83 </span>-- In the event that the parallel call fails and return Nothing, a recovery through a non-parallel call is attempted.
-<span class="lineno">   84 </span>preFactoredNumOfBitSizePar :: Integer -&gt; IO (Either Text (Integer, [Integer]))
-<span class="lineno">   85 </span><span class="decl"><span class="istickedoff">preFactoredNumOfBitSizePar 1 = <span class="nottickedoff">pure $ Right (1, [1])</span></span>
-<span class="lineno">   86 </span><span class="spaces"></span><span class="istickedoff">preFactoredNumOfBitSizePar n | <span class="tickonlytrue">n &gt; 1</span> = fromMaybe &lt;$&gt; preFactoredNumOfBitSize n &lt;*&gt; preFactoredNumOfBitSizeParMaybe n</span>
-<span class="lineno">   87 </span><span class="spaces"></span><span class="istickedoff">preFactoredNumOfBitSizePar _ = <span class="nottickedoff">pure $ Left $ pack &quot;Invalid&quot;</span></span></span>
-<span class="lineno">   88 </span>
-<span class="lineno">   89 </span>-- | Failable Parallel preFactored Number given BitSize
-<span class="lineno">   90 </span>-- Provide an integer input and it should generate a tuple of a number in the range [2^y, 2^y+1 -1] and its prime factors
-<span class="lineno">   91 </span>preFactoredNumOfBitSizeParMaybe :: Integer -&gt; IO (Maybe (Either Text (Integer, [Integer])))
-<span class="lineno">   92 </span><span class="decl"><span class="istickedoff">preFactoredNumOfBitSizeParMaybe 1 = <span class="nottickedoff">pure $ Just $ Right (1, [1])</span></span>
-<span class="lineno">   93 </span><span class="spaces"></span><span class="istickedoff">preFactoredNumOfBitSizeParMaybe n | <span class="tickonlytrue">n &gt; 1</span> = (snd &lt;$&gt; coresToUse) &gt;&gt;= spinUpThreads (preFactoredNumOfBitSize n)</span>
+<span class="lineno">   48 </span>    Text,
+<span class="lineno">   49 </span>    div,
+<span class="lineno">   50 </span>    filter,
+<span class="lineno">   51 </span>    flip,
+<span class="lineno">   52 </span>    fst,
+<span class="lineno">   53 </span>    length,
+<span class="lineno">   54 </span>    mod,
+<span class="lineno">   55 </span>    not,
+<span class="lineno">   56 </span>    otherwise,
+<span class="lineno">   57 </span>    product,
+<span class="lineno">   58 </span>    replicate,
+<span class="lineno">   59 </span>    snd,
+<span class="lineno">   60 </span>    ($),
+<span class="lineno">   61 </span>    (&amp;&amp;),
+<span class="lineno">   62 </span>    (*),
+<span class="lineno">   63 </span>    (.),
+<span class="lineno">   64 </span>    (&lt;$&gt;),
+<span class="lineno">   65 </span>    (&lt;&amp;&gt;),
+<span class="lineno">   66 </span>    (&lt;*&gt;),
+<span class="lineno">   67 </span>    (&gt;=&gt;),
+<span class="lineno">   68 </span>    (^),
+<span class="lineno">   69 </span>    (||),
+<span class="lineno">   70 </span>  )
+<span class="lineno">   71 </span>import System.Random.Stateful (globalStdGen, uniformRM)
+<span class="lineno">   72 </span>import Prelude (error, head)
+<span class="lineno">   73 </span>
+<span class="lineno">   74 </span>data Strats
+<span class="lineno">   75 </span>  = Chunk
+<span class="lineno">   76 </span>  | Buffer
+<span class="lineno">   77 </span>  | Split
+<span class="lineno">   78 </span>  deriving (<span class="decl"><span class="nottickedoff"><span class="decl"><span class="nottickedoff">Eq</span></span></span></span>)
+<span class="lineno">   79 </span>
+<span class="lineno">   80 </span>-- | Takes an Integer for Bitsize value to operate on range [2 ^ y, 2 ^ y + 1 - 1].  This function leverages parallel execution
+<span class="lineno">   81 </span>-- Provide an integer input and it should generate a tuple of a number in the range [2^y, 2^y+1 -1] and its prime factors
+<span class="lineno">   82 </span>-- In the event that the parallel call fails and return Nothing, a recovery through a non-parallel call is attempted.
+<span class="lineno">   83 </span>preFactoredNumOfBitSizePar :: Integer -&gt; IO (Either Text (Integer, [Integer]))
+<span class="lineno">   84 </span><span class="decl"><span class="istickedoff">preFactoredNumOfBitSizePar 1 = <span class="nottickedoff">pure $ Right (1, [1])</span></span>
+<span class="lineno">   85 </span><span class="spaces"></span><span class="istickedoff">preFactoredNumOfBitSizePar n | <span class="tickonlytrue">n &gt; 1</span> = fromMaybe &lt;$&gt; preFactoredNumOfBitSize n &lt;*&gt; preFactoredNumOfBitSizeParMaybe n</span>
+<span class="lineno">   86 </span><span class="spaces"></span><span class="istickedoff">preFactoredNumOfBitSizePar _ = <span class="nottickedoff">pure $ Left $ pack &quot;Invalid&quot;</span></span></span>
+<span class="lineno">   87 </span>
+<span class="lineno">   88 </span>-- | Failable Parallel preFactored Number given BitSize
+<span class="lineno">   89 </span>-- Provide an integer input and it should generate a tuple of a number in the range [2^y, 2^y+1 -1] and its prime factors
+<span class="lineno">   90 </span>preFactoredNumOfBitSizeParMaybe :: Integer -&gt; IO (Maybe (Either Text (Integer, [Integer])))
+<span class="lineno">   91 </span><span class="decl"><span class="istickedoff">preFactoredNumOfBitSizeParMaybe 1 = <span class="nottickedoff">pure $ Just $ Right (1, [1])</span></span>
+<span class="lineno">   92 </span><span class="spaces"></span><span class="istickedoff">preFactoredNumOfBitSizeParMaybe n | <span class="tickonlytrue">n &gt; 1 &amp;&amp; n &lt; 10 ^ 9</span> = Just &lt;$&gt; preFactoredNumOfBitSize n</span>
+<span class="lineno">   93 </span><span class="spaces"></span><span class="istickedoff">preFactoredNumOfBitSizeParMaybe n | <span class="nottickedoff">n &gt; 1</span> = <span class="nottickedoff">(snd &lt;$&gt; coresToUse) &gt;&gt;= spinUpThreads (preFactoredNumOfBitSize n)</span></span>
 <span class="lineno">   94 </span><span class="spaces"></span><span class="istickedoff">--preFactoredNumOfBitSizeParMaybe n | n &gt; 1 = (snd &lt;$&gt; coresToUse) &gt;&gt;= spinUpActions (preFactoredNumOfBitSize n)</span>
 <span class="lineno">   95 </span><span class="spaces"></span><span class="istickedoff">--preFactoredNumOfBitSizeParMaybe n | n &gt; 1 = (snd &lt;$&gt; coresToUse) &gt;&gt;= spinUpForks (preFactoredNumOfBitSize n)</span>
 <span class="lineno">   96 </span><span class="spaces"></span><span class="istickedoff">preFactoredNumOfBitSizeParMaybe _ = <span class="nottickedoff">pure $ Just $ Left $ pack &quot;Invalid&quot;</span></span></span>
 <span class="lineno">   97 </span>
 <span class="lineno">   98 </span>-- | Spin up t threads of function f in parallel and return what's executed first
 <span class="lineno">   99 </span>spinUpThreads :: IO a -&gt; Int -&gt; IO (Maybe a)
-<span class="lineno">  100 </span><span class="decl"><span class="istickedoff">spinUpThreads f t = withPool t $ \pool -&gt; parallelFirst pool $ replicate t (Just &lt;$&gt; f)</span></span>
+<span class="lineno">  100 </span><span class="decl"><span class="nottickedoff">spinUpThreads f t = withPool t $ \pool -&gt; parallelFirst pool $ replicate t (Just &lt;$&gt; f)</span></span>
 <span class="lineno">  101 </span>
 <span class="lineno">  102 </span>-- | Spin up t actions of function f in parallel and return what's executed first
 <span class="lineno">  103 </span>-- for now ignore t
@@ -140,13 +140,13 @@ span.spaces    { background: white }
 <span class="lineno">  121 </span>
 <span class="lineno">  122 </span>-- | Compute cores to actually use when called.
 <span class="lineno">  123 </span>coresToUse :: IO (Int, Int)
-<span class="lineno">  124 </span><span class="decl"><span class="istickedoff">coresToUse = do</span>
-<span class="lineno">  125 </span><span class="spaces">  </span><span class="istickedoff">nCores &lt;- getNumProcessors</span>
-<span class="lineno">  126 </span><span class="spaces">  </span><span class="istickedoff">nNumCapabilities &lt;- getNumCapabilities</span>
-<span class="lineno">  127 </span><span class="spaces">  </span><span class="istickedoff">let nEfficiencyCores = 4 -- //TODO is there a system function to detect this ?</span>
-<span class="lineno">  128 </span><span class="spaces">  </span><span class="istickedoff">setNumCapabilities $ max ((nCores - nEfficiencyCores) * 4) nNumCapabilities</span>
-<span class="lineno">  129 </span><span class="spaces">  </span><span class="istickedoff">nNumCapabilitiesSet &lt;- getNumCapabilities</span>
-<span class="lineno">  130 </span><span class="spaces">  </span><span class="istickedoff">pure (<span class="nottickedoff">nCores</span>, nNumCapabilitiesSet)</span></span>
+<span class="lineno">  124 </span><span class="decl"><span class="nottickedoff">coresToUse = do</span>
+<span class="lineno">  125 </span><span class="spaces">  </span><span class="nottickedoff">nCores &lt;- getNumProcessors</span>
+<span class="lineno">  126 </span><span class="spaces">  </span><span class="nottickedoff">nNumCapabilities &lt;- getNumCapabilities</span>
+<span class="lineno">  127 </span><span class="spaces">  </span><span class="nottickedoff">let nEfficiencyCores = 4 -- //TODO is there a system function to detect this ?</span>
+<span class="lineno">  128 </span><span class="spaces">  </span><span class="nottickedoff">setNumCapabilities $ max ((nCores - nEfficiencyCores) * 4) nNumCapabilities</span>
+<span class="lineno">  129 </span><span class="spaces">  </span><span class="nottickedoff">nNumCapabilitiesSet &lt;- getNumCapabilities</span>
+<span class="lineno">  130 </span><span class="spaces">  </span><span class="nottickedoff">pure (nCores, nNumCapabilitiesSet)</span></span>
 <span class="lineno">  131 </span>
 <span class="lineno">  132 </span>-- | Takes an Integer as a Bitsize value to operate on range [2 ^ y, 2 ^ y + 1 - 1]
 <span class="lineno">  133 </span>-- Provide an integer input and it should generate a tuple of a number in the range [2^y, 2^y+1 -1] and its prime factors
@@ -178,17 +178,17 @@ span.spaces    { background: white }
 <span class="lineno">  159 </span>
 <span class="lineno">  160 </span>-- | parallel filter based on 3 different strategies 
 <span class="lineno">  161 </span>parFilter :: (NFData a) =&gt; Strats -&gt; Int -&gt; (a -&gt; Bool) -&gt; [a] -&gt; [a]
-<span class="lineno">  162 </span><span class="decl"><span class="istickedoff">parFilter strat stratParm p = case strat of</span>
-<span class="lineno">  163 </span><span class="spaces">  </span><span class="istickedoff">Chunk -&gt; <span class="nottickedoff">S.withStrategy (S.parListChunk stratParm S.rdeepseq) . filter p</span></span>
-<span class="lineno">  164 </span><span class="spaces">  </span><span class="istickedoff">Buffer -&gt; <span class="nottickedoff">S.withStrategy (S.parBuffer stratParm S.rdeepseq) . filter p</span></span>
-<span class="lineno">  165 </span><span class="spaces">  </span><span class="istickedoff">Split -&gt; S.withStrategy (S.parListSplitAt stratParm S.rpar S.rdeepseq) . filter p</span></span>
+<span class="lineno">  162 </span><span class="decl"><span class="nottickedoff">parFilter strat stratParm p = case strat of</span>
+<span class="lineno">  163 </span><span class="spaces">  </span><span class="nottickedoff">Chunk -&gt; S.withStrategy (S.parListChunk stratParm S.rdeepseq) . filter p</span>
+<span class="lineno">  164 </span><span class="spaces">  </span><span class="nottickedoff">Buffer -&gt; S.withStrategy (S.parBuffer stratParm S.rdeepseq) . filter p</span>
+<span class="lineno">  165 </span><span class="spaces">  </span><span class="nottickedoff">Split -&gt; S.withStrategy (S.parListSplitAt stratParm S.rpar S.rdeepseq) . filter p</span></span>
 <span class="lineno">  166 </span>
 <span class="lineno">  167 </span>-- | parallel reduction of a composite list of integers into primefactors
 <span class="lineno">  168 </span>-- select the strategy based on the size range 
 <span class="lineno">  169 </span>onlyPrimesFrom :: [Integer] -&gt; [Integer]
 <span class="lineno">  170 </span><span class="decl"><span class="istickedoff">onlyPrimesFrom xs</span>
-<span class="lineno">  171 </span><span class="spaces">  </span><span class="istickedoff">| head xs &lt; 10 ^ 9 = filter isPrimeOr1 xs </span>
-<span class="lineno">  172 </span><span class="spaces">  </span><span class="istickedoff">| <span class="tickonlytrue">otherwise</span> = parFilter Split (length xs `div` 3) isPrimeOr1 xs</span></span> 
+<span class="lineno">  171 </span><span class="spaces">  </span><span class="istickedoff">| <span class="tickonlytrue">head xs &lt; 10 ^ 9</span> = filter isPrimeOr1 xs </span>
+<span class="lineno">  172 </span><span class="spaces">  </span><span class="istickedoff">| <span class="nottickedoff">otherwise</span> = <span class="nottickedoff">parFilter Split (length xs `div` 3) isPrimeOr1 xs</span></span></span> 
 <span class="lineno">  173 </span>-- assuming the first 3rd of the list being larger numbers and is as heavy as the residual 2/3rd
 <span class="lineno">  174 </span>
 <span class="lineno">  175 </span>-- | Provided an Integer, throws up a candidate Int and its factors for further assessment

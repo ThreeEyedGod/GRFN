@@ -45,7 +45,6 @@ import Protolude
     Monad ((>>=)),
     Num ((+), (-)),
     Ord (max, min, (<), (<=), (>)),
-    Show,
     Text,
     div,
     filter,
@@ -90,6 +89,7 @@ preFactoredNumOfBitSizePar _ = pure $ Left $ pack "Invalid"
 -- Provide an integer input and it should generate a tuple of a number in the range [2^y, 2^y+1 -1] and its prime factors
 preFactoredNumOfBitSizeParMaybe :: Integer -> IO (Maybe (Either Text (Integer, [Integer])))
 preFactoredNumOfBitSizeParMaybe 1 = pure $ Just $ Right (1, [1])
+preFactoredNumOfBitSizeParMaybe n | n > 1 && n < 10 ^ 9 = Just <$> preFactoredNumOfBitSize n
 preFactoredNumOfBitSizeParMaybe n | n > 1 = (snd <$> coresToUse) >>= spinUpThreads (preFactoredNumOfBitSize n)
 --preFactoredNumOfBitSizeParMaybe n | n > 1 = (snd <$> coresToUse) >>= spinUpActions (preFactoredNumOfBitSize n)
 --preFactoredNumOfBitSizeParMaybe n | n > 1 = (snd <$> coresToUse) >>= spinUpForks (preFactoredNumOfBitSize n)
