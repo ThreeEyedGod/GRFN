@@ -15,10 +15,10 @@ The Adam Kalai algorithm itself is an easier (but less efficient) version of [Er
 Synopsis
 ---------
 ### Highlights
-**Refactored to use Kleisli + applicative**; **Parallelised version available** Property Testing (QuickCheck), [Stan](https://hackage.haskell.org/package/stan) for Static analysis
+**Uses Kleisli + applicative**; **Parallelized and Concurrency for performance** ** Property Testing (QuickCheck), [Stan](https://hackage.haskell.org/package/stan) for Static analysis
 
 ### Standard
-hlint; github actions, IDE:Cursor+hoogle-vscode+ormolu ; Haddock ; makefile; Benchmark (tasty) Used Formal Verification using Refinement Types (LiquidHaskell) during development ; HPC code coverage enabled; stack profiling (.prof)
+hlint; github actions, IDE:Cursor+hoogle-vscode+ormolu ; Haddock ; makefile; Benchmark (tasty) Used Formal Verification using Refinement Types (LiquidHaskell) during development ; HPC code coverage enabled; cabal/stack profiling (.prof)
 
 Issues
 -------

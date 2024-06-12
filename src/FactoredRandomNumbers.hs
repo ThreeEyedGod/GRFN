@@ -21,8 +21,6 @@ module FactoredRandomNumbers
   )
 where
 
--- isPrime is slower
-
 import Control.Concurrent.Async (race)
 import Control.Concurrent.ParallelIO.Local (parallelFirst, withPool)
 import Control.Monad.Loops (iterateWhile)
@@ -32,7 +30,7 @@ import Data.Maybe (fromMaybe)
 import Data.Text (pack)
 import qualified Data.Unamb (race)
 import GHC.Conc (getNumCapabilities, getNumProcessors, setNumCapabilities)
-import Math.NumberTheory.Primes.Testing (bailliePSW)
+import Math.NumberTheory.Primes.Testing (bailliePSW) -- isPrime is slower
 import Protolude
   ( Applicative (pure),
     Bool (False),
@@ -91,8 +89,6 @@ preFactoredNumOfBitSizeParMaybe :: Integer -> IO (Maybe (Either Text (Integer, [
 preFactoredNumOfBitSizeParMaybe 1 = pure $ Just $ Right (1, [1])
 preFactoredNumOfBitSizeParMaybe n | n > 1 && n < 10 ^ 9 = Just <$> preFactoredNumOfBitSize n
 preFactoredNumOfBitSizeParMaybe n | n > 1 = (snd <$> coresToUse) >>= spinUpThreads (preFactoredNumOfBitSize n)
---preFactoredNumOfBitSizeParMaybe n | n > 1 = (snd <$> coresToUse) >>= spinUpActions (preFactoredNumOfBitSize n)
---preFactoredNumOfBitSizeParMaybe n | n > 1 = (snd <$> coresToUse) >>= spinUpForks (preFactoredNumOfBitSize n)
 preFactoredNumOfBitSizeParMaybe _ = pure $ Just $ Left $ pack "Invalid"
 
 -- | Spin up t threads of function f in parallel and return what's executed first
@@ -157,7 +153,7 @@ genARandomPreFactoredNumberLTEn n = do
 filterPrimesProduct :: [Integer] -> (Integer, [Integer])
 filterPrimesProduct xs = result where result@(_, sq) = (product sq, onlyPrimesFrom xs) -- note: product [] = 1
 
--- | parallel filter based on 3 different strategies 
+-- | parallel filter based on 3 different strategies
 parFilter :: (NFData a) => Strats -> Int -> (a -> Bool) -> [a] -> [a]
 parFilter strat stratParm p = case strat of
   Chunk -> S.withStrategy (S.parListChunk stratParm S.rdeepseq) . filter p
@@ -165,12 +161,13 @@ parFilter strat stratParm p = case strat of
   Split -> S.withStrategy (S.parListSplitAt stratParm S.rpar S.rdeepseq) . filter p
 
 -- | parallel reduction of a composite list of integers into primefactors
--- select the strategy based on the size range 
+-- select the strategy based on the size range
 onlyPrimesFrom :: [Integer] -> [Integer]
 onlyPrimesFrom xs
-  | head xs < 10 ^ 9 = filter isPrimeOr1 xs 
-  | otherwise = parFilter Split (length xs `div` 3) isPrimeOr1 xs 
--- assuming the first 3rd of the list being larger numbers and is as heavy as the residual 2/3rd
+  | head xs < 10 ^ 9 = filter isPrimeOr1 xs
+  | otherwise = parFilter Split (length xs `div` 3) isPrimeOr1 xs
+
+-- assuming the first 3rd of the list comprise larger numbers and their processing workload = the residual 2/3rd
 
 -- | Provided an Integer, throws up a candidate Int and its factors for further assessment
 potentialResult :: Integer -> IO (Integer, [Integer])

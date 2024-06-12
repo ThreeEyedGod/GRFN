@@ -6,6 +6,7 @@ dist-newstyle/cache
 dist-newstyle/packagedb
 dist-newstyle/tmp
 dist-newstyle/build/aarch64-osx/ghc-9.6.5/grfn-1.0.0.0/*
+dist-newstyle/build/aarch64-osx/ghc-9.6.5/grfn-1.0.0.0/*.* 
 !/dist-newstyle/build/aarch64-osx/ghc-9.6.5/grfn-1.0.0.0/doc
 cabal-dev
 *.o
