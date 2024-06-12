@@ -72,12 +72,11 @@ import Protolude
 import System.Random.Stateful (globalStdGen, uniformRM)
 import Prelude (error, head)
 
--- deriving Eq because in SpecHelper tests we are testing for equality
 data Strats
   = Chunk
   | Buffer
   | Split
-  deriving (Eq, Show)
+  deriving (Eq)
 
 -- | Takes an Integer for Bitsize value to operate on range [2 ^ y, 2 ^ y + 1 - 1].  This function leverages parallel execution
 -- Provide an integer input and it should generate a tuple of a number in the range [2^y, 2^y+1 -1] and its prime factors
@@ -93,7 +92,7 @@ preFactoredNumOfBitSizeParMaybe :: Integer -> IO (Maybe (Either Text (Integer, [
 preFactoredNumOfBitSizeParMaybe 1 = pure $ Just $ Right (1, [1])
 preFactoredNumOfBitSizeParMaybe n | n > 1 = (snd <$> coresToUse) >>= spinUpThreads (preFactoredNumOfBitSize n)
 --preFactoredNumOfBitSizeParMaybe n | n > 1 = (snd <$> coresToUse) >>= spinUpActions (preFactoredNumOfBitSize n)
---preFactoredNumOfBitSizeParMaybe n | n > 1 = (snd <$> coresToUse) >>= spinUpProcesses (preFactoredNumOfBitSize n)
+--preFactoredNumOfBitSizeParMaybe n | n > 1 = (snd <$> coresToUse) >>= spinUpForks (preFactoredNumOfBitSize n)
 preFactoredNumOfBitSizeParMaybe _ = pure $ Just $ Left $ pack "Invalid"
 
 -- | Spin up t threads of function f in parallel and return what's executed first
@@ -105,8 +104,8 @@ spinUpThreads f t = withPool t $ \pool -> parallelFirst pool $ replicate t (Just
 spinUpActions :: IO a -> Int -> IO (Maybe a)
 spinUpActions f _ = raceJust f
 
-spinUpProcesses :: IO a -> Int -> IO (Maybe a)
-spinUpProcesses f _ = raceJustU f
+spinUpForks :: IO a -> Int -> IO (Maybe a)
+spinUpForks f _ = raceJustU f
 
 -- | Convert async.race from Either-Or to Maybe
 raceJust :: IO a -> IO (Maybe a)
@@ -125,7 +124,7 @@ coresToUse :: IO (Int, Int)
 coresToUse = do
   nCores <- getNumProcessors
   nNumCapabilities <- getNumCapabilities
-  let nEfficiencyCores = 4
+  let nEfficiencyCores = 4 -- //TODO is there a system function to detect this ?
   setNumCapabilities $ max ((nCores - nEfficiencyCores) * 4) nNumCapabilities
   nNumCapabilitiesSet <- getNumCapabilities
   pure (nCores, nNumCapabilitiesSet)
@@ -158,23 +157,20 @@ genARandomPreFactoredNumberLTEn n = do
 filterPrimesProduct :: [Integer] -> (Integer, [Integer])
 filterPrimesProduct xs = result where result@(_, sq) = (product sq, onlyPrimesFrom xs) -- note: product [] = 1
 
+-- | parallel filter based on 3 different strategies 
 parFilter :: (NFData a) => Strats -> Int -> (a -> Bool) -> [a] -> [a]
 parFilter strat stratParm p = case strat of
   Chunk -> S.withStrategy (S.parListChunk stratParm S.rdeepseq) . filter p
   Buffer -> S.withStrategy (S.parBuffer stratParm S.rdeepseq) . filter p
-  Split -> S.withStrategy (S.parListSplitAt stratParm S.rpar S.rpar) . filter p
+  Split -> S.withStrategy (S.parListSplitAt stratParm S.rpar S.rdeepseq) . filter p
 
 -- | parallel reduction of a composite list of integers into primefactors
--- select the strategy based on the size range to be built in
+-- select the strategy based on the size range 
 onlyPrimesFrom :: [Integer] -> [Integer]
 onlyPrimesFrom xs
-  | head xs < 10 ^ 9 = filter isPrimeOr1 xs
-  | head xs < 2 ^ 32 = parFilter Buffer (length xs `div` 2) isPrimeOr1 xs
-  | head xs < 2 ^ 62 = parFilter Chunk (length xs `div` 3) isPrimeOr1 xs
-  | otherwise = parFilter Split (length xs `div` 3) isPrimeOr1 xs
-
--- onlyPrimesFrom xs = filter isPrimeOr1 xs
--- onlyPrimesFrom xs = filter isPrimeOr1 xs `S.using` S.parList S.rpar
+  | head xs < 10 ^ 9 = filter isPrimeOr1 xs 
+  | otherwise = parFilter Split (length xs `div` 3) isPrimeOr1 xs 
+-- assuming the first 3rd of the list being larger numbers and is as heavy as the residual 2/3rd
 
 -- | Provided an Integer, throws up a candidate Int and its factors for further assessment
 potentialResult :: Integer -> IO (Integer, [Integer])
@@ -210,13 +206,13 @@ isPrimeOr1 _ = error "Invalid Arg "
 is :: (a -> b) -> (b -> Bool) -> (a -> Bool)
 is = flip (.)
 
--- | @if then else@ made simpler
+-- | @if then else@ made concise
 if' :: Bool -> b -> b -> b
 if' p u v
   | p = u
   | otherwise = v
 
--- \| @isOdd an integer?
+-- | @isOdd Integer?
 isOdd :: Integer -> Bool
 isOdd 0 = error "Not valid"
 isOdd n = not (n `mod` 2 == 0)

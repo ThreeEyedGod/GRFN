@@ -17,7 +17,7 @@ main = do
   putStrLn "Plus Parallel threads/actions/processes-90+"
   y <- timeit (preFactoredNumOfBitSizePar sizeExponent)
   print y 
-  putStrLn "90 Hyper-Parallel more efficient than Reg by" 
+  putStrLn "Numer of times 90 Hyper-Parallel slower than Reg " 
   print $ snd y / snd x
   putStrLn "------------"
 
@@ -27,7 +27,7 @@ main = do
   putStrLn "Plus Parallel threads/actions/processes-45"
   y1 <- timeit (preFactoredNumOfBitSizePar $ sizeExponent `div` 2)
   print y1 
-  putStrLn "45 Hyper-Parallel more efficient than Reg by"
+  putStrLn "Number of times 45 Hyper-Parallel slower  than Reg"
   print $ snd y1 / snd x1
   putStrLn "------------"
 
@@ -37,7 +37,7 @@ main = do
   putStrLn "Plus Parallel threads/actions/processes-20"
   y2 <- timeit (preFactoredNumOfBitSizePar $ sizeExponent `div` 4)
   print y2
-  putStrLn "20 Hyper-Parallel more efficient than Reg by"
+  putStrLn "Nunmber of times 20 Hyper-Parallel slower than Reg by"
   print $ snd y2 / snd x2
   putStrLn "------------"
 
