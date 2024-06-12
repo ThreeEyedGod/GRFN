@@ -26,14 +26,13 @@ where
 import Control.Concurrent.Async (race)
 import Control.Concurrent.ParallelIO.Local (parallelFirst, withPool)
 import Control.Monad.Loops (iterateWhile)
-import Control.Parallel.Strategies (NFData, ($||))
+import Control.Parallel.Strategies (NFData)
 import qualified Control.Parallel.Strategies as S
 import Data.Maybe (fromMaybe)
 import Data.Text (pack)
-import Data.Time.Clock
-import qualified Data.Unamb (race, unamb)
+import qualified Data.Unamb (race)
 import GHC.Conc (getNumCapabilities, getNumProcessors, setNumCapabilities)
-import Math.NumberTheory.Primes.Testing (bailliePSW, isPrime)
+import Math.NumberTheory.Primes.Testing (bailliePSW)
 import Protolude
   ( Applicative (pure),
     Bool (False),
@@ -69,7 +68,6 @@ import Protolude
     (>=>),
     (^),
     (||),
-    maximum
   )
 import System.Random.Stateful (globalStdGen, uniformRM)
 import Prelude (error, head)
@@ -167,10 +165,11 @@ parFilter strat stratParm p = case strat of
     Split -> S.withStrategy (S.parListSplitAt stratParm S.rpar S.rpar) . filter p
 
 -- | parallel reduction of a composite list of integers into primefactors
+-- select the strategy based on the size range to be built in
 onlyPrimesFrom :: [Integer] -> [Integer]
 onlyPrimesFrom xs
   | head xs < 10^9 = filter isPrimeOr1 xs 
-  | head xs < 2^32 = parFilter Buffer (length xs `div` 3) isPrimeOr1 xs
+  | head xs < 2^32 = parFilter Buffer (length xs `div` 2) isPrimeOr1 xs
   | head xs < 2^62 = parFilter Chunk (length xs `div` 3) isPrimeOr1 xs
   | otherwise = parFilter Split (length xs `div` 3) isPrimeOr1 xs
 
@@ -222,10 +221,3 @@ isOdd :: Integer -> Bool
 isOdd 0 = error "Not valid"
 isOdd n = not (n `mod` 2 == 0)
 
--- | Helper function
-timeit :: IO a -> IO (Maybe a, NominalDiffTime)
-timeit action = do
-  start <- getCurrentTime
-  value <- action
-  end <- getCurrentTime
-  pure (Just value, diffUTCTime end start)

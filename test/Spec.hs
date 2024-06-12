@@ -1,8 +1,7 @@
 import Data.Numbers.Primes (primeFactors, primes)
 import Data.Text (pack)
-import FactoredRandomNumbers (genARandomPreFactoredNumberLTEn, preFactoredNumOfBitSize, preFactoredNumOfBitSizePar)
-import System.IO.Error (isDoesNotExistError, tryIOError)
-import Test.Hspec (Spec, describe, hspec, it, shouldBe, shouldNotReturn, shouldReturn)
+import FactoredRandomNumbers
+import Test.Hspec (Spec, describe, hspec)
 import Test.Hspec.Core.QuickCheck (modifyMaxDiscardRatio, modifyMaxSuccess)
 import Test.Hspec.QuickCheck (prop)
 import Test.QuickCheck (Arbitrary, Args (..), Gen, Negative (..), NonNegative (..), Positive (..), Property, arbitrary, chatty, choose, classify, collect, counterexample, cover, elements, expectFailure, forAll, forAllProperties, listOf, printTestCase, quickCheck, quickCheckWithResult, suchThat, verbose, verboseCheckWithResult, withMaxSuccess, (==>))
@@ -11,18 +10,6 @@ import Test.QuickCheck.Monadic (assert, monadicIO, run)
 main :: IO ()
 main = hspec $ do
   libH
-
--- Rigorous test arguments. unused as of now
-rigorousArgs :: Args
-rigorousArgs =
-  Args
-    { replay = Nothing,
-      maxSuccess = 100, -- tests to run
-      maxDiscardRatio = 5, -- the number of tests that are thrown out and ignored b/c of "==>" conditions, before "giving up" and failing due to too many discarded tests
-      maxSize = 10, -- if a prop_ function uses a list ([]) type, maxSize is the max length of the randomly generated list
-      chatty = True,
-      maxShrinks = 5
-    }
 
 libH :: Spec
 libH = describe "All Property Tests" $ do
