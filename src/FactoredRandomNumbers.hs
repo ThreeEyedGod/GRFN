@@ -159,18 +159,18 @@ filterPrimesProduct :: [Integer] -> (Integer, [Integer])
 filterPrimesProduct xs = result where result@(_, sq) = (product sq, onlyPrimesFrom xs) -- note: product [] = 1
 
 parFilter :: (NFData a) => Strats -> Int -> (a -> Bool) -> [a] -> [a]
-parFilter strat stratParm p = case strat of 
-    Chunk -> S.withStrategy (S.parListChunk stratParm S.rdeepseq) . filter p
-    Buffer -> S.withStrategy (S.parBuffer stratParm S.rdeepseq) . filter p
-    Split -> S.withStrategy (S.parListSplitAt stratParm S.rpar S.rpar) . filter p
+parFilter strat stratParm p = case strat of
+  Chunk -> S.withStrategy (S.parListChunk stratParm S.rdeepseq) . filter p
+  Buffer -> S.withStrategy (S.parBuffer stratParm S.rdeepseq) . filter p
+  Split -> S.withStrategy (S.parListSplitAt stratParm S.rpar S.rpar) . filter p
 
 -- | parallel reduction of a composite list of integers into primefactors
 -- select the strategy based on the size range to be built in
 onlyPrimesFrom :: [Integer] -> [Integer]
 onlyPrimesFrom xs
-  | head xs < 10^9 = filter isPrimeOr1 xs 
-  | head xs < 2^32 = parFilter Buffer (length xs `div` 2) isPrimeOr1 xs
-  | head xs < 2^62 = parFilter Chunk (length xs `div` 3) isPrimeOr1 xs
+  | head xs < 10 ^ 9 = filter isPrimeOr1 xs
+  | head xs < 2 ^ 32 = parFilter Buffer (length xs `div` 2) isPrimeOr1 xs
+  | head xs < 2 ^ 62 = parFilter Chunk (length xs `div` 3) isPrimeOr1 xs
   | otherwise = parFilter Split (length xs `div` 3) isPrimeOr1 xs
 
 -- onlyPrimesFrom xs = filter isPrimeOr1 xs
@@ -220,4 +220,3 @@ if' p u v
 isOdd :: Integer -> Bool
 isOdd 0 = error "Not valid"
 isOdd n = not (n `mod` 2 == 0)
-

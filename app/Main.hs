@@ -11,10 +11,10 @@ main = do
   args <- getFullArgs
   print args
   putStrLn "Parallel Strategies"
-  x <- timeit (preFactoredNumOfBitSize 55)
+  x <- timeit (preFactoredNumOfBitSize 92)
   print x 
   putStrLn "Parallel threads/actions/processes"
-  y <- timeit (preFactoredNumOfBitSizePar 55)
+  y <- timeit (preFactoredNumOfBitSizePar 92)
   print y 
 
 
