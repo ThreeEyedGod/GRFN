@@ -178,18 +178,18 @@ span.spaces    { background: white }
 <span class="lineno">  159 </span><span class="decl"><span class="istickedoff">filterPrimesProduct xs = result where result@(_, sq) = (product sq, onlyPrimesFrom xs)</span></span> -- note: product [] = 1
 <span class="lineno">  160 </span>
 <span class="lineno">  161 </span>parFilter :: (NFData a) =&gt; Strats -&gt; Int -&gt; (a -&gt; Bool) -&gt; [a] -&gt; [a]
-<span class="lineno">  162 </span><span class="decl"><span class="nottickedoff">parFilter strat stratParm p = case strat of</span>
-<span class="lineno">  163 </span><span class="spaces">  </span><span class="nottickedoff">Chunk -&gt; S.withStrategy (S.parListChunk stratParm S.rdeepseq) . filter p</span>
-<span class="lineno">  164 </span><span class="spaces">  </span><span class="nottickedoff">Buffer -&gt; S.withStrategy (S.parBuffer stratParm S.rdeepseq) . filter p</span>
-<span class="lineno">  165 </span><span class="spaces">  </span><span class="nottickedoff">Split -&gt; S.withStrategy (S.parListSplitAt stratParm S.rpar S.rpar) . filter p</span></span>
+<span class="lineno">  162 </span><span class="decl"><span class="istickedoff">parFilter strat stratParm p = case strat of</span>
+<span class="lineno">  163 </span><span class="spaces">  </span><span class="istickedoff">Chunk -&gt; S.withStrategy (S.parListChunk stratParm S.rdeepseq) . filter p</span>
+<span class="lineno">  164 </span><span class="spaces">  </span><span class="istickedoff">Buffer -&gt; <span class="nottickedoff">S.withStrategy (S.parBuffer stratParm S.rdeepseq) . filter p</span></span>
+<span class="lineno">  165 </span><span class="spaces">  </span><span class="istickedoff">Split -&gt; <span class="nottickedoff">S.withStrategy (S.parListSplitAt stratParm S.rpar S.rpar) . filter p</span></span></span>
 <span class="lineno">  166 </span>
 <span class="lineno">  167 </span>-- | parallel reduction of a composite list of integers into primefactors
 <span class="lineno">  168 </span>-- select the strategy based on the size range to be built in
 <span class="lineno">  169 </span>onlyPrimesFrom :: [Integer] -&gt; [Integer]
 <span class="lineno">  170 </span><span class="decl"><span class="istickedoff">onlyPrimesFrom xs</span>
-<span class="lineno">  171 </span><span class="spaces">  </span><span class="istickedoff">| <span class="tickonlytrue">head xs &lt; 10 ^ 9</span> = filter isPrimeOr1 xs</span>
-<span class="lineno">  172 </span><span class="spaces">  </span><span class="istickedoff">| <span class="nottickedoff">head xs &lt; 2 ^ 32</span> = <span class="nottickedoff">parFilter Buffer (length xs `div` 2) isPrimeOr1 xs</span></span>
-<span class="lineno">  173 </span><span class="spaces">  </span><span class="istickedoff">| <span class="nottickedoff">head xs &lt; 2 ^ 62</span> = <span class="nottickedoff">parFilter Chunk (length xs `div` 3) isPrimeOr1 xs</span></span>
+<span class="lineno">  171 </span><span class="spaces">  </span><span class="istickedoff">| head xs &lt; 10 ^ 9 = filter isPrimeOr1 xs</span>
+<span class="lineno">  172 </span><span class="spaces">  </span><span class="istickedoff">| <span class="tickonlyfalse">head xs &lt; 2 ^ 32</span> = <span class="nottickedoff">parFilter Buffer (length xs `div` 2) isPrimeOr1 xs</span></span>
+<span class="lineno">  173 </span><span class="spaces">  </span><span class="istickedoff">| <span class="tickonlytrue">head xs &lt; 2 ^ 62</span> = parFilter Chunk (length xs `div` 3) isPrimeOr1 xs</span>
 <span class="lineno">  174 </span><span class="spaces">  </span><span class="istickedoff">| <span class="nottickedoff">otherwise</span> = <span class="nottickedoff">parFilter Split (length xs `div` 3) isPrimeOr1 xs</span></span></span>
 <span class="lineno">  175 </span>
 <span class="lineno">  176 </span>-- onlyPrimesFrom xs = filter isPrimeOr1 xs
