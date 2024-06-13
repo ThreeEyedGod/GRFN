@@ -57,7 +57,6 @@ import Protolude
     snd,
     ($),
     (&&),
-    (*),
     (.),
     (<$>),
     (<&>),
@@ -77,17 +76,17 @@ data Strats
 
 -- | Takes an Integer for Bitsize value to operate on range [2 ^ y, 2 ^ y + 1 - 1].  This function leverages parallel execution
 -- Provide an integer input and it should generate a tuple of a number in the range [2^y, 2^y+1 -1] and its prime factors
--- In the event that the parallel call fails and return Nothing, a recovery through a non-parallel call is attempted.
+-- In the event that the concurrent call fails and return Nothing, a recovery through a basic parallelised call is attempted.
 preFactoredNumOfBitSizePar :: Integer -> IO (Either Text (Integer, [Integer]))
 preFactoredNumOfBitSizePar 1 = pure $ Right (1, [1])
 preFactoredNumOfBitSizePar n | n > 1 = fromMaybe <$> preFactoredNumOfBitSize n <*> preFactoredNumOfBitSizeParMaybe n
 preFactoredNumOfBitSizePar _ = pure $ Left $ pack "Invalid"
 
--- | Failable Parallel preFactored Number given BitSize
+-- | Parallel preFactored Number given BitSize
 -- Provide an integer input and it should generate a tuple of a number in the range [2^y, 2^y+1 -1] and its prime factors
 preFactoredNumOfBitSizeParMaybe :: Integer -> IO (Maybe (Either Text (Integer, [Integer])))
 preFactoredNumOfBitSizeParMaybe 1 = pure $ Just $ Right (1, [1])
-preFactoredNumOfBitSizeParMaybe n | n > 1 && n < 10 ^ 9 = Just <$> preFactoredNumOfBitSize n
+preFactoredNumOfBitSizeParMaybe n | n > 1 && n < (10 :: Integer) ^ (9 :: Integer) = Just <$> preFactoredNumOfBitSize n
 preFactoredNumOfBitSizeParMaybe n | n > 1 = (snd <$> coresToUse) >>= spinUpThreads (preFactoredNumOfBitSize n)
 preFactoredNumOfBitSizeParMaybe _ = pure $ Just $ Left $ pack "Invalid"
 
@@ -96,12 +95,12 @@ spinUpThreads :: IO a -> Int -> IO (Maybe a)
 spinUpThreads f t = withPool t $ \pool -> parallelFirst pool $ replicate t (Just <$> f)
 
 -- | Spin up t actions of function f in parallel and return what's executed first
--- for now ignore t; fires up a race call from Control.Concurrent.Async
+-- for now ignore t; fires up a 2 horse 'race' call from Control.Concurrent.Async
 spinUpActions :: IO a -> Int -> IO (Maybe a)
 spinUpActions f _ = raceJust f
 
 -- | Spin up t Forks of function f in parallel and return what's executed first
--- for now ignore the second paramemter; fires up a 'race' call from Data.Unamb
+-- for now ignore the second paramemter; fires up a 2-horse 'race' call from Data.Unamb
 spinUpForks :: IO a -> Int -> IO (Maybe a)
 spinUpForks f _ = raceJustU f
 
@@ -142,7 +141,7 @@ bound <| eOR = case eOR of
   Left _ -> False
   Right v -> fst v < bound
 
--- | This is the Entry Function with a Integer bound
+-- | This is the Entry Function with a Integer bound. This is the core of the Kalai algorithm
 -- Provide an integer input and it should generate a tuple of a number less than the input integer and its prime factors
 genARandomPreFactoredNumberLTEn :: Integer -> IO (Either Text (Integer, [Integer]))
 genARandomPreFactoredNumberLTEn x | x <= 0 = pure $ Left $ pack "Invalid"
@@ -166,7 +165,7 @@ parFilter strat stratParm p = case strat of
 -- select the strategy based on the size range
 onlyPrimesFrom :: [Integer] -> [Integer]
 onlyPrimesFrom xs
-  | head xs < 10 ^ 9 = filter isPrimeOr1 xs
+  | head xs < (10 :: Integer) ^ (9 :: Integer) = filter isPrimeOr1 xs -- at a billion try parallelzing and concurrency options
   | otherwise = parFilter Split (length xs `div` 3) isPrimeOr1 xs
 
 -- assuming the first 3rd of the list comprise larger numbers and their processing workload = the residual 2/3rd
