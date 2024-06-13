@@ -1,1 +1,0 @@
-'/Users/mandeburung/Documents/GRFN/dist-newstyle/build/aarch64-osx/ghc-9.6.5/grfn-1.0.0.0/b/grfn-benchmark/build/grfn-benchmark/grfn-benchmark' '--timeout' '10000000' +RTS '-A32m' '-threaded' '-T' 

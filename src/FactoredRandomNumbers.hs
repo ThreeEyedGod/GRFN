@@ -121,7 +121,7 @@ raceJustU a = Just <$> Data.Unamb.race a a
 coresToUse :: IO (Int, Int)
 coresToUse = do
   nCores <- getNumProcessors
-  let nEfficiencyCores = nCores `div` 2 -- a heuristic
+  let nEfficiencyCores = nCores `div` 2 -- a heuristic : 50% of cores = efficiency
   nNumCapabilities <- getNumCapabilities
   setNumCapabilities $ max (nCores - nEfficiencyCores) nNumCapabilities
   nNumCapabilitiesSet <- getNumCapabilities
