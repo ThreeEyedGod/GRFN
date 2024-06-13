@@ -91,15 +91,17 @@ preFactoredNumOfBitSizeParMaybe n | n > 1 && n < 10 ^ 9 = Just <$> preFactoredNu
 preFactoredNumOfBitSizeParMaybe n | n > 1 = (snd <$> coresToUse) >>= spinUpThreads (preFactoredNumOfBitSize n)
 preFactoredNumOfBitSizeParMaybe _ = pure $ Just $ Left $ pack "Invalid"
 
--- | Spin up t threads of function f in parallel and return what's executed first
+-- | Spin up t threads of function f in parallel and return the one which completes first
 spinUpThreads :: IO a -> Int -> IO (Maybe a)
 spinUpThreads f t = withPool t $ \pool -> parallelFirst pool $ replicate t (Just <$> f)
 
 -- | Spin up t actions of function f in parallel and return what's executed first
--- for now ignore t
+-- for now ignore t; fires up a race call from Control.Concurrent.Async
 spinUpActions :: IO a -> Int -> IO (Maybe a)
 spinUpActions f _ = raceJust f
 
+-- | Spin up t Forks of function f in parallel and return what's executed first
+-- for now ignore the second paramemter; fires up a 'race' call from Data.Unamb
 spinUpForks :: IO a -> Int -> IO (Maybe a)
 spinUpForks f _ = raceJustU f
 
@@ -115,13 +117,13 @@ raceJust a = do
 raceJustU :: IO a -> IO (Maybe a)
 raceJustU a = Just <$> Data.Unamb.race a a
 
--- | Compute cores to actually use when called.
+-- | Compute cores to use when called
 coresToUse :: IO (Int, Int)
 coresToUse = do
   nCores <- getNumProcessors
+  let nEfficiencyCores = nCores `div` 2 -- a heuristic
   nNumCapabilities <- getNumCapabilities
-  let nEfficiencyCores = 4 -- //TODO is there a system function to detect this ?
-  setNumCapabilities $ max ((nCores - nEfficiencyCores) * 4) nNumCapabilities
+  setNumCapabilities $ max (nCores - nEfficiencyCores) nNumCapabilities
   nNumCapabilitiesSet <- getNumCapabilities
   pure (nCores, nNumCapabilitiesSet)
 
@@ -153,7 +155,7 @@ genARandomPreFactoredNumberLTEn n = do
 filterPrimesProduct :: [Integer] -> (Integer, [Integer])
 filterPrimesProduct xs = result where result@(_, sq) = (product sq, onlyPrimesFrom xs) -- note: product [] = 1
 
--- | parallel filter based on 3 different strategies
+-- | parallel filter with 3 optional strategies
 parFilter :: (NFData a) => Strats -> Int -> (a -> Bool) -> [a] -> [a]
 parFilter strat stratParm p = case strat of
   Chunk -> S.withStrategy (S.parListChunk stratParm S.rdeepseq) . filter p
@@ -169,7 +171,7 @@ onlyPrimesFrom xs
 
 -- assuming the first 3rd of the list comprise larger numbers and their processing workload = the residual 2/3rd
 
--- | Provided an Integer, throws up a candidate Int and its factors for further assessment
+-- | Provided an Integer, throws up a candidate Int and its factors for further evaluation
 potentialResult :: Integer -> IO (Integer, [Integer])
 potentialResult n = mkList n <&> filterPrimesProduct
 

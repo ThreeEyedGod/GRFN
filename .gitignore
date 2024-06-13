@@ -8,6 +8,8 @@ dist-newstyle/tmp
 dist-newstyle/build/aarch64-osx/ghc-9.6.5/grfn-1.0.0.0/*
 dist-newstyle/build/aarch64-osx/ghc-9.6.5/grfn-1.0.0.0/*.* 
 !/dist-newstyle/build/aarch64-osx/ghc-9.6.5/grfn-1.0.0.0/doc
+dist-newstyle/build/aarch64-osx/ghc-9.6.5/grfn-1.0.0.0/t/grfn-test/build/grfn-test/grfn-test
+dist-newstyle/build/aarch64-osx/ghc-9.6.5/grfn-1.0.0.0/x/grfn-exe/build/grfn-exe/grfn-exe
 cabal-dev
 *.o
 *.hi
