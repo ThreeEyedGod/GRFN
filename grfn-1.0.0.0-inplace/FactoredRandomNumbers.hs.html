@@ -176,17 +176,17 @@ span.spaces    { background: white }
 <span class="lineno">  157 </span>
 <span class="lineno">  158 </span>-- | parallel filter with 3 optional strategies
 <span class="lineno">  159 </span>parFilter :: (NFData a) =&gt; Strats -&gt; Int -&gt; (a -&gt; Bool) -&gt; [a] -&gt; [a]
-<span class="lineno">  160 </span><span class="decl"><span class="istickedoff">parFilter strat stratParm p = case strat of</span>
-<span class="lineno">  161 </span><span class="spaces">  </span><span class="istickedoff">Chunk -&gt; <span class="nottickedoff">S.withStrategy (S.parListChunk stratParm S.rdeepseq) . filter p</span></span>
-<span class="lineno">  162 </span><span class="spaces">  </span><span class="istickedoff">Buffer -&gt; <span class="nottickedoff">S.withStrategy (S.parBuffer stratParm S.rdeepseq) . filter p</span></span>
-<span class="lineno">  163 </span><span class="spaces">  </span><span class="istickedoff">Split -&gt; S.withStrategy (S.parListSplitAt stratParm S.rpar S.rdeepseq) . filter p</span></span>
+<span class="lineno">  160 </span><span class="decl"><span class="nottickedoff">parFilter strat stratParm p = case strat of</span>
+<span class="lineno">  161 </span><span class="spaces">  </span><span class="nottickedoff">Chunk -&gt; S.withStrategy (S.parListChunk stratParm S.rdeepseq) . filter p</span>
+<span class="lineno">  162 </span><span class="spaces">  </span><span class="nottickedoff">Buffer -&gt; S.withStrategy (S.parBuffer stratParm S.rdeepseq) . filter p</span>
+<span class="lineno">  163 </span><span class="spaces">  </span><span class="nottickedoff">Split -&gt; S.withStrategy (S.parListSplitAt stratParm S.rpar S.rdeepseq) . filter p</span></span>
 <span class="lineno">  164 </span>
 <span class="lineno">  165 </span>-- | parallel reduction of a composite list of integers into primefactors
 <span class="lineno">  166 </span>-- select the strategy based on the size range
 <span class="lineno">  167 </span>onlyPrimesFrom :: [Integer] -&gt; [Integer]
 <span class="lineno">  168 </span><span class="decl"><span class="istickedoff">onlyPrimesFrom xs</span>
-<span class="lineno">  169 </span><span class="spaces">  </span><span class="istickedoff">| head xs &lt; 10 ^ 9 = filter isPrimeOr1 xs</span>
-<span class="lineno">  170 </span><span class="spaces">  </span><span class="istickedoff">| <span class="tickonlytrue">otherwise</span> = parFilter Split (length xs `div` 3) isPrimeOr1 xs</span></span>
+<span class="lineno">  169 </span><span class="spaces">  </span><span class="istickedoff">| <span class="tickonlytrue">head xs &lt; 10 ^ 9</span> = filter isPrimeOr1 xs</span>
+<span class="lineno">  170 </span><span class="spaces">  </span><span class="istickedoff">| <span class="nottickedoff">otherwise</span> = <span class="nottickedoff">parFilter Split (length xs `div` 3) isPrimeOr1 xs</span></span></span>
 <span class="lineno">  171 </span>
 <span class="lineno">  172 </span>-- assuming the first 3rd of the list comprise larger numbers and their processing workload = the residual 2/3rd
 <span class="lineno">  173 </span>
@@ -208,7 +208,7 @@ span.spaces    { background: white }
 <span class="lineno">  189 </span>
 <span class="lineno">  190 </span>infixr 1 &gt;=&gt;:
 <span class="lineno">  191 </span>
-<span class="lineno">  192 </span>-- | Left-to-right Kleisli composition of monads plus prepend elem to List using standard operators
+<span class="lineno">  192 </span>-- | Left-to-right Kleisli composition of monads plus prepend elem to List using applicative
 <span class="lineno">  193 </span>(&gt;=&gt;:) :: (Monad m) =&gt; (a -&gt; m b) -&gt; (b -&gt; m [b]) -&gt; (a -&gt; m [b])
 <span class="lineno">  194 </span><span class="decl"><span class="istickedoff">f &gt;=&gt;: g = f &gt;=&gt; \u -&gt; (u :) &lt;$&gt; g u</span></span>
 <span class="lineno">  195 </span>

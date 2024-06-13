@@ -11,7 +11,7 @@ synopsis:            Uniformly-random pre-factored number generation as per Kala
 description:
     This is an implementation of this paper ["Get pre-factored random numbers easily"](https://twitter.com/michael_nielsen/status/1724854680990486780?s=20). 
     The full paper may be read [here](https://link.springer.com/content/pdf/10.1007/s00145-003-0051-5.pdf).
-    A synopsis is available in a different paper (https://math.dartmouth.edu/~carlp/kalai3.pdf) dealing 
+    A synopsis is available in a different [paper](https://math.dartmouth.edu/~carlp/kalai3.pdf) dealing 
     with getting pre-factored random numbers for Gaussian distributions.
     .
     A reference Python implemention is [here](https://www.johndcook.com/blog/2023/11/17/factored-random-numbers/).
@@ -19,20 +19,20 @@ description:
     The Adam Kalai algorithm itself is an easier (but less efficient) version of 
     [Eric Bach's original algorithm](https://pages.cs.wisc.edu/~cs812-1/pfrn.pdf). 
     
-    As an example, a single pre-factored number may be obtained by one of these 3 calls. preFactoredNumOfBitSizePar is a parallel
-    implementation.
+    As an example, a single pre-factored number may be obtained by one of these 3 calls. preFactoredNumOfBitSizePar is a Concurrent 
+    implementation
 
       >>> genARandomPreFactoredNumberLTEn 20 -- will give a pre-factored number less than or equal to 20.
       >>> Right (8,[2,2,2,1])
 
-      >>> preFactoredNumOfBitSize 20 -- will give a pre-factored number less than or equal to [2^20, 2^21 - 1]
+      >>> preFactoredNumOfBitSize 20 -- will give a pre-factored number in the range [2^20, 2^21 - 1]
       >>> Right (1695177,[17123,11,3,3,1])
 
-      >>> preFactoredNumOfBitSizePar 60 -- will give a pre-factored number less than or equal to [2^60, 2^61 - 1]
+      >>> preFactoredNumOfBitSizePar 60 -- will give a pre-factored number in the range [2^60, 2^61 - 1]
       >>> Right (1245467344549977447,[332515759,233924281,179,19,3,3,1])
     
 
-category:            Numeric Probability 
+category:            Numerical  
 build-type:          Simple
 extra-source-files:  README.md
                      CHANGELOG.md
@@ -118,8 +118,6 @@ test-suite grfn-test
                        -Wmissing-home-modules
                        -Wpartial-fields
                        -Wredundant-constraints
-                      --  -threaded
-                      --  -rtsopts
                        -rtsopts
                        -threaded
                        -with-rtsopts=-N

@@ -6,7 +6,7 @@
 
 
 Implementation of this paper ["Get pre-factored random numbers easily"](https://twitter.com/michael_nielsen/status/1724854680990486780?s=20). The full paper may be read [here](https://link.springer.com/content/pdf/10.1007/s00145-003-0051-5.pdf).
-A synopsis is available in Section 2 [here] in a different paper (https://math.dartmouth.edu/~carlp/kalai3.pdf) dealing with getting pre-factored random numbers for Gausian distributions.
+A synopsis is available in Section 2 in this other [paper](https://math.dartmouth.edu/~carlp/kalai3.pdf) dealing with getting pre-factored random numbers for Gausian distributions.
 
 A reference Python implemention is [here](https://www.johndcook.com/blog/2023/11/17/factored-random-numbers/).
 
@@ -15,10 +15,10 @@ The Adam Kalai algorithm itself is an easier (but less efficient) version of [Er
 Synopsis
 ---------
 ### Highlights
-**Kleisli + applicative** ; **Parallelized / Concurrent** ; Property Testing (QuickCheck), [Stan](https://hackage.haskell.org/package/stan) for Static analysis
+**Parallelized / Concurrent** ; Property Testing (QuickCheck), [Stan](https://hackage.haskell.org/package/stan) for Static analysis
 
 ### Standard
-hlint; github actions, IDE:Cursor+hoogle-vscode+ormolu ; Haddock ; makefile; Benchmark (tasty) ; Verification using Refinement Types (LiquidHaskell) during development ; HPC code coverage enabled; cabal/stack profiling (.prof)
+hlint; github actions, IDE:Cursor+hoogle-vscode+ormolu ; Haddock ; makefile; Benchmark (tasty) ; Verification using Refinement Types (LiquidHaskell) during development ; HPC code coverage enabled; cabal/stack profiling (.prof); **Kleisli Applicative** 
 
 Issues
 -------

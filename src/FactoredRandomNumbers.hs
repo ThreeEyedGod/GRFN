@@ -189,7 +189,7 @@ getRndMInt _ = error "Malformed Range"
 
 infixr 1 >=>:
 
--- | Left-to-right Kleisli composition of monads plus prepend elem to List using standard operators
+-- | Left-to-right Kleisli composition of monads plus prepend elem to List using applicative
 (>=>:) :: (Monad m) => (a -> m b) -> (b -> m [b]) -> (a -> m [b])
 f >=>: g = f >=> \u -> (u :) <$> g u
 

@@ -2,140 +2,155 @@ Test suite grfn-test: RUNNING...
 
 All Property Tests
   prop_checkIfLTEn [✔]
-    +++ OK, passed 100 tests; 192 discarded.
+    +++ OK, passed 100 tests; 150 discarded.
   prop_checkIffiltersInValidInput [✔]
     +++ OK, passed 5 tests.
   prop_checkValidOutput [✔]
-    +++ OK, passed 100 tests; 88 discarded:
-    78% n LT 30
+    +++ OK, passed 100 tests; 91 discarded:
+    72% n LT 30
     
-    11% 3
-     6% 27
-     5% 10
-     5% 4
-     5% 8
-     4% 18
+     6% 11
+     6% 3
+     6% 42
+     5% 20
+     4% 12
+     4% 16
+     4% 24
+     4% 4
      4% 5
-     4% 6
-     3% 11
-     3% 14
-     3% 15
-     3% 35
+     3% 10
+     3% 19
+     3% 21
+     3% 22
+     3% 30
+     3% 33
      3% 40
-     3% 48
-     3% 7
      3% 9
-     2% 12
      2% 13
-     2% 16
+     2% 14
+     2% 15
      2% 17
-     2% 21
-     2% 22
      2% 23
-     2% 24
-     2% 25
-     2% 32
-     2% 38
+     2% 28
+     2% 29
+     2% 37
      2% 44
-     2% 45
-     1% 28
+     2% 7
+     1% 25
+     1% 26
+     1% 31
+     1% 32
+     1% 34
+     1% 36
      1% 39
      1% 41
+     1% 45
      1% 46
      1% 47
-     1% 49
+     1% 6
+     1% 8
   prop_checkAccurateOutput [✔]
-    +++ OK, passed 100 tests; 88 discarded:
-    78% n LT 30
+    +++ OK, passed 100 tests; 91 discarded:
+    72% n LT 30
     
-    11% 3
-     6% 27
-     5% 10
-     5% 4
-     5% 8
-     4% 18
+     6% 11
+     6% 3
+     6% 42
+     5% 20
+     4% 12
+     4% 16
+     4% 24
+     4% 4
      4% 5
-     4% 6
-     3% 11
-     3% 14
-     3% 15
-     3% 35
+     3% 10
+     3% 19
+     3% 21
+     3% 22
+     3% 30
+     3% 33
      3% 40
-     3% 48
-     3% 7
      3% 9
-     2% 12
      2% 13
-     2% 16
+     2% 14
+     2% 15
      2% 17
-     2% 21
-     2% 22
      2% 23
-     2% 24
-     2% 25
-     2% 32
-     2% 38
+     2% 28
+     2% 29
+     2% 37
      2% 44
-     2% 45
-     1% 28
+     2% 7
+     1% 25
+     1% 26
+     1% 31
+     1% 32
+     1% 34
+     1% 36
      1% 39
      1% 41
+     1% 45
      1% 46
      1% 47
-     1% 49
+     1% 6
+     1% 8
   prop_checkAccurateOutputVal [✔]
-    +++ OK, passed 100 tests; 88 discarded:
-    78% n LT 30
+    +++ OK, passed 100 tests; 91 discarded:
+    72% n LT 30
     
-    11% 3
-     6% 27
-     5% 10
-     5% 4
-     5% 8
-     4% 18
+     6% 11
+     6% 3
+     6% 42
+     5% 20
+     4% 12
+     4% 16
+     4% 24
+     4% 4
      4% 5
-     4% 6
-     3% 11
-     3% 14
-     3% 15
-     3% 35
+     3% 10
+     3% 19
+     3% 21
+     3% 22
+     3% 30
+     3% 33
      3% 40
-     3% 48
-     3% 7
      3% 9
-     2% 12
      2% 13
-     2% 16
+     2% 14
+     2% 15
      2% 17
-     2% 21
-     2% 22
      2% 23
-     2% 24
-     2% 25
-     2% 32
-     2% 38
+     2% 28
+     2% 29
+     2% 37
      2% 44
-     2% 45
-     1% 28
+     2% 7
+     1% 25
+     1% 26
+     1% 31
+     1% 32
+     1% 34
+     1% 36
      1% 39
      1% 41
+     1% 45
      1% 46
      1% 47
-     1% 49
+     1% 6
+     1% 8
   prop_checkAccurateOutputValBitSize [✔]
-    +++ OK, passed 2 tests; 25 discarded:
+    +++ OK, passed 2 tests; 21 discarded:
     100% n LT 50
     
+    50% 12
     50% 3
-    50% 42
   prop_checkAccurateOutputValBitSizePar [✔]
-    +++ OK, passed 2 tests; 25 discarded:
+    +++ OK, passed 2 tests; 21 discarded:
     100% n LT 50
     
+    50% 12
     50% 3
-    50% 42
 
-Finished in 0.0209 seconds
+Finished in 0.0254 seconds
 7 examples, 0 failures
 Test suite grfn-test: PASS
 Test suite logged to: /Users/mandeburung/Documents/GRFN/dist-newstyle/build/aarch64-osx/ghc-9.6.5/grfn-1.0.0.0/t/grfn-test/test/grfn-1.0.0.0-grfn-test.log
