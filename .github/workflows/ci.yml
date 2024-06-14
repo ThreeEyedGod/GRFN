@@ -78,10 +78,10 @@ jobs:
     
     - name: Specific GHC
       run: |
-        ghcup install ghc 9.4.7 
-        ghcup set ghc 9.4.7
+        ghcup install ghc ${{ matrix.ghc }}
+        ghcup set ghc ${{ matrix.ghc }}
         ghc --version
 
     - name: Build Binary, Test and Benchmark
       run: |
-        make do_build do_test do_gendoc do_benchmark    
+        make do_build do_test do_gendoc
