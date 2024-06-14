@@ -1,5 +1,4 @@
-all: do_build do_test do_gendoc do_benchmark do_profile
-min: do_build do_test do_profile
+all: do_build do_test do_gendoc
 	
 do_build:
 	@echo "Build"

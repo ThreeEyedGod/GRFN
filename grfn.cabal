@@ -35,23 +35,21 @@ description:
 category:            Numerical  
 build-type:          Simple
 extra-source-files:  README.md
+extra-doc-files:
                      CHANGELOG.md
-
 library
   hs-source-dirs:      src
   exposed-modules:     FactoredRandomNumbers
-  build-depends:       base                 >= 4.11.1.0 && < 5
-                      ,protolude
-                      ,text
-                      ,random>=1.2.1.2
-                      ,primes
-                      ,arithmoi>=0.13.0.0
-                      ,tuple >= 0.3.0.2
-                      ,monad-loops >= 0.4.3
-                      ,parallel-io >= 0.3.5
-                      ,async>=2.2.5
-                      ,parallel>=3.2.2.0
-                      ,unamb>=0.2.7
+  build-depends:       base >= 4.18.2 && < 4.19
+                      ,protolude >= 0.3.4 && < 0.4
+                      ,text >= 2.0.2 && < 2.1
+                      ,random >=1.2.1.2 && < 1.3 
+                      ,arithmoi >= 0.13.0 && < 0.14
+                      ,monad-loops >= 0.4.3 && < 3.3 
+                      ,parallel-io >= 0.3.5 && < 0.4 
+                      ,async >=2.2.5 && < 2.3 
+                      ,parallel >=3.2.2 && < 3.3
+                      ,unamb >=0.2.7 && < 0.3
   default-language:    Haskell2010
   ghc-options:         -Wall
                        ---Werror
@@ -65,19 +63,13 @@ library
                        -Wredundant-constraints
                        -fwrite-ide-info
                        -hiedir=.hie
-                       -fhpc
-                       -O2
                        -threaded
 executable grfn-exe
   hs-source-dirs:      app
   main-is:             Main.hs
-  build-depends:       base
+  build-depends:       base >= 4.18.2 && < 4.19
                      , grfn
-                     , mtl>=2.3.1
-                     , transformers-base>=0.4.6
-                     , monad-par >= 0.3.5
-                     , abstract-par >= 0.3.3
-                     , time >= 1.12.2
+                     , time >= 1.12.2 && < 1.13
 
   default-language:    Haskell2010
   ghc-options:         -Wall
@@ -92,8 +84,6 @@ executable grfn-exe
                        -threaded
                        -rtsopts
                        -with-rtsopts=-N4
-                       -fhpc
-                       -O2
 
 test-suite grfn-test
   type:                exitcode-stdio-1.0
@@ -103,7 +93,7 @@ test-suite grfn-test
                      , grfn
                      , QuickCheck >= 2.14.3
                      , primes
-                     , text
+                     , text >= 2.0.2 && < 2.1
                      , hspec >= 2.11.7
                      , hspec-core >= 2.11.7
 
