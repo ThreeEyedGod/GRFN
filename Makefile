@@ -6,6 +6,7 @@ do_build:
 	@rm -rf *.tix
 	@rm -rf hpc*.html
 	cabal clean
+	cabal update
 	cabal build
 
 do_test:

@@ -76,14 +76,14 @@ data Strats
 
 -- | Takes an Integer for Bitsize value to operate on range [2 ^ y, 2 ^ y + 1 - 1].  This function leverages parallel execution
 -- Provide an integer input and it should generate a tuple of a number in the range [2^y, 2^y+1 -1] and its prime factors
--- In the event that the concurrent call fails and return Nothing, a recovery through a basic parallelised call is attempted.
+-- In the event that the concurrent call fails, a recovery through a basic parallelised call is attempted.
 preFactoredNumOfBitSizePar :: Integer -> IO (Either Text (Integer, [Integer]))
 preFactoredNumOfBitSizePar 1 = pure $ Right (1, [1])
 preFactoredNumOfBitSizePar n | n > 1 = fromMaybe <$> preFactoredNumOfBitSize n <*> preFactoredNumOfBitSizeParMaybe n
 preFactoredNumOfBitSizePar _ = pure $ Left $ pack "Invalid"
 
 -- | Parallel preFactored Number given BitSize
--- Provide an integer input and it should generate a tuple of a number in the range [2^y, 2^y+1 -1] and its prime factors
+-- Provide an integer input and it should generate a tuple of a number in the range [2^y, 2^y+1 -1] and its prime factors.
 preFactoredNumOfBitSizeParMaybe :: Integer -> IO (Maybe (Either Text (Integer, [Integer])))
 preFactoredNumOfBitSizeParMaybe 1 = pure $ Just $ Right (1, [1])
 preFactoredNumOfBitSizeParMaybe n | n > 1 && n < (10 :: Integer) ^ (9 :: Integer) = Just <$> preFactoredNumOfBitSize n
@@ -96,25 +96,25 @@ spinUpThreads f t = withPool t $ \pool -> parallelFirst pool $ replicate t (Just
 
 -- | Spin up t actions of function f in parallel and return what's executed first
 -- for now ignore t; fires up a 2 horse 'race' call from Control.Concurrent.Async
-spinUpActions :: IO a -> Int -> IO (Maybe a)
-spinUpActions f _ = raceJust f
+_spinUpActions :: IO a -> Int -> IO (Maybe a)
+_spinUpActions f _ = _raceJust f
 
 -- | Spin up t Forks of function f in parallel and return what's executed first
 -- for now ignore the second paramemter; fires up a 2-horse 'race' call from Data.Unamb
-spinUpForks :: IO a -> Int -> IO (Maybe a)
-spinUpForks f _ = raceJustU f
+_spinUpForks :: IO a -> Int -> IO (Maybe a)
+_spinUpForks f _ = _raceJustU f
 
 -- | Convert async.race from Either-Or to Maybe
-raceJust :: IO a -> IO (Maybe a)
-raceJust a = do
+_raceJust :: IO a -> IO (Maybe a)
+_raceJust a = do
   r <- race a a
   case r of
     Left u -> pure $ Just u
     Right v -> pure $ Just v
 
 -- | Convert Data.Unamb.race to Maybe
-raceJustU :: IO a -> IO (Maybe a)
-raceJustU a = Just <$> Data.Unamb.race a a
+_raceJustU :: IO a -> IO (Maybe a)
+_raceJustU a = Just <$> Data.Unamb.race a a
 
 -- | Compute cores to use when called
 coresToUse :: IO (Int, Int)
@@ -127,7 +127,7 @@ coresToUse = do
   pure (nCores, nNumCapabilitiesSet)
 
 -- | Takes an Integer as a Bitsize value to operate on range [2 ^ y, 2 ^ y + 1 - 1]
--- Provide an integer input and it should generate a tuple of a number in the range [2^y, 2^y+1 -1] and its prime factors
+-- Provide an integer input and it should generate a tuple of a number in the range [2^y, 2^y+1 -1] and its prime factors.
 preFactoredNumOfBitSize :: Integer -> IO (Either Text (Integer, [Integer]))
 preFactoredNumOfBitSize 1 = pure $ Right (1, [1])
 preFactoredNumOfBitSize n | n > 1 = iterateWhile ((2 ^ n) <|) (genARandomPreFactoredNumberLTEn (2 ^ (n + 1) - 1))
