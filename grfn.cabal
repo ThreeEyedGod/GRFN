@@ -52,7 +52,6 @@ library
                       ,unamb >=0.2.7 && < 0.3
   default-language:    Haskell2010
   ghc-options:         -Wall
-                       ---Werror
                        -Wcompat
                        -Widentities
                        -Wincomplete-record-updates

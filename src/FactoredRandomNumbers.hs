@@ -68,6 +68,7 @@ import Protolude
 import System.Random.Stateful (globalStdGen, uniformRM)
 import Prelude (error, head)
 
+-- | Strategies that may be used with parallel calls
 data Strats
   = Chunk
   | Buffer
@@ -83,7 +84,7 @@ preFactoredNumOfBitSizePar n | n > 1 = fromMaybe <$> preFactoredNumOfBitSize n <
 preFactoredNumOfBitSizePar _ = pure $ Left $ pack "Invalid"
 
 -- | Parallel preFactored Number given BitSize
--- Provide an integer input and it should generate a tuple of a number in the range [2^y, 2^y+1 -1] and its prime factors.
+-- Provide an integer input. Generate a tuple of a number in the range [2^y, 2^y+1 -1] and its prime factors.
 preFactoredNumOfBitSizeParMaybe :: Integer -> IO (Maybe (Either Text (Integer, [Integer])))
 preFactoredNumOfBitSizeParMaybe 1 = pure $ Just $ Right (1, [1])
 preFactoredNumOfBitSizeParMaybe n | n > 1 && n < (10 :: Integer) ^ (9 :: Integer) = Just <$> preFactoredNumOfBitSize n
@@ -116,7 +117,7 @@ _raceJust a = do
 _raceJustU :: IO a -> IO (Maybe a)
 _raceJustU a = Just <$> Data.Unamb.race a a
 
--- | Compute cores to use when called
+-- | Figure out # cores to use when called for parallel calls
 coresToUse :: IO (Int, Int)
 coresToUse = do
   nCores <- getNumProcessors
@@ -161,8 +162,8 @@ parFilter strat stratParm p = case strat of
   Buffer -> S.withStrategy (S.parBuffer stratParm S.rdeepseq) . filter p
   Split -> S.withStrategy (S.parListSplitAt stratParm S.rpar S.rdeepseq) . filter p
 
--- | parallel reduction of a composite list of integers into primefactors
--- select the strategy based on the size range
+-- | Reduction of a composite list of integers into primefactors
+-- Select the parallel (or not) strategy based on the size range. Use Parallel > Billion
 onlyPrimesFrom :: [Integer] -> [Integer]
 onlyPrimesFrom xs
   | head xs < (10 :: Integer) ^ (9 :: Integer) = filter isPrimeOr1 xs -- at a billion try parallelzing and concurrency options

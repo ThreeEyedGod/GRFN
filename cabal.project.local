@@ -1,5 +1,5 @@
 profiling: True
-profiling-detail: all-functions
+profiling-detail: toplevel-functions
 
 package *
   coverage: True

@@ -69,7 +69,7 @@ jobs:
           ${{ runner.os }}-build-
           ${{ runner.os }}- 
 
-    - name: Echo World
+    - name: Echo Runner environments
       run: | 
          ls -al
          echo $GITHUB_REPOSITORY $GITHUB_WORKSPACE $GITHUB_EVENT_PATH $RUNNER_WORKSPACE
@@ -82,6 +82,6 @@ jobs:
         ghcup set ghc ${{ matrix.ghc }}
         ghc --version
 
-    - name: Build Binary, Test and Benchmark
+    - name: Build Binary, Test and Documentation
       run: |
         make do_build do_test do_gendoc
