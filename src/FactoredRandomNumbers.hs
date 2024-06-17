@@ -118,7 +118,7 @@ _raceJust a = do
 _raceJustU :: IO a -> IO (Maybe a)
 _raceJustU a = Just <$> Data.Unamb.race a a
 
--- | Figure out # cores to use when called for parallel calls
+-- | Figure out # cores to use for parallelization
 coresToUse :: IO (Int, Int)
 coresToUse = do
   nCores <- getNumProcessors
