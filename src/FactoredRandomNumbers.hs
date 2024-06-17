@@ -36,6 +36,7 @@ import Protolude
     Bool (False),
     Either (..),
     Eq ((==)),
+    Foldable (maximum),
     IO,
     Int,
     Integer,
@@ -50,8 +51,8 @@ import Protolude
     flip,
     fst,
     length,
-    mod,
-    not,
+    maximum,
+    odd,
     otherwise,
     product,
     replicate,
@@ -64,8 +65,7 @@ import Protolude
     (<*>),
     (>=>),
     (^),
-    (||), Foldable (maximum),
-    maximum
+    (||),
   )
 import System.Random.Stateful (globalStdGen, uniformRM)
 
@@ -185,7 +185,7 @@ mkList n = (getRndMInt >=>: mkList) (1, n)
 
 -- | Get a Random Integer with uniform probability in the range (l,u)
 getRndMInt :: (Integer, Integer) -> IO Integer
-getRndMInt (l, u) = max l . min u <$> uniformRM (l, u) globalStdGen --uniformRM (a, b) = uniformRM (b, a) holds as per fn defn
+getRndMInt (l, u) = max l . min u <$> uniformRM (l, u) globalStdGen -- uniformRM (a, b) = uniformRM (b, a) holds as per fn defn
 
 infixr 1 >=>:
 
@@ -198,7 +198,7 @@ f >=>: g = f >=> \u -> (u :) <$> g u
 -- the isOdd and greater than 3 is for the use of bailliePSW primality
 -- using bailliePSW in place of the standard isPrime leads to 75% reduction in time !!!
 isPrimeOr1 :: Integer -> Bool
-isPrimeOr1 n = (i == 1 || i == 3) || (i > 3 && isOdd i && bailliePSW i) where i = abs n -- bailliePSW requires that n > 3 and that input is Odd
+isPrimeOr1 n = (i == 1 || i == 3) || (i > 3 && odd i && bailliePSW i) where i = abs n -- bailliePSW requires that n > 3 and that input is Odd
 
 -- | from Data.Function.predicate
 is :: (a -> b) -> (b -> Bool) -> (a -> Bool)
@@ -209,7 +209,3 @@ if' :: Bool -> b -> b -> b
 if' p u v
   | p = u
   | otherwise = v
-
--- | @isOdd Integer?
-isOdd :: Integer -> Bool
-isOdd n = not (n `mod` 2 == 0)
