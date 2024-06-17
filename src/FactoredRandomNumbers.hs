@@ -64,10 +64,10 @@ import Protolude
     (<*>),
     (>=>),
     (^),
-    (||),
+    (||), Foldable (maximum),
+    maximum
   )
 import System.Random.Stateful (globalStdGen, uniformRM)
-import Prelude (error, head)
 
 -- | Strategies that may be used with parallel calls
 data Strats
@@ -168,7 +168,7 @@ parFilter strat stratParm p = case strat of
 -- Select the parallel (or not) strategy based on the size range. Use Parallel > Billion
 onlyPrimesFrom :: [Integer] -> [Integer]
 onlyPrimesFrom xs
-  | head xs < (10 :: Integer) ^ (9 :: Integer) = filter isPrimeOr1 xs -- at a billion try parallelzing and concurrency options
+  | maximum xs < (10 :: Integer) ^ (9 :: Integer) = filter isPrimeOr1 xs -- at a billion try parallelzing and concurrency options
   | otherwise = parFilter Split (length xs `div` 3) isPrimeOr1 xs
 
 -- assuming the first 3rd of the list comprise larger numbers and their processing workload = the residual 2/3rd
@@ -185,8 +185,7 @@ mkList n = (getRndMInt >=>: mkList) (1, n)
 
 -- | Get a Random Integer with uniform probability in the range (l,u)
 getRndMInt :: (Integer, Integer) -> IO Integer
-getRndMInt (l, u) | l <= u && l > 0 = max l . min u <$> uniformRM (l, u) globalStdGen
-getRndMInt _ = error "Malformed Range"
+getRndMInt (l, u) = max l . min u <$> uniformRM (l, u) globalStdGen --uniformRM (a, b) = uniformRM (b, a) holds as per fn defn
 
 infixr 1 >=>:
 
