@@ -44,6 +44,7 @@ import Protolude
     Num ((+), (-)),
     Ord (max, min, (<), (<=), (>)),
     Text,
+    abs,
     div,
     filter,
     flip,
@@ -129,6 +130,7 @@ coresToUse = do
 
 -- | Takes an Integer as a Bitsize value to operate on range [2 ^ y, 2 ^ y + 1 - 1]
 -- Provide an integer input and it should generate a tuple of a number in the range [2^y, 2^y+1 -1] and its prime factors.
+-- if it throws up a value below 2^n then do again. 50% of the time it should result in success.
 preFactoredNumOfBitSize :: Integer -> IO (Either Text (Integer, [Integer]))
 preFactoredNumOfBitSize 1 = pure $ Right (1, [1])
 preFactoredNumOfBitSize n | n > 1 = iterateWhile ((2 ^ n) <|) (genARandomPreFactoredNumberLTEn (2 ^ (n + 1) - 1))
@@ -136,7 +138,7 @@ preFactoredNumOfBitSize _ = pure $ Left $ pack "Invalid"
 
 infix 1 <|
 
--- | An operator to compare the Right first value of the (Int, [Int]) to an Int for lesser-than predicate
+-- | An operator to compare the Right first value of the (Int, [Int]) to an Int for Truth-value of lesser-than predicate
 (<|) :: Integer -> Either Text (Integer, [Integer]) -> Bool
 bound <| eOR = case eOR of
   Left _ -> False
@@ -176,13 +178,12 @@ potentialResult :: Integer -> IO (Integer, [Integer])
 potentialResult n = mkList n <&> filterPrimesProduct
 
 -- | Provided an Integer, creates a sequence of random integers LTE n in decreasing order,
--- possibly with multiples ending at a single 1
+-- possibly with multiples ending at 1
 mkList :: Integer -> IO [Integer]
 mkList 1 = pure []
-mkList n | n > 1 = (getRndMInt >=>: mkList) (1, n)
-mkList _ = error "Out of bound Arg"
+mkList n = (getRndMInt >=>: mkList) (1, n)
 
--- | Get a Random Integer with uniform probability in the range [1,n]
+-- | Get a Random Integer with uniform probability in the range (l,u)
 getRndMInt :: (Integer, Integer) -> IO Integer
 getRndMInt (l, u) | l <= u && l > 0 = max l . min u <$> uniformRM (l, u) globalStdGen
 getRndMInt _ = error "Malformed Range"
@@ -198,8 +199,7 @@ f >=>: g = f >=> \u -> (u :) <$> g u
 -- the isOdd and greater than 3 is for the use of bailliePSW primality
 -- using bailliePSW in place of the standard isPrime leads to 75% reduction in time !!!
 isPrimeOr1 :: Integer -> Bool
-isPrimeOr1 n | n > 0 = (n == 1 || n == 3) || (n > 3 && isOdd n && bailliePSW n) -- bailliePSW requires that n > 3 and that input is Odd
-isPrimeOr1 _ = error "Invalid Arg "
+isPrimeOr1 n = (i == 1 || i == 3) || (i > 3 && isOdd i && bailliePSW i) where i = abs n -- bailliePSW requires that n > 3 and that input is Odd
 
 -- | from Data.Function.predicate
 is :: (a -> b) -> (b -> Bool) -> (a -> Bool)
@@ -213,5 +213,4 @@ if' p u v
 
 -- | @isOdd Integer?
 isOdd :: Integer -> Bool
-isOdd 0 = error "Not valid"
 isOdd n = not (n `mod` 2 == 0)

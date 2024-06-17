@@ -1,7 +1,14 @@
 module Main (main) where
 
 import Data.Time.Clock
+  ( NominalDiffTime,
+    diffUTCTime,
+    getCurrentTime,
+  )
 import FactoredRandomNumbers
+  ( preFactoredNumOfBitSize,
+    preFactoredNumOfBitSizePar,
+  )
 import GHC.Environment (getFullArgs)
 
 main :: IO ()
