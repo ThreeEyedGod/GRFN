@@ -2,6 +2,7 @@ name: CI_GRFN
 
 on:
   pull_request:
+    types: [synchronize, opened, reopened]
   push:
     branches: main
 
@@ -30,10 +31,7 @@ jobs:
     runs-on: ${{ matrix.runner }}
 
     steps:
-    - uses: actions/checkout@v2
-      if: github.event.action == 'opened' || github.event.action == 'synchronize' || github.event.ref == 'refs/heads/main'
-      with:
-        fetch-depth: '0'
+    - uses: actions/checkout@v4
 
     - name: Bump version and push tag
       uses: anothrNick/github-tag-action@1.67.0

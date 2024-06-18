@@ -34,11 +34,16 @@ description:
 
 category:            Numerical  
 build-type:          Simple
+stability:           experimental
 extra-source-files:  README.md
 extra-doc-files:
                      CHANGELOG.md
 tested-with:         GHC == 9.8.2
                      GHC == 9.6.5
+
+source-repository head
+  type:     git
+  location: https://github.com/threeeyedgod/grfn
 
 library
   hs-source-dirs:      src
@@ -67,6 +72,8 @@ library
                        -fwrite-ide-info
                        -hiedir=.hie
                        -threaded
+                       -Wunused-packages
+
 executable grfn-exe
   hs-source-dirs:      app
   main-is:             Main.hs
@@ -111,13 +118,10 @@ test-suite grfn-test
                        -Wmissing-home-modules
                        -Wpartial-fields
                        -Wredundant-constraints
-                       -rtsopts
+                       -Wno-x-partial
                        -threaded
+                       -rtsopts
                        -with-rtsopts=-N
-
-source-repository head
-  type:     git
-  location: https://github.com/threeeyedgod/grfn
 
 benchmark grfn-benchmark
   type:                exitcode-stdio-1.0
