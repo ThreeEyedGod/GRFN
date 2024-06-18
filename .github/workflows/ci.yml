@@ -42,7 +42,7 @@ jobs:
         PRERELEASE: true
       continue-on-error: true
 
-    - uses: haskell-actions/setup-haskell@v2 
+    - uses: haskell-actions/setup@v2 
       name: Setup Haskell
       with:
           stack-version: ${{ matrix.stack }}
