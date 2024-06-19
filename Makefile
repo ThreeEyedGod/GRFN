@@ -30,4 +30,8 @@ do_profile:
 	# rm -rf *.tix
 	# stack build --profile
 	# stack exec -- grfn-exe  100000 +RTS -p -N4 -RTS
-	
+
+do_main:
+	@echo "creating main"
+	@rm -rf *.tix
+	cabal run grfn-exe -- +RTS -N4

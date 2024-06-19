@@ -24,8 +24,7 @@ where
 import Control.Concurrent.Async (race)
 import Control.Concurrent.ParallelIO.Local (parallelFirst, withPool)
 import Control.Monad.Loops (iterateWhile)
-import Control.Parallel.Strategies (NFData)
-import qualified Control.Parallel.Strategies as S
+import Control.Parallel.Strategies (NFData, parBuffer, parListChunk, parListSplitAt, rdeepseq, rpar, withStrategy)
 import Data.Maybe (fromMaybe)
 import Data.Text (pack)
 import qualified Data.Unamb (race)
@@ -160,9 +159,9 @@ filterPrimesProduct xs = result where result@(_, sq) = (product sq, onlyPrimesFr
 -- | parallel filter with 3 optional strategies
 parFilter :: (NFData a) => Strats -> Int -> (a -> Bool) -> [a] -> [a]
 parFilter strat stratParm p = case strat of
-  Chunk -> S.withStrategy (S.parListChunk stratParm S.rdeepseq) . filter p
-  Buffer -> S.withStrategy (S.parBuffer stratParm S.rdeepseq) . filter p
-  Split -> S.withStrategy (S.parListSplitAt stratParm S.rpar S.rdeepseq) . filter p
+  Chunk -> withStrategy (parListChunk stratParm rdeepseq) . filter p
+  Buffer -> withStrategy (parBuffer stratParm rpar) . filter p
+  Split -> withStrategy (parListSplitAt stratParm rdeepseq rdeepseq) . filter p
 
 -- | Reduction of a composite list of integers into primefactors
 -- Select the parallel (or not) strategy based on the size range. Use Parallel > Billion
