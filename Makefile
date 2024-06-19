@@ -1,4 +1,4 @@
-all: do_build do_test do_gendoc
+all: do_build do_test do_gendoc do_profile
 	
 do_build:
 	@echo "Build"
@@ -27,11 +27,13 @@ do_profile:
 	@echo "creating profile"
 	@rm -rf *.tix
 	cabal run grfn-exe -- +RTS -p -N4
-	# rm -rf *.tix
-	# stack build --profile
-	# stack exec -- grfn-exe  100000 +RTS -p -N4 -RTS
 
 do_main:
 	@echo "creating main"
 	@rm -rf *.tix
 	cabal run grfn-exe -- +RTS -N4
+
+do_profile_stack:
+	@echo "creating profile w/stack"
+	stack build --profile
+	stack exec -- grfn-exe  100000 +RTS -p -N4 -RTS
