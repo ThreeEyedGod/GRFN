@@ -9,7 +9,10 @@ maintainer:          venkatesh.narayanan@live.in
 copyright:           2024 ThreeEyedGod
 synopsis:            Uniformly-random pre-factored number generation as per Kalai's algorithm
 description:
-    This is an implementation of this paper ["Get pre-factored random numbers easily"](https://twitter.com/michael_nielsen/status/1724854680990486780?s=20). 
+    grfn is a Haskell  implementation of Adam Kalai's algorithm to get uniform pre-factored numbers.
+    See [README.md](https://github.com/threeeyedgod/grfn#grfn) for more details.    
+
+    It's an implementation of this paper ["Get pre-factored random numbers easily"](https://twitter.com/michael_nielsen/status/1724854680990486780?s=20). 
     The full paper may be read [here](https://link.springer.com/content/pdf/10.1007/s00145-003-0051-5.pdf).
     A synopsis is available in a different [paper](https://math.dartmouth.edu/~carlp/kalai3.pdf) dealing 
     with getting pre-factored random numbers for Gaussian distributions.
@@ -20,7 +23,7 @@ description:
     [Eric Bach's original algorithm](https://pages.cs.wisc.edu/~cs812-1/pfrn.pdf). 
     
     As an example, a single pre-factored number may be obtained by one of these 3 calls. preFactoredNumOfBitSizePar is a Concurrent 
-    implementation
+    parallized implementation
 
       >>> genARandomPreFactoredNumberLTEn 20 -- will give a pre-factored number less than or equal to 20.
       >>> Right (8,[2,2,2,1])
@@ -31,7 +34,6 @@ description:
       >>> preFactoredNumOfBitSizePar 60 -- will give a pre-factored number in the range [2^60, 2^61 - 1]
       >>> Right (1245467344549977447,[332515759,233924281,179,19,3,3,1])
     
-
 category:            Numerical  
 build-type:          Simple
 stability:           experimental

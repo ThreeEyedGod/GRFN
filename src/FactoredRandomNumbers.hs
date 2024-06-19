@@ -190,6 +190,7 @@ getRndMInt (l, u) = max l . min u <$> uniformRM (l, u) globalStdGen -- uniformRM
 infixr 1 >=>:
 
 -- | Left-to-right Kleisli composition of monads plus prepend elem to List using applicative
+-- Late edit: there may be something in Control.arrow that already does exactly this
 (>=>:) :: (Monad m) => (a -> m b) -> (b -> m [b]) -> (a -> m [b])
 f >=>: g = f >=> \u -> (u :) <$> g u
 
