@@ -4,10 +4,10 @@ version:             1.0.0.0
 homepage:            https://github.com/threeeyedgod/grfn#readme
 license:             BSD-3-Clause
 license-file:        LICENSE
-author:              VN
+author:              Venkatesh Narayanan
 maintainer:          venkatesh.narayanan@live.in
 copyright:           2024 ThreeEyedGod
-synopsis:            Uniformly-random pre-factored number generation as per Kalai's algorithm
+synopsis:            Uniformly-random pre-factored numbers
 description:
     grfn is a Haskell  implementation of Adam Kalai's algorithm to get uniform pre-factored numbers.
     See [README.md](https://github.com/threeeyedgod/grfn#grfn) for more details.    
@@ -34,7 +34,7 @@ description:
       >>> preFactoredNumOfBitSizePar 60 -- will give a pre-factored number in the range [2^60, 2^61 - 1]
       >>> Right (1245467344549977447,[332515759,233924281,179,19,3,3,1])
     
-category:            Numerical  
+category:            Algorithms  
 build-type:          Simple
 stability:           experimental
 extra-source-files:  README.md
