@@ -1,4 +1,6 @@
 {-# LANGUAGE UnicodeSyntax #-}
+{-# LANGUAGE LambdaCase #-}
+
 {--
    The Adam Kalai Algorithm implmemented in this module (see Readme for more details)
               Input: Integer n > 0.
@@ -62,6 +64,7 @@ import Protolude
     (<$>),
     (<&>),
     (<*>),
+
     (>=>),
     (^),
     (||),
@@ -107,9 +110,7 @@ _spinUpForks f _ = _raceJustU f
 
 -- | Convert async.race from Either-Or to Maybe
 _raceJust :: IO a -> IO (Maybe a)
-_raceJust a = do
-  r <- race a a
-  case r of
+_raceJust a = race a a >>= \case
     Left u -> pure $ Just u
     Right v -> pure $ Just v
 
