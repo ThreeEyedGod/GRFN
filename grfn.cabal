@@ -34,7 +34,7 @@ description:
       >>> preFactoredNumOfBitSizePar 60 -- will give a pre-factored number in the range [2^60, 2^61 - 1]
       >>> Right (1245467344549977447,[332515759,233924281,179,19,3,3,1])
     
-category:            Algorithms  
+category:            Algorithm, Random, Numbers
 build-type:          Simple
 stability:           experimental
 extra-source-files:  README.md
