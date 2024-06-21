@@ -15,7 +15,8 @@ test:
 
 doc:
 	@echo "creating documentation"
-	cabal v2-haddock --haddock-for-hackage --haddock-option=--hyperlinked-source --haddock-options=--quickjump --enable-doc
+	--cabal v2-haddock --haddock-for-hackage --haddock-hyperlink-source --haddock-quickjump --enable-doc
+	cabal haddock --haddock-executables --haddock-for-hackage --haddock-hyperlink-source --haddock-quickjump --enable-doc
 
 benchmark:
 	@echo "creating benchmarks"

@@ -9,10 +9,11 @@ maintainer:          venkatesh.narayanan@live.in
 copyright:           2024 ThreeEyedGod
 synopsis:            Uniformly-random pre-factored numbers (Kalai)
 description:
-    grfn is a Haskell implementation of Adam Kalai's algorithm to get uniform pre-factored numbers. 
+    @__grfn__@ is an focused library. @grfn@ is an implementation of Adam Kalai's algorithm 
+    to get uniform pre-factored numbers. 
     See [README.md](https://github.com/threeeyedgod/grfn#grfn) for more details.    
-    
-    As an example, a single pre-factored number may be obtained by one of these 3 calls.  preFactoredNumOfBitSizePar is a Concurrent 
+
+    ==  /Example:/ a __single pre-factored number__ may be obtained by one of these 3 calls.  preFactoredNumOfBitSizePar is a Concurrent 
     parallized implementation
 
       >>> genARandomPreFactoredNumberLTEn 20 -- will give a pre-factored number less than or equal to 20.
