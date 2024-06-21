@@ -1,5 +1,6 @@
 .stack-work/** linguist-generated=true
 dist-newstyle/** linguist-generated=true
+build/** linguist-generated=true
 **/.liquid/* linguist-generated=true
 **/.liquid/* linguist-generated=true
 .vscode/* linguist-generated=true
@@ -11,3 +12,6 @@ aeson/* linguist-generated=true
 *.html linguist-generated
 .hpc/** linguist-generated=true
 *.tix linguist-generated
+*.prof linguist-generated
+cache/** linguist-generated=true
+
