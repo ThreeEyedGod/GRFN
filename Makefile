@@ -14,8 +14,8 @@ test:
 	cabal test 
 
 doc:
-	@echo "creating haddock docs"
-	cabal haddock
+	@echo "creating documentation"
+	cabal v2-haddock --haddock-for-hackage --haddock-option=--hyperlinked-source --haddock-options=--quickjump --enable-doc
 
 benchmark:
 	@echo "creating benchmarks"
@@ -37,3 +37,7 @@ profile_stack:
 	@echo "creating profile w/stack"
 	stack build --profile
 	stack exec -- grfn-exe  100000 +RTS -p -N4 -RTS
+
+package:
+	@echo "creating tarball"
+	cabal sdist
