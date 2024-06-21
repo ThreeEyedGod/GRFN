@@ -13,6 +13,11 @@ dist-newstyle/build/aarch64-osx/ghc-9.6.5/grfn-1.0.0.0/t/grfn-test/build/grfn-te
 dist-newstyle/build/aarch64-osx/ghc-9.6.5/grfn-1.0.0.0/x/grfn-exe/build/grfn-exe/grfn-exe
 grfn-1.0.0.0-inplace
 cabal-dev
+*.gz
+cache
+build
+build/*
+bench
 *.o
 *.hi
 *.chi
