@@ -1,4 +1,4 @@
-all: build test doc profile
+all: build test doc profile package
 	
 build:
 	@echo "Build"
@@ -16,7 +16,7 @@ test:
 doc:
 	@echo "creating documentation"
 	--cabal v2-haddock --haddock-for-hackage --haddock-hyperlink-source --haddock-quickjump --enable-doc
-	cabal haddock --haddock-executables --haddock-for-hackage --haddock-hyperlink-source --haddock-quickjump --enable-doc
+	cabal haddock --haddock-executables --haddock-for-hackage --haddock-hyperlink-source --haddock-quickjump --enable-doc  
 
 benchmark:
 	@echo "creating benchmarks"
@@ -29,7 +29,7 @@ profile:
 	@rm -rf *.tix
 	cabal run grfn-exe -- +RTS -p -s -N4
 
-dmain:
+main:
 	@echo "creating main"
 	@rm -rf *.tix
 	cabal run grfn-exe -- +RTS -N4

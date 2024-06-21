@@ -18,3 +18,17 @@ hlint; github actions, IDE:Cursor+ormolu ; Haddock ; makefile; Benchmark (tasty)
 
 ### Performance
 Development on an entry level M1 ==> Ghc settings and usable cores (rtsopts as well) set to 4.
+
+### Usage
+    /Example:/ a single pre-factored number guaranteed with uniform probability may be obtained by one of these 3 calls.  
+    preFactoredNumOfBitSizePar is a concurrent parallized implementation and may offer performance 
+
+      >>> genARandomPreFactoredNumberLTEn 20 -- will give a pre-factored number less than or equal to 20.
+      >>> Right (8,[2,2,2,1])
+
+      >>> preFactoredNumOfBitSize 20 -- will give a pre-factored number in the range [2^20, 2^21 - 1]
+      >>> Right (1695177,[17123,11,3,3,1])
+
+      >>> preFactoredNumOfBitSizePar 60 -- will give a pre-factored number in the range [2^60, 2^61 - 1]
+      >>> Right (1245467344549977447,[332515759,233924281,179,19,3,3,1])
+    
