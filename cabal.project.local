@@ -4,3 +4,4 @@ profiling-detail: toplevel-functions
 package *
   coverage: True
   library-coverage: True
+  documentation: True
