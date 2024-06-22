@@ -43,3 +43,9 @@ profile_stack:
 package:
 	@echo "creating tarball"
 	cabal sdist
+
+upload:
+	@echo "uploading docs hack"
+	rm -rf ./dist-docs/*
+	cabal haddock --builddir=dist-docs --haddock-for-hackage --haddock-option=--hyperlinked-source
+	cabal upload --publish -d dist-docs/*-docs.tar.gz
