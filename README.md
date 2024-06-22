@@ -21,10 +21,10 @@ Development on an entry level M1 ==> Ghc settings and usable cores (rtsopts as w
 
 ### Usage
 
-> __Example:__ a single pre-factored number guaranteed with uniform probability may 
+__Example:__ a single pre-factored number guaranteed with uniform probability may 
 be obtained by one of these 3 calls.  
 
-> ⚠️ Note: preFactoredNumOfBitSizePar is a concurrent 
+⚠️ Note: preFactoredNumOfBitSizePar is a concurrent 
 parallized implementation and may offer performance benefits.
 
     >>> genARandomPreFactoredNumberLTEn 20 -- will give a pre-factored number less 

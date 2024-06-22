@@ -17,7 +17,6 @@ cabal-dev
 cache
 build
 build/*
-bench
 *.o
 *.hi
 *.chi
