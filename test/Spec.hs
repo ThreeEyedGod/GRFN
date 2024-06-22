@@ -134,5 +134,3 @@ prop_checkAccurateOutputValBitSizePar (Positive n) = n > 2 && n < 70 ==> classif
 primeFactorsOr1 :: Integer -> [Integer]
 primeFactorsOr1 1 = [1]
 primeFactorsOr1 n = reverse (1 : primeFactors n)
-
-

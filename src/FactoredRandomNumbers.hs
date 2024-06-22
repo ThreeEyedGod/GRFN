@@ -1,6 +1,13 @@
 {-# LANGUAGE LambdaCase #-}
 {-# LANGUAGE UnicodeSyntax #-}
-{--
+{-- |
+-- Module: FactoredRandomNumbers
+-- Description: A module of Kalai's algorithm to get uniformly pre-factored numbers
+-- Copyright: (c) Venkatesh Narayanan
+-- License:
+-- Maintainer: venkatesh.narayanan@live.in
+--
+-- The module has three functions.
    The Adam Kalai Algorithm implmemented in this module (see Readme for more details)
               Input: Integer n > 0.
 
