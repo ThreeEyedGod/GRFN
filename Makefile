@@ -1,4 +1,5 @@
-all: build test doc profile package
+all: build test doc profile package_upload doc_upload
+all_butno_package: build test doc profile
 	
 build:
 	@echo "Build"
@@ -40,11 +41,13 @@ profile_stack:
 	stack build --profile
 	stack exec -- grfn-exe  100000 +RTS -p -N4 -RTS
 
-package:
+package_upload:
 	@echo "creating tarball"
+	rm -rf ./dist-newstyle/sdist/*.tar.gz
 	cabal sdist
+	cabal upload --publish dist-newstyle/sdist/*.tar.gz
 
-upload:
+doc_upload:
 	@echo "uploading docs hack"
 	rm -rf ./dist-docs/*
 	cabal haddock --builddir=dist-docs --haddock-for-hackage --haddock-option=--hyperlinked-source

@@ -9,3 +9,6 @@ and this project adheres to the
 ## Unreleased
 
 ## 0.1.0.0 - YYYY-MM-DD
+### Added
+
+- v1.0.0.1 Fixed broken links in Readme.md, verson and typos in cabal, makefile, ci.yml, Changelog

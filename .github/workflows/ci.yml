@@ -85,4 +85,4 @@ jobs:
 
     - name: Build Binary, Test and Documentation
       run: |
-        make 
+        make all_butno_package
